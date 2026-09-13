@@ -4,10 +4,12 @@ import os
 from collections.abc import Callable, Sequence
 from typing import TYPE_CHECKING, Any, Literal
 
+import jax
 from jax import Array, vmap
 from jax import numpy as jnp
 from matplotlib import pyplot as plt
 
+from flapjax.aero.frequency_flowfields import FrequencyFlowField
 from flapjax.aero.linear import LinearUVLM, LinearWakeType
 from flapjax.aero.linear.data_structures import (
     AeroInputUnflattened,
@@ -72,9 +74,7 @@ class LinearCoupled(
         prescribed_dofs: Sequence[int] | Array | slice | int | None = None,
     ):
         if prescribed_dofs is not None:
-            prescribed_dofs = case.structure.make_prescribed_dofs_tuple(
-                prescribed_dofs
-            )
+            prescribed_dofs = case.structure.make_prescribed_dofs_tuple(prescribed_dofs)
 
         self.aero = LinearUVLM(
             case=case.aero,
@@ -127,8 +127,10 @@ class LinearCoupled(
 
         super().__init__(reference=reference, dt=case.aero.dt)
 
+        self._case: BaseCoupledAeroelastic = case
         self.unsteady_force: bool = unsteady_force
-        self.sys = self.linearise(batch_size=batch_size)
+        if batch_size is not False:
+            self.sys = self.linearise(batch_size=batch_size)
 
     @property
     def reference(self) -> AeroelasticCase:
@@ -1157,10 +1159,6 @@ class LinearCoupled(
 
         return evals[idx]
 
-    def rescale(
-        self, u_inf_mag: float | Array, rho: float | Array, c_ref: float
-    ) -> LinearCoupled: ...
-
     # noinspection PyMethodOverriding
     def run(
         self,
@@ -1168,3 +1166,82 @@ class LinearCoupled(
         x0: AeroelasticStateUnflattened | None = None,
     ) -> AeroelasticLinearResult:
         raise NotImplementedError
+
+    def frf(
+        self,
+        omega: Array,
+        flowfield: FrequencyFlowField | None,
+    ) -> AeroelasticOutputUnflattened:
+        r"""
+        Compute the frequency response function for a gust input.
+        :param omega: Frequencies in rad/s, ``(n_freq,)``.
+        :param flowfield: Frequency-domain turbulence spectrum. If ``None``,
+            the raw transfer function is returned.
+        :return: Gust FRF with ``q`` and ``q_dot`` fields, each ``(n_freq, n_dof)``.
+        """
+        h = self.frf_base(omega, flowfield)
+        n_out = self.n_beam_output_dof
+        return AeroelasticOutputUnflattened(q=h[:, :n_out], q_dot=h[:, n_out:])
+
+    def frf_base(
+        self,
+        omega: Array,
+        flowfield: FrequencyFlowField | None,
+    ) -> Array:
+        r"""
+        Compute the gust FRF as a flat vector.
+        :param omega: Frequencies in rad/s, ``(n_freq,)``.
+        :param flowfield: Frequency-domain turbulence spectrum. If ``None``,
+            the raw transfer function is returned.
+        :return: Complex FRF, ``(n_freq, n_outputs)``.
+        """
+        from flapjax.coupled.linear_gradients.frf import gust_penetration_vector
+
+        u_inf = (
+            flowfield.u_inf
+            if flowfield is not None
+            else self._case.aero.flowfield.u_inf_mag
+        )
+
+        zeta_b0 = self._reference.aero.zeta_b
+        vertex_x = jnp.concatenate([z[..., 0].ravel() for z in zeta_b0])
+        g = gust_penetration_vector(omega=omega, vertex_x=vertex_x, u_inf=u_inf)
+
+        a = self.sys.a
+        c = self.sys.c
+        n_states = a.shape[0]
+
+        linear_upwash = LinearCoupled(
+            case=self._case,
+            reference=self._reference,
+            batch_size=False,
+            n_struct_modes=None,
+            bound_upwash=True,
+            skip_checks=True,
+        )
+        nu_b_zero = jnp.zeros(self._reference.aero.zeta_b.size)
+
+        def _step_nu_b(nu_b_vec: Array) -> Array:
+            state_np1, _ = linear_upwash.step(nu_b_vec=nu_b_vec)
+            return linear_upwash.pack_state_vector(state_np1)
+
+        def _b_g_single(g_k: Array) -> Array:
+            _, bg_re = jax.jvp(_step_nu_b, (nu_b_zero,), (g_k.real,))
+            _, bg_im = jax.jvp(_step_nu_b, (nu_b_zero,), (g_k.imag,))
+            return bg_re + 1j * bg_im
+
+        b_g = jax.vmap(_b_g_single)(g)
+
+        z = jnp.exp(1j * omega * self.dt)
+        eye = jnp.eye(n_states)
+
+        def _solve_single(z_k: Array, bg_k: Array) -> Array:
+            return z_k * c @ jnp.linalg.solve(z_k * eye - a, bg_k)
+
+        h = jax.vmap(_solve_single)(z, b_g)
+
+        if flowfield is not None:
+            # scale with flowfield PSD if available
+            h *= jnp.sqrt(flowfield.psd(omega))[:, None]
+
+        return h

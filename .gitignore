@@ -6,6 +6,7 @@
 *.dat
 *.csv
 *.pickle
+*.png
 
 # Claude files
 *.claude
@@ -35,3 +36,5 @@ tmp/
 site/
 .cache/
 
+# jax cache
+jit_*

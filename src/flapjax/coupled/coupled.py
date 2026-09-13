@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, ClassVar, Literal
 
-import jax
+import equinox.internal as eqxi
 from jax import Array, vmap
 from jax import numpy as jnp
 
@@ -284,7 +284,7 @@ class BaseCoupledAeroelastic:
         fsi_converge_status = ConvergenceStatus(self.fsi_convergence_settings)
         fsi_converge_status.print_header(dynamic=False)
 
-        _, struct_case, aero_case, _, _ = jax.lax.while_loop(
+        _, struct_case, aero_case, _, _ = eqxi.while_loop(
             lambda args_: ~args_[0].get_status(),
             lambda args_: _convergence_loop(*args_),  # type: ignore
             (
@@ -300,6 +300,8 @@ class BaseCoupledAeroelastic:
                 jnp.array(fsi_relaxation),
                 jnp.zeros((self.structure.n_nodes, 6)),
             ),
+            max_steps=self.fsi_convergence_settings.max_n_iter,
+            kind="bounded",
         )
 
         fsi_converge_status.print_line(dynamic=False)

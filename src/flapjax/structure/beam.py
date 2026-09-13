@@ -5,6 +5,7 @@ from collections.abc import Sequence
 from functools import partial
 from typing import TYPE_CHECKING, ClassVar, Literal, cast, overload
 
+import equinox.internal as eqxi
 import jax
 from jax import Array, vmap
 from jax import numpy as jnp
@@ -2187,7 +2188,7 @@ class BaseBeamStructure:
             :param hg_init: Initial coordinates, ``(n_nodes, 4, 4)``.
             :return: Converged coordinates, ``(n_nodes, 4, 4)``.
             """
-            _, convergence_status, hg_solve = jax.lax.while_loop(
+            _, convergence_status, hg_solve = eqxi.while_loop(
                 lambda args_: ~args_[1].get_status(),
                 lambda args_: _update(*args_),
                 (
@@ -2197,6 +2198,8 @@ class BaseBeamStructure:
                     ),
                     hg_init,
                 ),
+                max_steps=self.struct_convergence_settings.max_n_iter,
+                kind="bounded",
             )
 
             if map_verbosity_level(get_verbosity()) >= map_verbosity_level("normal"):
@@ -2619,7 +2622,7 @@ class BaseBeamStructure:
                 cs_ang_nm1 = {k: v[i_ts - 1] for k, v in cs_ang_t_.items()}
                 cs_ang_n = {k: v[i_ts] for k, v in cs_ang_t_.items()}
                 cs_vel_n = {k: v[i_ts] for k, v in cs_vel_t_.items()}
-
+                assert fsi_convergence_status is not None
                 (
                     _,
                     struct_sol,
@@ -2629,7 +2632,7 @@ class BaseBeamStructure:
                     phi_alpha,
                     q_alpha,
                     *_,
-                ) = jax.lax.while_loop(
+                ) = eqxi.while_loop(
                     lambda args_: ~cast(ConvergenceStatus, args_[4]).get_status(),
                     lambda args_: fsi_convergence_loop(*args_),
                     (
@@ -2647,6 +2650,8 @@ class BaseBeamStructure:
                         cs_ang_nm1,
                         cs_vel_n,
                     ),
+                    max_steps=fsi_convergence_status.convergence_settings.max_n_iter,
+                    kind="bounded",
                 )
 
             else:
@@ -2939,7 +2944,7 @@ class BaseBeamStructure:
             struct_convergence_status_.reset_status()
 
             _, _, struct_convergence_status_, hg_solve, phi_alpha, q_alpha, _, _ = (
-                jax.lax.while_loop(
+                eqxi.while_loop(
                     lambda args_: ~args_[2].get_status(),
                     lambda args_: _update(*args_),
                     (
@@ -2952,6 +2957,8 @@ class BaseBeamStructure:
                         f_ext_aero_steps,
                         thrust_alpha,
                     ),
+                    max_steps=self.struct_convergence_settings.max_n_iter,
+                    kind="bounded",
                 )
             )
 

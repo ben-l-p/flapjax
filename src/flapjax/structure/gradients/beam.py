@@ -120,9 +120,11 @@ class BeamStructure(BaseBeamStructure):
             if dv_full.f_ext_follower is not None
             else None,
             f_ext_dead_n=f_ext_dead_i,
-            thrust_n={k: v[i_ts] for k, v in dv.thrust_t.items()}
+            thrust_n={k: (v[i_ts] if v.ndim > 0 else v) for k, v in dv.thrust_t.items()}
             if dv.thrust_t is not None
-            else {k: v[i_ts] for k, v in dv_full.thrust_t.items()},
+            else {
+                k: (v[i_ts] if v.ndim > 0 else v) for k, v in dv_full.thrust_t.items()
+            },
             dynamic=True,
             m_t=m_t,
             c_l=self._make_c_t(d=d, d_dot=self._make_d_dot(p_d=p_d, v=q.v), v=q.v)[0],

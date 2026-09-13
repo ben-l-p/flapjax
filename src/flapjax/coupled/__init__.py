@@ -16,6 +16,11 @@ from flapjax.coupled.linear.data_structures import (
 )
 from flapjax.coupled.linear.linear_coupled import LinearCoupled
 from flapjax.coupled.linear_aero_coupled import NonlinearBeamLinearAero
+from flapjax.coupled.linear_gradients.frf import (
+    FRFObjective,
+    compute_gust_frf,
+    gust_frf_adjoint,
+)
 from flapjax.coupled.linear_gradients.stability import (
     StabilityObjective,
     stability_adjoint,

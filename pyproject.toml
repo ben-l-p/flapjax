@@ -24,6 +24,7 @@ dependencies = [
     "vtk>=9.4",
     "scipy>=1.13",
     "matplotlib>=3.8.4",
+    "equinox>=0.13",
 ]
 
 [project.urls]

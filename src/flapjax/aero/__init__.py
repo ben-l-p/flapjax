@@ -17,3 +17,21 @@ from flapjax.aero.linear.data_structures import (
 from flapjax.aero.linear.linear_uvlm import LinearUVLM
 from flapjax.aero.utils import add_control_surface, make_rectangular_grid
 from flapjax.aero.uvlm import UVLM
+
+__all__ = [
+    "UVLM",
+    "AeroCase",
+    "AeroFullStates",
+    "AeroGradsToCompute",
+    "AeroInputUnflattened",
+    "AeroJacobianApproximations",
+    "AeroLinearResult",
+    "AeroOutputUnflattened",
+    "AeroStateUnflattened",
+    "ConstantFlowField",
+    "GridDiscretisation",
+    "LinearUVLM",
+    "OneMinusCosineFlowField",
+    "add_control_surface",
+    "make_rectangular_grid",
+]

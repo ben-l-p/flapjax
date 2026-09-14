@@ -25,3 +25,23 @@ from flapjax.coupled.linear_gradients.stability import (
     StabilityObjective,
     stability_adjoint,
 )
+
+__all__ = [
+    "AeroelasticCase",
+    "AeroelasticDesignVariables",
+    "AeroelasticFullStates",
+    "AeroelasticGradsToCompute",
+    "AeroelasticInputUnflattened",
+    "AeroelasticLinearResult",
+    "AeroelasticOutputUnflattened",
+    "AeroelasticStateUnflattened",
+    "CoupledAeroelastic",
+    "FRFObjective",
+    "LinearCoupled",
+    "NonlinearBeamLinearAero",
+    "StabilityObjective",
+    "TrimVariables",
+    "compute_gust_frf",
+    "gust_frf_adjoint",
+    "stability_adjoint",
+]

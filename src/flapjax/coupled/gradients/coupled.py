@@ -120,7 +120,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         )  # (n_nodes, 4, 4)
 
         # evaluate aero forcing and project to beam nodes
-        aero_sol = inner_case.aero.solve_static(hg=hg, t=t, horseshoe=use_horseshoe)
+        aero_sol = inner_case.aero.static_solve(hg=hg, t=t, horseshoe=use_horseshoe)
         f_ext_aero_global = aero_sol.project_forcing_to_beam(
             i_ts=0,
             rmat=hg[:, :3, :3],

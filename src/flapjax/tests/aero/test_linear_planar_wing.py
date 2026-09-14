@@ -65,7 +65,7 @@ class TestLinearAero:
             gamma_dot_relaxation=1.0,
         )
         uvlm.set_design_variables(cls.dt, flowfield, x_grid, hg)
-        case = uvlm.solve_static()
+        case = uvlm.static_solve()
 
         return uvlm, case, hg
 
@@ -93,7 +93,7 @@ class TestLinearAero:
         hg_dot_t = hg_dot_t.at[:, :, 2, 3].set(z_dot_t[:, None])
 
         # nonlinear case
-        dynamic_case = uvlm.solve_prescribed_dynamic(
+        dynamic_case = uvlm.prescribed_dynamic_solve(
             init_case=static_case, hg_t=hg_t, hg_dot_t=hg_dot_t
         )
         if plot:
@@ -178,7 +178,7 @@ class TestLinearAero:
         hg_dot_t = hg_dot_t.at[:, :, 2, 0].set(-alpha_dot_t[:, None])
 
         # nonlinear case
-        dynamic_case = uvlm.solve_prescribed_dynamic(
+        dynamic_case = uvlm.prescribed_dynamic_solve(
             init_case=static_case, hg_t=hg_t, hg_dot_t=hg_dot_t
         )
         if plot:
@@ -265,7 +265,7 @@ class TestLinearAero:
         hg_dot_t = hg_dot_t.at[:, :, 2, 0].set(-alpha_dot_t[:, None])
 
         # nonlinear case
-        dynamic_case = uvlm.solve_prescribed_dynamic(
+        dynamic_case = uvlm.prescribed_dynamic_solve(
             init_case=static_case, hg_t=hg_t, hg_dot_t=hg_dot_t
         )
         if plot:
@@ -334,7 +334,7 @@ class TestLinearAero:
         hg_dot_t = jnp.zeros_like(hg_t)
 
         # nonlinear case
-        dynamic_case = uvlm.solve_prescribed_dynamic(
+        dynamic_case = uvlm.prescribed_dynamic_solve(
             init_case=static_case, hg_t=hg_t, hg_dot_t=hg_dot_t
         )
         if plot:

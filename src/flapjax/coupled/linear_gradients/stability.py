@@ -41,7 +41,7 @@ def build_reference_case(
     """
     inner = system.case_from_dv(dv)
     hg = inner.structure.compute_hg_from_varphi(varphi=varphi)
-    aero_sol = inner.aero.solve_static(
+    aero_sol = inner.aero.static_solve(
         t=case.aero.t,
         hg=hg,
         horseshoe=False,

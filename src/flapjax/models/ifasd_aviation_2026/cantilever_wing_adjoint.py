@@ -16,7 +16,7 @@ from flapjax.utils.data_structures import ConvergenceSettings
 
 if __name__ == "__main__":
     r"""
-    Obtain the time history of the cantilever wing case, and the gradient of the wing root bending moment with respect 
+    Obtain the time history of the cantilever wing case, and the gradient of the wing root bending moment with respect
     to some structural and aerodynamic properties. This does not verify with finite differences.
     """
     # problem discretisation

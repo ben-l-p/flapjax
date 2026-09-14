@@ -309,9 +309,7 @@ class UVLM:
         self.polar_circulation_scale: float = float(polar_circulation_scale)
 
         # mirror definitions
-        if (mirror_point is None and mirror_normal is not None) or (
-            mirror_point is not None and mirror_normal is None
-        ):
+        if (mirror_point is None) != (mirror_normal is None):
             raise ValueError(
                 "Both mirror_point and mirror_normal must be provided to apply mirroring, or both must be None to "
                 "apply no mirroring."
@@ -390,7 +388,7 @@ class UVLM:
         flowfield: FlowField,
         zeta_b0: ArrayList | Sequence[Array] | Array,
         hg0: Array,
-        delta_w: Sequence[Array | None] | None | Array = None,
+        delta_w: Sequence[Array | None] | Array | None = None,
         reference_cs_angles: dict[str, Array] | None = None,
     ) -> None:
         r"""
@@ -642,6 +640,19 @@ class UVLM:
             gamma_w_slices.append(slice(cnt_w, cnt_w + n_w))
             cnt_w += n_w
         return tuple(gamma_b_slices), tuple(gamma_w_slices)
+
+    def _vec_to_gamma_b_list(self, vec: Array) -> ArrayList:
+        r"""
+        Reshape a flat bound-circulation vector into a per-surface ArrayList.
+        :param vec: Flat circulation vector, ``(gamma_b_tot, )``.
+        :return: Per-surface circulation strengths, ``(n_surf,)(m, n)``.
+        """
+        return ArrayList(
+            [
+                vec[self.gamma_b_slice[i]].reshape(self.grid_disc[i].m, self.grid_disc[i].n)
+                for i in range(self.n_surf)
+            ]
+        )
 
     def _make_surf_horseshoe_wake(
         self, zeta_b: Array, i_surf: int, horseshoe_length: float
@@ -986,14 +997,7 @@ class UVLM:
         v_bc_n = ArrayList.einsum("ijk,ijk->ij", v_bc_n, nc_n)  # (c_tot, )
 
         gamma_b_vec_n = jnp.linalg.solve(aic_solve, -v_bc_n.ravel())
-
-        gamma_b_n = ArrayList([])
-        for i_surf in range(self.n_surf):
-            gamma_b_n.append(
-                gamma_b_vec_n[self.gamma_b_slice[i_surf]].reshape(
-                    self.grid_disc[i_surf].m, self.grid_disc[i_surf].n
-                )
-            )
+        gamma_b_n = self._vec_to_gamma_b_list(gamma_b_vec_n)
 
         def _static_wake_from_gamma_b(gamma_b: ArrayList) -> ArrayList:
             return ArrayList(
@@ -1286,7 +1290,7 @@ class UVLM:
             batch_size=self.batch_size,
         )
 
-    def solve_static(
+    def static_solve(
         self,
         hg: Array | None = None,
         t: Array | float = 0.0,
@@ -1335,7 +1339,7 @@ class UVLM:
 
         return out_case
 
-    def solve_prescribed_dynamic(
+    def prescribed_dynamic_solve(
         self,
         init_case: AeroCase,
         hg_t: Array,
@@ -1635,15 +1639,7 @@ class UVLM:
         v_bc_n = ArrayList.einsum("ijk,ijk->ij", v_bc_n, nc_n)  # (c_tot, )
 
         gamma_b_vec_n = jnp.linalg.solve(aic_solve, -v_bc_n.ravel())
-
-        # assemble back to surface ArrayList
-        gamma_b_nm1_update = ArrayList([])
-        for i_surf in range(inner_case.n_surf):
-            gamma_b_nm1_update.append(
-                gamma_b_vec_n[inner_case.gamma_b_slice[i_surf]].reshape(
-                    inner_case.grid_disc[i_surf].m, inner_case.grid_disc[i_surf].n
-                )
-            )
+        gamma_b_nm1_update = self._vec_to_gamma_b_list(gamma_b_vec_n)
 
         return (gamma_b_nm1_update - gamma_b_n).ravel()
 

@@ -45,7 +45,7 @@ class TestMirroredWing:
         uvlm_mirror.set_design_variables(
             dt=dt, flowfield=flowfield, zeta_b0=x_grid, hg0=hg
         )
-        sol_mirror = uvlm_mirror.solve_static()
+        sol_mirror = uvlm_mirror.static_solve()
 
         # full wing
         disc = GridDiscretisation(m=m, n=2 * n, m_star=m_star)
@@ -66,7 +66,7 @@ class TestMirroredWing:
         uvlm_full.set_design_variables(
             dt=dt, flowfield=flowfield, zeta_b0=x_grid, hg0=hg
         )
-        sol_full = uvlm_full.solve_static()
+        sol_full = uvlm_full.static_solve()
 
         # compare
         assert jnp.allclose(sol_mirror.gamma_b[0], sol_full.gamma_b[0][:, n:]), (

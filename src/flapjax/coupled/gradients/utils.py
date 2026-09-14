@@ -53,7 +53,7 @@ def parse_groups(
                     )
                 groups.append(tuple(item))
             else:
-                raise ValueError(  # noqa: TRY004 — match the ValueError style used by the surrounding input validation
+                raise ValueError(
                     f"{arg_name} entries must be a string or sequence of strings. Got {type(item)}."
                 )
         return groups

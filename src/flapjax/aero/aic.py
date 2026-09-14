@@ -14,7 +14,7 @@ def compute_aic_grid(
     zeta: Array,
     kernel: KernelFunction,
     batch_size: int | None,
-):
+) -> Array:
     """
     Compute the aerodynamic influence coefficient (AIC) across grids of points. When normal is provided, fuses the dot
     product inside each map step so the trailing 3-component axis is never accumulated, saving memory.

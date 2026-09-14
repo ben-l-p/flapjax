@@ -9,8 +9,8 @@ from pathlib import Path
 
 """
 Obtain data on evaluation time of the primal, matrix-free and dense adjoint problems, and how these change with problem
-size. This creates plots for the time per step of these problems for just the time series evaluation, omitting pre- and 
-post-processing steps which have fixed cost irrespective of number of time steps. By default this script is chosen to 
+size. This creates plots for the time per step of these problems for just the time series evaluation, omitting pre- and
+post-processing steps which have fixed cost irrespective of number of time steps. By default this script is chosen to
 run on one core only. This may take ~1 hour to run, as the compile cost is rather large for so many different cases, as
 well as the large cases taking in the order of seconds to complete a single step.
 """

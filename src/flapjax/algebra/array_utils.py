@@ -188,7 +188,7 @@ class ArrayList:
     def __getitem__(self, idx: int) -> Array:
         return self.data[idx]
 
-    def __setitem__(self, idx: int, val: Array):
+    def __setitem__(self, idx: int, val: Array) -> None:
         self.data[idx] = val
 
     def __len__(self) -> int:
@@ -309,16 +309,16 @@ class ArrayListShape:
         self.n_arrays: int = len(self.shapes)
         self.sizes: Sequence[int] = [prod(shape) for shape in self.shapes]
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[tuple[int, ...]]:
         return iter(self.shapes)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self.n_arrays
 
-    def __getitem__(self, i):
+    def __getitem__(self, i: int) -> tuple[int, ...]:
         return self.shapes[i]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"ArrayListShape(n_arrays={self.n_arrays}), shapes={self.shapes}"
 
     def total_size(self) -> int:

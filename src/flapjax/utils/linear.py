@@ -619,7 +619,7 @@ class LinearModel[
                     out[name] = jnp.zeros(entry.shapes)
                 elif isinstance(entry.slices, Sequence):
                     arrs = ArrayList([])
-                    for i_surf, shape in enumerate(entry.shapes):
+                    for shape in entry.shapes:
                         arrs.append(jnp.zeros(shape))
                     out[name] = arrs
         return out
@@ -661,7 +661,7 @@ class LinearModel[
         elif isinstance(component.shapes, ArrayListShape):
             arrs = ArrayList([])
             cnt = 0
-            for i_surf, shape in enumerate(component.shapes):
+            for shape in component.shapes:
                 size = prod(shape)
                 arrs.append(vec[cnt : cnt + size].reshape(shape))
             return arrs

@@ -32,14 +32,14 @@ class TestRotInvariance:
         )
 
         cases = []
-        for i_u_inf, u_inf in enumerate(
+        for _i_u_inf, u_inf in enumerate(
             [jnp.array((0.0, 10.0, 3.0)), jnp.array((10.0, 0.0, 3.0))]
         ):
             flowfield = ConstantFlowField(u_inf, 1.225, True)
             uvlm.set_design_variables(
                 dt=1.0, flowfield=flowfield, zeta_b0=x_grid, hg0=hg
             )
-            cases.append(uvlm.solve_static())
+            cases.append(uvlm.static_solve())
 
         if not jnp.allclose(cases[0].gamma_b[0], cases[1].gamma_b[0]):
             raise ValueError(

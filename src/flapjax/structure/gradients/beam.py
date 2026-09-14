@@ -314,11 +314,9 @@ class BeamStructure(BaseBeamStructure):
         a_n: Array,
         solve_dofs: tuple[int, ...],
     ) -> Array:
-        varphi_nm1 = varphi_nm1.reshape(-1, 6)
-        varphi_n = varphi_n.reshape(-1, 6)
-        v_nm1 = v_nm1.reshape(-1, 6)
-        a_nm1 = a_nm1.reshape(-1, 6)
-        a_n = a_n.reshape(-1, 6)
+        varphi_nm1, varphi_n, v_nm1, a_nm1, a_n = (
+            a.reshape(-1, 6) for a in (varphi_nm1, varphi_n, v_nm1, a_nm1, a_n)
+        )
 
         # time integrator parameters
         dt = self.time_integrator.dt
@@ -390,12 +388,9 @@ class BeamStructure(BaseBeamStructure):
         solve_dofs: tuple[int, ...],
         approx_grads: bool,
     ) -> Array:
-        varphi_nm1 = varphi_nm1.reshape(-1, 6)
-        varphi_n = varphi_n.reshape(-1, 6)
-        v_nm1 = v_nm1.reshape(-1, 6)
-        v_n = v_n.reshape(-1, 6)
-        v_dot_nm1 = v_dot_nm1.reshape(-1, 6)
-        v_dot_n = v_dot_n.reshape(-1, 6)
+        varphi_nm1, varphi_n, v_nm1, v_n, v_dot_nm1, v_dot_n = (
+            a.reshape(-1, 6) for a in (varphi_nm1, varphi_n, v_nm1, v_n, v_dot_nm1, v_dot_n)
+        )
         f_aero_nm1 = f_aero_nm1.reshape(-1, 6) if f_aero_nm1 is not None else None
         f_aero_n = f_aero_n.reshape(-1, 6) if f_aero_n is not None else None
 

@@ -16,3 +16,18 @@ from flapjax.structure.linear.data_structures import (
     StructureStateUnflattened,
 )
 from flapjax.structure.linear.linear_beam import LinearBeam
+
+__all__ = [
+    "BeamStructure",
+    "LinearBeam",
+    "OptionalJacobians",
+    "StructureCase",
+    "StructureDesignVariables",
+    "StructureFullStates",
+    "StructureGradsToCompute",
+    "StructureInputUnflattened",
+    "StructureJacobianApproximations",
+    "StructureLinearResult",
+    "StructureOutputUnflattened",
+    "StructureStateUnflattened",
+]

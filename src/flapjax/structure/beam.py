@@ -1058,7 +1058,7 @@ class BaseBeamStructure:
                 .set(modes[:n_plot_vtu, :])
             )
 
-            for i_mode in range(n_plot_vtu):
+            for _i_mode in range(n_plot_vtu):
                 plot_modes_vtu(
                     reference=case,
                     directory=vtu_directory,

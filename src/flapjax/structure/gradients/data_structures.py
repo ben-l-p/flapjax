@@ -281,7 +281,7 @@ class StructureDesignVariables(DesignVariables):
             cell_vector_data=cell_vector_data,
         )
 
-    def to_dict(self) -> dict[str, Array | None | dict[str, Array]]:
+    def to_dict(self) -> dict[str, Array | dict[str, Array] | None]:
         return {
             "x0": self.x0,
             "orientation_euler": self.orientation_euler,

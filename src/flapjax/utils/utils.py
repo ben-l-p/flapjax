@@ -84,7 +84,7 @@ def pytree_clone[V](obj: V) -> V:
     return tree_util.tree_unflatten(treedef, leaves)
 
 
-def shallow_as_dict(obj):
+def shallow_as_dict(obj: Any) -> dict[str, Any]:
     if not is_dataclass(obj):
         raise TypeError("object must be a dataclass")
     return {f.name: getattr(obj, f.name) for f in fields(obj)}

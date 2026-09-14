@@ -156,7 +156,7 @@ class BaseCoupledAeroelastic:
                 use_f_aero=True,
                 prescribed_dofs=prescribed_dofs,
             ),
-            aero=self.aero.solve_static(
+            aero=self.aero.static_solve(
                 t=t_init, hg=self.structure.hg0, horseshoe=horseshoe
             ),
         )
@@ -269,7 +269,7 @@ class BaseCoupledAeroelastic:
                 total_force=total_f,
             )
 
-            aero_case_np1 = self.aero.solve_static(
+            aero_case_np1 = self.aero.static_solve(
                 t=t,
                 hg=struct_case_np1.hg,
                 horseshoe=horseshoe,
@@ -296,7 +296,7 @@ class BaseCoupledAeroelastic:
                     use_f_aero=True,
                     prescribed_dofs=prescribed_dofs,
                 ),
-                self.aero.solve_static(t=t, hg=self.structure.hg0, horseshoe=horseshoe),
+                self.aero.static_solve(t=t, hg=self.structure.hg0, horseshoe=horseshoe),
                 jnp.array(fsi_relaxation),
                 jnp.zeros((self.structure.n_nodes, 6)),
             ),

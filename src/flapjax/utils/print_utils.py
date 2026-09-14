@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Generator
 from contextlib import contextmanager
 from enum import Enum
 from typing import Literal
@@ -49,7 +50,7 @@ def get_verbosity() -> VerbosityLevel:
 
 
 @contextmanager
-def verbosity(level: VerbosityLevel):
+def verbosity(level: VerbosityLevel) -> Generator[None, None, None]:
     r"""
     Context manager to temporarily change the verbosity level.
     :param level: Custom verbosity to use in context.

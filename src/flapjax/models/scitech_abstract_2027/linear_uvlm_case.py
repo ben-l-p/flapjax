@@ -76,7 +76,7 @@ if __name__ == "__main__":
         delta_w=delta_w,
     )
     # solve static case
-    case = nonlinear_model.solve_static()
+    case = nonlinear_model.static_solve()
 
     # heaving motion
     freq = 6.0  # Hz
@@ -94,10 +94,10 @@ if __name__ == "__main__":
     hg_dot_t = jnp.zeros_like(hg_t)
     hg_dot_t = hg_dot_t.at[:, :, 2, 3].set(z_dot_t[:, None])
 
-    static_case = nonlinear_model.solve_static()
+    static_case = nonlinear_model.static_solve()
 
     # nonlinear case
-    nonlinear_case = nonlinear_model.solve_prescribed_dynamic(
+    nonlinear_case = nonlinear_model.prescribed_dynamic_solve(
         init_case=static_case,
         hg_t=hg_t,
         hg_dot_t=hg_dot_t,

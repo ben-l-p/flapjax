@@ -231,8 +231,8 @@ class AeroDesignVariables(DesignVariables):
             str,
             tuple[int, ...]
             | ArrayListShape
-            | None
-            | dict[str, tuple[int, ...] | ArrayListShape],
+            | dict[str, tuple[int, ...] | ArrayListShape]
+            | None,
         ] = self.get_shapes()
         self.mapping, self.n_x = self.make_index_mapping()
 

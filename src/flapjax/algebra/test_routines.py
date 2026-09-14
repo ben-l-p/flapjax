@@ -205,7 +205,7 @@ def k_t_expected(coeffs: Array | Sequence[float], length: Array | float) -> Arra
     if isinstance(length, Array) and not jnp.isscalar(length):
         raise ValueError("Length l0 must be a scalar value")
 
-    eax, gay, gaz, gjx, eiy, eiz = coeffs
+    eax, *_, gjx, eiy, eiz = coeffs
 
     k_upper_left = jnp.array(
         [

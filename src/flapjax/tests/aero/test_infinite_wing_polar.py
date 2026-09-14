@@ -56,7 +56,7 @@ class TestPseudoInfiniteWing:
         """
         alpha_deg = 3.0
         uvlm, alpha_rad, *_ = _build_pseudo_infinite_wing(alpha_deg=alpha_deg)
-        sol = uvlm.solve_static(horseshoe=True)
+        sol = uvlm.static_solve(horseshoe=True)
 
         alpha_strip = sol.alpha[0]  # (n_strip, )
 
@@ -86,7 +86,7 @@ class TestPseudoInfiniteWing:
         n_strip = uvlm.grid_disc[0].n
         polars: list[list[PolarFunction] | None] = [[polar_half] * n_strip]
         uvlm, *_ = _build_pseudo_infinite_wing(alpha_deg=alpha_deg, polars=polars)
-        sol = uvlm.solve_static(horseshoe=True)
+        sol = uvlm.static_solve(horseshoe=True)
 
         measured_force = jnp.sum(
             sol.f_steady[0] * jnp.array((-jnp.sin(alpha_rad), 0.0, jnp.cos(alpha_rad)))
@@ -117,14 +117,14 @@ class TestPseudoInfiniteWing:
         n_strip = uvlm_ref.grid_disc[0].n
         polars: list[list[PolarFunction] | None] = [[polar_half] * n_strip]
 
-        sol_ref = uvlm_ref.solve_static(horseshoe=True)
+        sol_ref = uvlm_ref.static_solve(horseshoe=True)
 
         uvlm_corr, *_ = _build_pseudo_infinite_wing(
             alpha_deg=alpha_deg,
             polars=polars,
             polar_circulation_scale=1.0,
         )
-        sol_corr = uvlm_corr.solve_static(horseshoe=True)
+        sol_corr = uvlm_corr.static_solve(horseshoe=True)
 
         # scale should be half
         gamma_b_ratio = sol_corr.gamma_b[0] / sol_ref.gamma_b[0]
@@ -156,7 +156,7 @@ class TestPseudoInfiniteWing:
         n_strip = uvlm.grid_disc[0].n
         polars: list[list[PolarFunction] | None] = [[polar_drag_only] * n_strip]
         uvlm, *_ = _build_pseudo_infinite_wing(alpha_deg=alpha_deg, polars=polars)
-        sol = uvlm.solve_static(horseshoe=True)
+        sol = uvlm.static_solve(horseshoe=True)
 
         e_drag = jnp.array((jnp.cos(alpha_rad), 0.0, jnp.sin(alpha_rad)))
         drag_polar = jnp.sum(sol.f_steady[0] * e_drag)

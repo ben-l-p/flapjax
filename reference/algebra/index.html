@@ -13741,7 +13741,7 @@ the angle approaches zero.</p>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">Array</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">jnp</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Length l0 must be a scalar value"</span><span class="p">)</span>
 
-    <span class="n">eax</span><span class="p">,</span> <span class="n">gay</span><span class="p">,</span> <span class="n">gaz</span><span class="p">,</span> <span class="n">gjx</span><span class="p">,</span> <span class="n">eiy</span><span class="p">,</span> <span class="n">eiz</span> <span class="o">=</span> <span class="n">coeffs</span>
+    <span class="n">eax</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">gjx</span><span class="p">,</span> <span class="n">eiy</span><span class="p">,</span> <span class="n">eiz</span> <span class="o">=</span> <span class="n">coeffs</span>
 
     <span class="n">k_upper_left</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
         <span class="p">[</span>

@@ -2685,7 +2685,7 @@ swept_models = [generate_swept_pazy_wing(flowfield=ConstantFlowField(
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">freqs</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">marker</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Tip displacement, [m]"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Mode frequency [Hz]"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Mode natural frequency evolution with displacement"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Mode natural frequency evolution with displacement"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.02</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">borderaxespad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">110.0</span><span class="p">)</span>
@@ -2702,7 +2702,7 @@ for tip_z, freqs, name, marker in zip(tip_z_all,
     ax.plot(xs, freqs.ravel(), marker, markersize=3, label=name)
 ax.set_xlabel("Tip displacement, [m]")
 ax.set_ylabel("Mode frequency [Hz]")
-ax.set_title(f"Mode natural frequency evolution with displacement")
+ax.set_title("Mode natural frequency evolution with displacement")
 ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1.0), borderaxespad=0.0)
 ax.set_xlim(0.0, 0.18)
 ax.set_ylim(0.0, 110.0)

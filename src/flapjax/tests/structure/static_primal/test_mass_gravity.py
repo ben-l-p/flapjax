@@ -1,45 +1,54 @@
+import pytest
 from jax import numpy as jnp
 
 from flapjax.algebra.se3 import exp_se3
 from flapjax.structure import BeamStructure
 
+LENGTH = jnp.array(2.5)
+M_BAR = 10.0
+K_CS = jnp.eye(6) * 1e6
+M_CS = jnp.zeros((6, 6)).at[:3, :3].set(M_BAR * jnp.eye(3))
 
-class TestTwoNodeXGravityZ:
+GRAVITY_PARAMS = [
+    pytest.param(0, jnp.array([[0.0, 1.0, 0.0]]), jnp.array([0.0, 0.0, -9.81]), id="x_beam-z_gravity"),
+    pytest.param(0, jnp.array([[0.0, 1.0, 0.0]]), jnp.array([-9.81, 0.0, 0.0]), id="x_beam-x_gravity"),
+    pytest.param(0, jnp.array([[0.0, 1.0, 0.0]]), jnp.array([0.0, -9.81, 0.0]), id="x_beam-y_gravity"),
+    pytest.param(1, jnp.array([[0.0, 0.0, 1.0]]), jnp.array([0.0, 0.0, -9.81]), id="y_beam-z_gravity"),
+    pytest.param(1, jnp.array([[0.0, 0.0, 1.0]]), jnp.array([-9.81, 0.0, 0.0]), id="y_beam-x_gravity"),
+    pytest.param(1, jnp.array([[0.0, 0.0, 1.0]]), jnp.array([0.0, -9.81, 0.0]), id="y_beam-y_gravity"),
+    pytest.param(2, jnp.array([[1.0, 0.0, 0.0]]), jnp.array([0.0, 0.0, -9.81]), id="z_beam-z_gravity"),
+    pytest.param(2, jnp.array([[1.0, 0.0, 0.0]]), jnp.array([-9.81, 0.0, 0.0]), id="z_beam-x_gravity"),
+    pytest.param(2, jnp.array([[1.0, 0.0, 0.0]]), jnp.array([0.0, -9.81, 0.0]), id="z_beam-y_gravity"),
+]
+
+
+def _beam(direction_index, y_vector, g_vec):
+    coords = jnp.zeros((2, 3)).at[1, direction_index].set(LENGTH)
+    struct = BeamStructure(
+        num_nodes=2,
+        connectivity=jnp.array([[0, 1]]),
+        y_vector=y_vector,
+        gravity=g_vec,
+    )
+    struct.set_design_variables(coords, K_CS, M_CS)
+    return struct, coords
+
+
+@pytest.mark.parametrize("direction_index, y_vector, g_vec", GRAVITY_PARAMS)
+class TestTwoNodeGravity:
     r"""
     Test the strains and forces for a two-node beam element with prescribed displacements
     """
 
-    beam_direction = "x_target"
-    direction_index = 0
-    y_vector = jnp.array([[0.0, 1.0, 0.0]])
-
-    g_vec = jnp.array([0.0, 0.0, -9.81])  # gravity vector
-
-    length = jnp.array(2.5)
-    coords = jnp.zeros((2, 3)).at[1, direction_index].set(length)
-
-    m_bar = 10.0  # mass per unit b_ref
-
-    k_cs = jnp.eye(6) * 1e6  # stiffness matrix
-    m_cs = jnp.zeros((6, 6)).at[:3, :3].set(m_bar * jnp.eye(3))
-
-    @classmethod
-    def test_total_mass(cls):
+    def test_total_mass(self, direction_index, y_vector, g_vec):
         r"""
         Ensure total mass of beam is correct
         """
+        struct, coords = _beam(direction_index, y_vector, g_vec)
 
-        cls.struct = BeamStructure(
-            num_nodes=2,
-            connectivity=jnp.array([[0, 1]]),
-            y_vector=cls.y_vector,
-            gravity=cls.g_vec,
-        )
-        cls.struct.set_design_variables(cls.coords, cls.k_cs, cls.m_cs)
+        m_t = struct.make_m_t(struct.d0)
 
-        m_t = cls.struct.make_m_t(cls.struct.d0)
-
-        expected_mass = cls.m_bar * cls.length
+        expected_mass = M_BAR * LENGTH
 
         # consider all three directions, and divide by three
         matrix_mass = jnp.sum(
@@ -52,102 +61,47 @@ class TestTwoNodeXGravityZ:
             f"Total mass from mass matrix {matrix_mass} does not match expected {expected_mass}"
         )
 
-    @classmethod
-    def test_gravity_forces(cls):
+    def test_gravity_forces(self, direction_index, y_vector, g_vec):
         r"""
         Ensure weight of beam is correct
         """
+        struct, coords = _beam(direction_index, y_vector, g_vec)
 
-        cls.struct = BeamStructure(
-            num_nodes=2,
-            connectivity=jnp.array([[0, 1]]),
-            y_vector=cls.y_vector,
-            gravity=cls.g_vec,
-        )
-        cls.struct.set_design_variables(cls.coords, cls.k_cs, cls.m_cs)
-        f_g = cls.struct.assemble_vector_from_entries(
-            cls.struct._make_f_grav(
-                cls.struct.make_m_t(cls.struct.d0), cls.struct.hg0[:, :3, :3]
+        f_g = struct.assemble_vector_from_entries(
+            struct._make_f_grav(
+                struct.make_m_t(struct.d0), struct.hg0[:, :3, :3]
             )
         )
 
-        expected_weight = cls.m_bar * cls.length * cls.g_vec
+        expected_weight = M_BAR * LENGTH * g_vec
         matrix_weight = (
-            cls.struct.hg0[0, :3, :3] @ f_g[:3] + cls.struct.hg0[1, :3, :3] @ f_g[6:9]
+            struct.hg0[0, :3, :3] @ f_g[:3] + struct.hg0[1, :3, :3] @ f_g[6:9]
         )
 
         assert jnp.allclose(matrix_weight, expected_weight), (
             f"""Weight from gravity forces {matrix_weight} does not match expected {expected_weight}"""
         )
 
-    @classmethod
-    def test_gravity_forces_deformed(cls):
+    def test_gravity_forces_deformed(self, direction_index, y_vector, g_vec):
         r"""
         Ensure weight of beam is correct
         """
-
-        cls.struct = BeamStructure(
-            num_nodes=2,
-            connectivity=jnp.array([[0, 1]]),
-            y_vector=cls.y_vector,
-            gravity=cls.g_vec,
-        )
-        cls.struct.set_design_variables(cls.coords, cls.k_cs, cls.m_cs)
+        struct, coords = _beam(direction_index, y_vector, g_vec)
 
         # make beam curved around local y
-        d = jnp.array((cls.length, 0.0, 0.0, 0.0, jnp.pi / 2.0, 0.0))
-        ha0 = jnp.eye(4).at[:3, :3].set(cls.struct.o0[0, ...])
+        d = jnp.array((LENGTH, 0.0, 0.0, 0.0, jnp.pi / 2.0, 0.0))
+        ha0 = jnp.eye(4).at[:3, :3].set(struct.o0[0, ...])
         hb = ha0 @ exp_se3(d) @ ha0.T
 
         hg = jnp.stack((jnp.eye(4), hb), axis=0)
 
-        f_g = cls.struct.assemble_vector_from_entries(
-            cls.struct._make_f_grav(cls.struct.make_m_t(d[None, :]), hg[:, :3, :3])
+        f_g = struct.assemble_vector_from_entries(
+            struct._make_f_grav(struct.make_m_t(d[None, :]), hg[:, :3, :3])
         )
 
-        expected_weight = cls.m_bar * cls.length * cls.g_vec
+        expected_weight = M_BAR * LENGTH * g_vec
         matrix_weight = hg[0, :3, :3] @ f_g[:3] + hg[1, :3, :3] @ f_g[6:9]
 
         assert jnp.allclose(matrix_weight, expected_weight), (
             f"""Weight from gravity forces {matrix_weight} does not match expected {expected_weight}"""
         )
-
-
-class TestTwoNodeXGravityX(TestTwoNodeXGravityZ):
-    g_vec = jnp.array([-9.81, 0.0, 0.0])
-
-
-class TestTwoNodeXGravityY(TestTwoNodeXGravityZ):
-    g_vec = jnp.array([0.0, -9.81, 0.0])
-
-
-class TestTwoNodeYGravityZ(TestTwoNodeXGravityZ):
-    beam_direction = "y"
-    direction_index = 1
-    y_vector = jnp.array([[0.0, 0.0, 1.0]])
-
-    coords = jnp.zeros((2, 3)).at[1, direction_index].set(TestTwoNodeXGravityZ.length)
-
-
-class TestTwoNodeYGravityX(TestTwoNodeYGravityZ):
-    g_vec = jnp.array([-9.81, 0.0, 0.0])
-
-
-class TestTwoNodeYGravityY(TestTwoNodeYGravityZ):
-    g_vec = jnp.array([0.0, -9.81, 0.0])
-
-
-class TestTwoNodeZGravityZ(TestTwoNodeXGravityZ):
-    beam_direction = "z"
-    direction_index = 2
-    y_vector = jnp.array([[1.0, 0.0, 0.0]])
-
-    coords = jnp.zeros((2, 3)).at[1, direction_index].set(TestTwoNodeXGravityZ.length)
-
-
-class TestTwoNodeZGravityX(TestTwoNodeZGravityZ):
-    g_vec = jnp.array([-9.81, 0.0, 0.0])
-
-
-class TestTwoNodeZGravityY(TestTwoNodeZGravityZ):
-    g_vec = jnp.array([0.0, -9.81, 0.0])

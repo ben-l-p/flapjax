@@ -1,3 +1,4 @@
+import pytest
 from jax import numpy as jnp
 from jax import vmap
 from jax.scipy.linalg import block_diag
@@ -6,15 +7,16 @@ from flapjax.algebra.se3 import log_se3
 from flapjax.structure import BeamStructure
 
 
-class TestConstLinXVelocityLumpedMass:
-    r"""
-    Simulate a point with constant initial rotational velocity.
-    """
-
-    v_direction_index: int = 0
-
-    @classmethod
-    def test_const_velocity_point_mass(cls):
+@pytest.mark.parametrize("v_direction_index", [
+    pytest.param(0, id="lin_x"),
+    pytest.param(1, id="lin_y"),
+    pytest.param(2, id="lin_z"),
+    pytest.param(3, id="rot_x"),
+    pytest.param(4, id="rot_y"),
+    pytest.param(5, id="rot_z"),
+])
+class TestConstVelocityLumpedMass:
+    def test_const_velocity_point_mass(self, v_direction_index):
         v = 10.0
 
         coords = jnp.zeros((1, 3))
@@ -38,7 +40,7 @@ class TestConstLinXVelocityLumpedMass:
             coords, jnp.zeros((0, 6, 6)), None, m_lump[None, ...]
         )
 
-        v_init = jnp.zeros((1, 6)).at[0, cls.v_direction_index].set(v)
+        v_init = jnp.zeros((1, 6)).at[0, v_direction_index].set(v)
 
         init_cond = struct.reference_configuration(prescribed_dofs=()).to_dynamic()
         init_cond.v = v_init
@@ -57,37 +59,17 @@ class TestConstLinXVelocityLumpedMass:
         disp_measured = output.x[:, 0, :]
         theta_measured = vmap(log_se3)(output.hg[:, 0, :, :])[:, 3:]
         x_measured = jnp.concatenate((disp_measured, theta_measured), axis=-1)[
-            :, cls.v_direction_index
+            :, v_direction_index
         ]
 
         assert jnp.allclose(x_measured, x_expected), (
             "Displacements/angles do not match expected values."
         )
 
-        assert jnp.allclose(output.v[:, 0, cls.v_direction_index], v), (
+        assert jnp.allclose(output.v[:, 0, v_direction_index], v), (
             "Velocities do not remain constant as expected."
         )
 
         assert jnp.allclose(output.v_dot, 0.0), (
             "Accelerations are not zero as expected."
         )
-
-
-class TestConstLinYVelocityLumpedMass(TestConstLinXVelocityLumpedMass):
-    v_direction_index: int = 1
-
-
-class TestConstLinZVelocityLumpedMass(TestConstLinXVelocityLumpedMass):
-    v_direction_index: int = 2
-
-
-class TestConstRotXVelocityLumpedMass(TestConstLinXVelocityLumpedMass):
-    v_direction_index: int = 3
-
-
-class TestConstRotYVelocityLumpedMass(TestConstLinXVelocityLumpedMass):
-    v_direction_index: int = 4
-
-
-class TestConstRotZVelocityLumpedMass(TestConstLinXVelocityLumpedMass):
-    v_direction_index: int = 5

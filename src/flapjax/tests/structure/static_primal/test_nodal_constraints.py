@@ -1,3 +1,4 @@
+import pytest
 from jax import numpy as jnp
 
 from flapjax.structure import BeamStructure
@@ -85,17 +86,19 @@ class TestSpringDamper:
         )
 
 
-class TestXHinge:
+@pytest.mark.parametrize("hinge_dir_idx", [
+    pytest.param(0, id="x"),
+    pytest.param(1, id="y"),
+    pytest.param(2, id="z"),
+])
+class TestHinge:
     r"""
     Hinge with axis aligned with :math:`\hat{\mathbf{y}}`: rotation about y is
     free (governed by ``k_axis``), rotations about x/z and translations are
     blocked.
     """
 
-    hinge_dir_idx: int = 0
-
-    @classmethod
-    def test_free_axis_rotates_under_moment(cls):
+    def test_free_axis_rotates_under_moment(self, hinge_dir_idx):
         r"""
         Stiff beam attached to ground by hinge with torsional
         stiffness. Applying a moment should result in a linear relationship with angle about the hinge axis.
@@ -106,7 +109,7 @@ class TestXHinge:
 
         hinge = Hinge(
             node_index=0,
-            axis=jnp.zeros(3).at[cls.hinge_dir_idx].set(1.0),
+            axis=jnp.zeros(3).at[hinge_dir_idx].set(1.0),
             hg_ref=jnp.eye(4),
             k_translation=1e12,
             k_perpendicular=1e12,
@@ -115,18 +118,17 @@ class TestXHinge:
 
         beam = _cantilever_beam(n_nodes=n_nodes, k_scale=1e6, nodal_constraints=[hinge])
 
-        f_ext = jnp.zeros((n_nodes, 6)).at[0, cls.hinge_dir_idx + 3].set(moment)
+        f_ext = jnp.zeros((n_nodes, 6)).at[0, hinge_dir_idx + 3].set(moment)
         res = beam.static_solve(prescribed_dofs=(), f_ext_dead=f_ext)
 
         # rotation of node 0 about y
-        theta_y = res.varphi[0, cls.hinge_dir_idx + 3]
+        theta_y = res.varphi[0, hinge_dir_idx + 3]
         expected = moment / k_axis
         assert jnp.isclose(theta_y, expected, rtol=1e-3), (
             f"Free-axis rotation should be M/k_axis = {expected}, got {theta_y}"
         )
 
-    @classmethod
-    def test_constrained_axis_barely_rotates(cls):
+    def test_constrained_axis_barely_rotates(self, hinge_dir_idx):
         r"""
         Same setup as the free-axis test but applying moment around a non-free axis, which should use the perpendicular
         stiffness.
@@ -138,7 +140,7 @@ class TestXHinge:
 
         hinge = Hinge(
             node_index=0,
-            axis=jnp.zeros(3).at[cls.hinge_dir_idx].set(1.0),
+            axis=jnp.zeros(3).at[hinge_dir_idx].set(1.0),
             hg_ref=jnp.eye(4),
             k_translation=1e12,
             k_perpendicular=k_perp,
@@ -146,7 +148,7 @@ class TestXHinge:
         )
         beam = _cantilever_beam(n_nodes=n_nodes, k_scale=1e6, nodal_constraints=[hinge])
 
-        i_non_axis = (cls.hinge_dir_idx + 1) % 3
+        i_non_axis = (hinge_dir_idx + 1) % 3
 
         f_ext = jnp.zeros((n_nodes, 6)).at[0, i_non_axis + 3].set(moment)
         res = beam.static_solve(prescribed_dofs=(), f_ext_dead=f_ext)
@@ -156,11 +158,3 @@ class TestXHinge:
         assert jnp.isclose(theta_x, expected, rtol=1e-2), (
             f"Constrained-axis rotation should be ~M/k_perp = {expected}, got {theta_x}"
         )
-
-
-class TestYHinge(TestXHinge):
-    hinge_dir_idx: int = 1
-
-
-class TestZHinge(TestXHinge):
-    hinge_dir_idx: int = 2

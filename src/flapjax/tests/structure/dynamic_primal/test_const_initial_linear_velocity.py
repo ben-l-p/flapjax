@@ -1,20 +1,25 @@
+import pytest
 from jax import numpy as jnp
 from jax.scipy.linalg import block_diag
 
 from flapjax.structure import BeamStructure
 
+PARAMS = [
+    pytest.param(v, b, y, id=f"v_{['x','y','z'][v]}-beam_{['x','y','z'][b]}")
+    for b, y in [(0, jnp.array([[0.0, 1.0, 0.0]])),
+                 (1, jnp.array([[0.0, 0.0, 1.0]])),
+                 (2, jnp.array([[1.0, 0.0, 0.0]]))]
+    for v in range(3)
+]
 
-class TestConstXVelocityXBeam:
-    v_direction_index: int = 0
-    beam_direction_index: int = 0
-    y_vect = jnp.array([[0.0, 1.0, 0.0]])
 
-    @classmethod
-    def test_const_velocity_beam(cls):
+@pytest.mark.parametrize("v_direction_index, beam_direction_index, y_vect", PARAMS)
+class TestConstLinearVelocity:
+    def test_const_velocity_beam(self, v_direction_index, beam_direction_index, y_vect):
         v_mag: float = 50.0
         length = 3.14
 
-        coords = jnp.zeros((2, 3)).at[1, cls.beam_direction_index].set(length)
+        coords = jnp.zeros((2, 3)).at[1, beam_direction_index].set(length)
         conn = jnp.array([[0, 1]])
 
         k_cs = jnp.diag(jnp.full(6, 1e3))
@@ -28,13 +33,13 @@ class TestConstXVelocityXBeam:
         struct = BeamStructure(
             2,
             conn,
-            cls.y_vect,
+            y_vect,
             None,
             spectral_radius=1.0,
         )
         struct.set_design_variables(coords, k_cs, m_cs)
 
-        v_init = jnp.zeros((2, 6)).at[:, cls.v_direction_index].set(v_mag)
+        v_init = jnp.zeros((2, 6)).at[:, v_direction_index].set(v_mag)
 
         init_cond = struct.reference_configuration(prescribed_dofs=()).to_dynamic()
         init_cond.v = v_init
@@ -47,44 +52,10 @@ class TestConstXVelocityXBeam:
             f_ext_dead=None,
             f_ext_aero=None,
         )
-        x_t = output.x[:, 0, cls.v_direction_index]  # [n_tstep]
+        x_t = output.x[:, 0, v_direction_index]  # [n_tstep]
 
         expected_x_t = jnp.arange(n_tstep) * dt * v_mag  # [n_tstep]
 
         assert jnp.allclose(expected_x_t, x_t), (
             "Beam with constant initial velocity did not maintain constant velocity."
         )
-
-
-class TestConstYVelocityXBeam(TestConstXVelocityXBeam):
-    v_direction_index: int = 1
-
-
-class TestConstZVelocityXBeam(TestConstXVelocityXBeam):
-    v_direction_index: int = 2
-
-
-class TestConstXVelocityYBeam(TestConstXVelocityXBeam):
-    beam_direction_index: int = 1
-    y_vect = jnp.array([[0.0, 0.0, 1.0]])
-
-
-class TestConstYVelocityYBeam(TestConstXVelocityYBeam):
-    v_direction_index: int = 1
-
-
-class TestConstZVelocityYBeam(TestConstXVelocityYBeam):
-    v_direction_index: int = 2
-
-
-class TestConstXVelocityZBeam(TestConstXVelocityXBeam):
-    beam_direction_index: int = 2
-    y_vect = jnp.array([[1.0, 0.0, 0.0]])
-
-
-class TestConstYVelocityZBeam(TestConstXVelocityZBeam):
-    v_direction_index: int = 1
-
-
-class TestConstZVelocityZBeam(TestConstXVelocityZBeam):
-    v_direction_index: int = 2

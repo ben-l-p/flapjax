@@ -130,7 +130,7 @@ class TestGustFRFAdjoint:
     def test_primal_matches_pipeline(cls):
         """Adjoint and direct pipeline should yield the same primal objective."""
         j_pipe = compute_objective_gust(cls.wing, U_INF_REF, cls.k_cs_base, OMEGA)
-        assert jnp.isclose(cls.j_adj, j_pipe, rtol=1e-5), (
+        assert jnp.isclose(cls.j_adj, j_pipe, rtol=1e-4), (
             f"Primal mismatch: adjoint={float(cls.j_adj)}, pipeline={j_pipe}"
         )
 

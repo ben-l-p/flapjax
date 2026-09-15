@@ -320,17 +320,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#where-to-go-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where to go next
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -428,6 +417,8 @@
   
     
     
+      
+        
       
         
       
@@ -578,6 +569,34 @@
     
   
     Flying Spaghetti Mass Optimisation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/double_pendulum/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flexible Double Pendulum
   
 
     
@@ -1562,17 +1581,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#where-to-go-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where to go next
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1609,18 +1617,18 @@
 
 
 <h1 id="flapjax">flapjax<a class="headerlink" href="#flapjax" title="Permanent link">&para;</a></h1>
-<p><strong>flapjax</strong> (COupled Nonlinear Differentiable solver fOR aeroelastics) is a nonlinear aeroelastic solver build using
+<p><strong>flapjax</strong> (FLexible Adjoint-enabled Panel code in JAX) is a nonlinear aeroelastic solver build using
 Google JAX. It couples:</p>
 <ul>
-<li><strong>UVLM</strong> (Unsteady Vortex Lattice Method) for aerodynamics</li>
-<li><strong>Nonlinear beam theory</strong> (SE (3)/SO (3) Lie-group formulation) for structural mechanics</li>
+<li><strong>Aerodynamics</strong> - Unsteady Vortex Lattice Method (UVLM)</li>
+<li><strong>Structure</strong> - Lie-group nonlinear beam formulation</li>
 </ul>
 <p>This allows for accurate simulation of highly flexible aircraft configurations. Capabilities for simulation include:</p>
 <ul>
 <li><strong>Static aeroelastic analysis</strong> for finding the equilibrium configuration</li>
 <li><strong>Dynamic aeroelastic analysis</strong> for time-domain response to gusts and control inputs</li>
 <li><strong>Linearised aeroelastic analysis</strong> for structural modal, and aeroelastic stability and flutter analysis</li>
-<li><strong>Adjoint-based gradients</strong> for efficient sensitivity computation of static and dynamic systems, enabling
+<li><strong>Adjoint-based gradients</strong> for efficient sensitivity computation of static, dynamic and linearised systems, enabling
   gradient-based optimisation</li>
 </ul>
 <p>There are many advantages for using a fully JAX-based framework, including:</p>
@@ -1637,9 +1645,12 @@ often result in unusual coding patterns due to the absense of conventional contr
 <p>This framework is designed to be modular, and allows for very flexible workflows. It makes extensive use of
 object-oriented principles with a very "pythonic" interface. It makes full use of Python type hinting to best inform
 users of the expected input and output types for each function.</p>
-<h2 id="where-to-go-next">Where to go next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17z"/></svg></span> <strong><a href="model_definition/model_definition/">Modelling</a></strong>
+  How to construct an aeroelastic model.</p>
+</li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17z"/></svg></span> <strong><a href="tutorials/">Tutorials</a></strong>
   Example-based guides.</p>

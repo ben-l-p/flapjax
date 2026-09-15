@@ -1,4 +1,4 @@
-# FLAPJAX — FLexible Aeroelastic Panel code in JAX
+# FLAPJAX — FLexible Adjoint-enabled Panel code in JAX
 
 *nonlinear · differentiable · adjoint-enabled*
 
@@ -18,6 +18,18 @@ Full documentation, including tutorials, API reference and theory, is available 
 
 ## Installation
 
+### Github
+
+For the latest version from git, clone the repository and install with pip:
+
+```bash
+git clone https://github.com/ben-l-p/flapjax/
+cd flapjax
+pip install -e .  # uses the -e flag to install in editable mode
+```
+
+### PyPI
+
 Two PyPI distributions are provided:
 
 | Package        | Contents                                  |
@@ -32,14 +44,11 @@ pip install flapjax        # minimal
 pip install flapjax-full   # includes tests and tutorial notebooks
 ```
 
-Cloning the full repository and installing with uv is also supported, which allows for development installation:
+## Testing
 
-```bash
-uv sync
-```
-
-An extensive test suite is included to verify the correctness of the code. This verifies the numerics, and takes
-approximately 40 minutes to run on an M2 MacBook Air. Tests can be run with pytest, either against a `flapjax-full`
+An extensive suite of over 300 tests is included to verify the correctness of the code. This checks the numerics, and
+takes approximately 40 minutes to run on an M2 MacBook Air. Tests can be run with pytest, either against a
+`flapjax-full`
 install (`pytest --pyargs flapjax`) or from a repository clone (`uv run pytest`).
 
 

@@ -3,7 +3,7 @@ from jax import numpy as jnp
 
 from flapjax.aero.linear.linear_uvlm import LinearWakeType
 from flapjax.coupled import NonlinearBeamLinearAero
-from flapjax.models.cantilever_wing import generate_cantilever_wing
+from flapjax.models.cantilever_wing.cantilever_wing import generate_cantilever_wing
 from flapjax.utils.data_structures import ConvergenceSettings
 
 

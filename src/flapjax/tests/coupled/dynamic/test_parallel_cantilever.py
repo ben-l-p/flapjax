@@ -2,7 +2,7 @@ import jax
 from jax import numpy as jnp
 
 from flapjax.coupled import CoupledAeroelastic
-from flapjax.models.cantilever_wing import generate_cantilever_wing
+from flapjax.models.cantilever_wing.cantilever_wing import generate_cantilever_wing
 
 
 class TestParallelCantilever:

@@ -10,6 +10,30 @@ from flapjax.algebra.integration import gauss_legendre, gauss_lobatto
 from flapjax.algebra.se3 import ha_to_ha_check, ha_to_ha_hat, p, q, q_dot
 
 
+def _split_connectivity(
+    conn: list[list[int]], node_i: int, node_j: int
+) -> list[list[int]]:
+    r"""
+    Split connectivity at ``node_i``: the first element containing ``node_i``
+    keeps it, the second has ``node_i`` replaced by ``node_j``. Used for automatically adding constraint nodes.
+    """
+    touching = [i for i, (a, b) in enumerate(conn) if a == node_i or b == node_i]
+    if len(touching) < 2:
+        return conn
+    if len(touching) > 2:
+        raise ValueError(
+            f"Node {node_i} appears in {len(touching)} elements; "
+            f"_split_connectivity only supports nodes shared by exactly 2 elements."
+        )
+    conn = [list(e) for e in conn]
+    e_idx = touching[1]
+    if conn[e_idx][0] == node_i:
+        conn[e_idx][0] = node_j
+    else:
+        conn[e_idx][1] = node_j
+    return conn
+
+
 def _check_connectivity(connectivity: Array, num_nodes: int) -> None:
     r"""
     Check connectivity array for validity

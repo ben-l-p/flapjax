@@ -5,7 +5,7 @@ from flapjax.structure.constraints import PrescribedMotion
 
 
 # create a beam that takes input nodal constraints
-def _short_beam(n_nodes: int, nodal_constraints):
+def _short_beam(n_nodes: int, constraints):
     conn = jnp.stack((jnp.arange(n_nodes - 1), jnp.arange(1, n_nodes)), axis=1).astype(
         int
     )
@@ -13,7 +13,7 @@ def _short_beam(n_nodes: int, nodal_constraints):
         num_nodes=n_nodes,
         connectivity=conn,
         y_vector=jnp.array((0.0, 0.0, 1.0)),
-        nodal_constraints=nodal_constraints,
+        constraints=constraints,
     )
     coords = jnp.stack(
         (
@@ -49,7 +49,7 @@ class TestPrescribedMotion:
             hg_ref_t=hg_ref_t,
             c=jnp.eye(6) * 1e4,
         )
-        beam = _short_beam(cls.n_nodes, nodal_constraints=[pm])
+        beam = _short_beam(cls.n_nodes, constraints=[pm])
         return beam.dynamic_solve(
             init_state=None,
             prescribed_dofs=(),

@@ -6,7 +6,7 @@ from flapjax.aero.gradients.data_structures import AeroGradsToCompute
 from flapjax.coupled import AeroelasticCase, CoupledAeroelastic
 from flapjax.coupled.data_structures import AeroelasticFullStates
 from flapjax.coupled.gradients.data_structures import AeroelasticGradsToCompute
-from flapjax.models.cantilever_wing import generate_cantilever_wing
+from flapjax.models.cantilever_wing.cantilever_wing import generate_cantilever_wing
 from flapjax.structure.gradients.data_structures import StructureGradsToCompute
 from flapjax.utils.data_structures import ConvergenceSettings
 

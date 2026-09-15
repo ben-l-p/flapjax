@@ -16,6 +16,9 @@ write ``.vtu`` and ``.pvd`` files to disk, which can be visualised in ParaView.
     - [Flying spaghetti mass optimisation](flying_spaghetti_optimise.ipynb) - Follow-on to the free dynamics tutorial
       that uses the beam ``dynamic_adjoint()`` routine to drive an SLSQP outer loop, redistributing per-element mass to
       minimise the final-time strain energy of the beam subject to a total-mass constraint.
+    - [Flexible double pendulum](double_pendulum.ipynb) - Two very flexible beam segments connected by a hinge joint,
+      with the root mounted to a hinge. Demonstrates multibody dynamics with ``GroundedHinge`` and ``MultibodyHinge``
+      constraints using the ``dynamic_solve()`` routine.
 - Aeroelastic
     - [Simple HALE gust response](simple_hale_gust.ipynb) - Free-flying high aspect ratio aircraft configuration subject
       to a one-minus-cosine gust. This first uses the aeroelastic``trim()``

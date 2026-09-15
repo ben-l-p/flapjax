@@ -9,7 +9,7 @@ from flapjax.coupled.data_structures import (
     AeroelasticFullStates,
 )
 from flapjax.coupled.gradients.data_structures import AeroelasticGradsToCompute
-from flapjax.models import cantilever_wing
+from flapjax.models.cantilever_wing.cantilever_wing import generate_cantilever_wing
 from flapjax.structure.gradients.data_structures import StructureGradsToCompute
 from flapjax.utils.data_structures import ConvergenceSettings
 
@@ -27,7 +27,7 @@ def _objective(states: AeroelasticFullStates, *_) -> Array:
 
 
 def _solve(u_inf: Array, k_cs: Array):
-    wing = cantilever_wing.generate_cantilever_wing(
+    wing = generate_cantilever_wing(
         n_nodes=n_nodes, m=m, m_star=m_star, u_inf=u_inf, k_cs=k_cs
     )
 

@@ -1,17 +1,17 @@
 # flapjax
 
-**flapjax** (COupled Nonlinear Differentiable solver fOR aeroelastics) is a nonlinear aeroelastic solver build using
+**flapjax** (FLexible Adjoint-enabled Panel code in JAX) is a nonlinear aeroelastic solver build using
 Google JAX. It couples:
 
-- **UVLM** (Unsteady Vortex Lattice Method) for aerodynamics
-- **Nonlinear beam theory** (SE (3)/SO (3) Lie-group formulation) for structural mechanics
+- **Aerodynamics** - Unsteady Vortex Lattice Method (UVLM)
+- **Structure** - Lie-group nonlinear beam formulation
 
 This allows for accurate simulation of highly flexible aircraft configurations. Capabilities for simulation include:
 
 - **Static aeroelastic analysis** for finding the equilibrium configuration
 - **Dynamic aeroelastic analysis** for time-domain response to gusts and control inputs
 - **Linearised aeroelastic analysis** for structural modal, and aeroelastic stability and flutter analysis
-- **Adjoint-based gradients** for efficient sensitivity computation of static and dynamic systems, enabling
+- **Adjoint-based gradients** for efficient sensitivity computation of static, dynamic and linearised systems, enabling
   gradient-based optimisation
 
 There are many advantages for using a fully JAX-based framework, including:
@@ -30,9 +30,10 @@ This framework is designed to be modular, and allows for very flexible workflows
 object-oriented principles with a very "pythonic" interface. It makes full use of Python type hinting to best inform
 users of the expected input and output types for each function.
 
-## Where to go next
-
 <div class="grid cards" markdown>
+
+- :material-school: **[Modelling](model_definition/model_definition.md)**
+  How to construct an aeroelastic model.
 
 - :material-school: **[Tutorials](tutorials/index.md)**
   Example-based guides.

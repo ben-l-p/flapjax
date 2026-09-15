@@ -1,6 +1,6 @@
 from jax import numpy as jnp
 
-from flapjax.models.cantilever_wing import generate_cantilever_wing
+from flapjax.models.cantilever_wing.cantilever_wing import generate_cantilever_wing
 from flapjax.utils.data_structures import ConvergenceSettings
 
 

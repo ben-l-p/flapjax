@@ -14,6 +14,11 @@ K_CS_DEFAULT = jnp.diag(jnp.array((1e6, 1e6, 1e6, 4e2, 4e2, 4e2)))
 M_CS_DEFAULT = jnp.diag(jnp.array((1.0, 1.0, 1.0, 1.0, 1.0, 1.0)))
 U_INF_DEFAULT = jnp.array((10.0, 0.0, 1.0))
 
+r"""
+A simple cantilever wing model for testing the coupled aeroelastic solver. The wing is modeled as a beam with constant
+spanwise properties and a rectangular planform. 
+"""
+
 
 def generate_cantilever_wing(
     n_nodes: int = 40,

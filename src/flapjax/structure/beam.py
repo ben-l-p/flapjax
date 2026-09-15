@@ -24,7 +24,7 @@ from flapjax.algebra.se3 import (
 )
 from flapjax.algebra.so3 import vec_to_skew
 from flapjax.plotting.modal import plot_modes_vtu
-from flapjax.structure.constraints import NodalConstraint
+from flapjax.structure.constraints import HardConstraint, SoftConstraint
 from flapjax.structure.data_structures import (
     OptionalJacobians,
     StructureCase,
@@ -43,6 +43,7 @@ from flapjax.structure.utils import (
     _k_t_entry,
     _make_c_t_lumped,
     _n_elem_per_node,
+    _split_connectivity,
     get_solve_dofs,
     transform_nodal_vect,
 )
@@ -103,6 +104,7 @@ class BaseBeamStructure:
         "spectral_radius",
         "alpha_m",
         "beta_k",
+        "_auto_node_sources",
     )
 
     @property
@@ -162,7 +164,12 @@ class BaseBeamStructure:
         alpha_m: float = 0.0,
         beta_k: float = 0.0,
         struct_convergence_settings: ConvergenceSettings = DEFAULT_STRUCT_CONVERGENCE_SETTINGS,
-        nodal_constraints: NodalConstraint | Sequence[NodalConstraint] | None = None,
+        constraints: (
+            SoftConstraint
+            | HardConstraint
+            | Sequence[SoftConstraint | HardConstraint]
+            | None
+        ) = None,
     ) -> None:
         r"""
         Initialise BaseBeamStructure class with all non-design parameters.
@@ -187,17 +194,44 @@ class BaseBeamStructure:
         :param alpha_m: Mass-proportional Rayleigh damping coefficient.
         :param beta_k: Stiffness-proportional Rayleigh damping coefficient.
         :param struct_convergence_settings: Structure convergence settings.
-        :param nodal_constraints: Optional sequence of single-node constraints (springs, dampers,
-        prescribed motions) that add residual + tangent contributions at their target nodes.
+        :param constraints: Optional constraint or sequence of constraints.
         """
 
         check_type(num_nodes, int)
-        self.n_nodes: int = num_nodes
-        self.n_dof: int = num_nodes * 6
+
+        # split mixed constraint input into soft and hard
+        if constraints is None:
+            constraints = ()
+        elif isinstance(constraints, (SoftConstraint, HardConstraint)):
+            constraints = (constraints,)
+        soft_constraints = tuple(
+            c for c in constraints if isinstance(c, SoftConstraint)
+        )
+        hard_constraints = tuple(
+            c for c in constraints if isinstance(c, HardConstraint)
+        )
 
         check_arr_shape(connectivity, (None, 2), "connectivity")
         check_arr_dtype(connectivity, int, "connectivity")
         _check_connectivity(connectivity, num_nodes)
+
+        auto_node_sources: list[int] = []
+        conn_list: list[list[int]] = connectivity.tolist()
+
+        # add extra nodes and alter connectivity to account for constraints with the auto-generate node behaviour
+        for con in hard_constraints:
+            if con.node_j is None and not con.is_grounded:
+                node_j_new = num_nodes + len(auto_node_sources)
+                con.node_j = node_j_new
+                auto_node_sources.append(con.node_i)
+                conn_list = _split_connectivity(conn_list, con.node_i, node_j_new)
+        self._auto_node_sources: tuple[int, ...] = tuple(auto_node_sources)
+
+        num_nodes += len(auto_node_sources)
+        connectivity = jnp.array(conn_list, dtype=int)
+        self.n_nodes: int = num_nodes
+        self.n_dof: int = num_nodes * 6
+
         self.connectivity: tuple[tuple[int, int], ...] = nested_list_to_tuple(
             connectivity.tolist()
         )  # (n_elem, 2)
@@ -330,15 +364,8 @@ class BaseBeamStructure:
 
         self.time_integrator = None
 
-        # dynamic pytree entries for the constraints
-        if isinstance(nodal_constraints, NodalConstraint):
-            self.nodal_constraints: Sequence[NodalConstraint] = (nodal_constraints,)
-        elif isinstance(nodal_constraints, Sequence):
-            self.nodal_constraints = nodal_constraints
-        elif nodal_constraints is None:
-            self.nodal_constraints = ()
-        else:
-            raise TypeError()
+        self.nodal_constraints: Sequence[SoftConstraint] = soft_constraints
+        self.multibody_constraints: Sequence[HardConstraint] = hard_constraints
 
     def set_design_variables(
         self,
@@ -379,7 +406,14 @@ class BaseBeamStructure:
             self.y_vector_reference_arr,
         )
 
-        # coordinates
+        # coordinates — auto-extend for nodes created by multibody constraints
+        if self._auto_node_sources and coords.shape[0] == self.n_nodes - len(
+            self._auto_node_sources
+        ):
+            coords = jnp.concatenate(
+                [coords, coords[jnp.array(self._auto_node_sources)]],
+                axis=0,
+            )
         check_arr_shape(coords, (self.n_nodes, 3), "coords")
         self.x0_reference = coords
         self.x0 = jnp.einsum("jk,ik->ij", self.orientation, coords)
@@ -495,6 +529,8 @@ class BaseBeamStructure:
 
         # add reference frames to the nodal constraints
         for con in self.nodal_constraints:
+            con.resolve_hg_ref(self.hg0)
+        for con in self.multibody_constraints:
             con.resolve_hg_ref(self.hg0)
 
     def get_design_variables(
@@ -1397,6 +1433,236 @@ class BaseBeamStructure:
                 )
         return mat
 
+    @property
+    def n_multibody_constraints(self) -> int:
+        r"""Total number of scalar Lagrange-multiplier constraints."""
+        return sum(con.n_constraints for con in self.multibody_constraints)
+
+    @property
+    def n_holonomic_constraints(self) -> int:
+        r"""Number of scalar holonomic (position-level) Lagrange-multiplier constraints."""
+        return sum(
+            con.n_constraints for con in self.multibody_constraints if con.is_holonomic
+        )
+
+    @property
+    def n_nonholonomic_constraints(self) -> int:
+        r"""Number of scalar non-holonomic (velocity-level) Lagrange-multiplier constraints."""
+        return sum(
+            con.n_constraints
+            for con in self.multibody_constraints
+            if not con.is_holonomic
+        )
+
+    def _compute_holonomic_violation(self, hg: Array) -> Array:
+        r"""
+        Compute the stacked position-level constraint violation for holonomic constraints.
+        :param hg: Current nodal SE(3) frames, ``(n_nodes, 4, 4)``.
+        :return: Constraint violation, ``(n_holonomic_constraints,)``.
+        """
+        return jnp.concatenate(
+            [
+                con.violation(
+                    hg[con.node_i], con.hg_ref if con.is_grounded else hg[con.node_j]
+                )
+                for con in self.multibody_constraints
+                if con.is_holonomic
+            ]
+        )
+
+    def _compute_holonomic_jacobian(
+        self,
+        hg: Array,
+        solve_dofs: Array,
+        phi: Array | None = None,
+    ) -> Array:
+        r"""
+        Assemble the position-level constraint Jacobian for holonomic constraints.
+        :param hg: Base SE(3) frames, ``(n_nodes, 4, 4)``.
+        :param solve_dofs: Free DOF indices, ``(n_solve,)``.
+        :param phi: Accumulated configuration increment, ``(n_nodes, 6)`` or ``None``.
+        :return: Constraint Jacobian at solve DOFs, ``(n_holonomic_constraints, n_solve)``.
+        """
+        n_c = self.n_holonomic_constraints
+        jac_full = jnp.zeros((n_c, self.n_dof))
+        offset = 0
+        for con in self.multibody_constraints:
+            if not con.is_holonomic:
+                continue
+            phi_i = phi[con.node_i] if phi is not None else None
+            hg_j = con.hg_ref if con.is_grounded else hg[con.node_j]
+            phi_j = (
+                None
+                if con.is_grounded
+                else (phi[con.node_j] if phi is not None else None)
+            )
+            jac_i, jac_j = con.jacobian_local(hg[con.node_i], hg_j, phi_i, phi_j)
+            nc = con.n_constraints
+            dofs_i = con.node_i * 6 + jnp.arange(6)
+            jac_full = jac_full.at[offset : offset + nc, dofs_i].set(jac_i)
+            if not con.is_grounded:
+                dofs_j = con.node_j * 6 + jnp.arange(6)
+                jac_full = jac_full.at[offset : offset + nc, dofs_j].set(jac_j)
+            offset += nc
+        return jac_full[:, solve_dofs]
+
+    def _compute_nonholonomic_vel_violation(self, hg: Array, v: Array) -> Array:
+        r"""
+        Compute the stacked velocity-level constraint violation for non-holonomic constraints.
+        :param hg: Current nodal SE(3) frames, ``(n_nodes, 4, 4)``.
+        :param v: Current nodal velocities, ``(n_nodes, 6)``.
+        :return: Velocity constraint violation, ``(n_nonholonomic_constraints,)``.
+        """
+        return jnp.concatenate(
+            [
+                con.vel_violation(
+                    hg[con.node_i],
+                    con.hg_ref if con.is_grounded else hg[con.node_j],
+                    v[con.node_i],
+                    jnp.zeros(6) if con.is_grounded else v[con.node_j],
+                )
+                for con in self.multibody_constraints
+                if not con.is_holonomic
+            ]
+        )
+
+    def _compute_nonholonomic_a_vel(
+        self, hg: Array, v: Array, solve_dofs: Array
+    ) -> Array:
+        r"""
+        Assemble velocity Jacobian :math:`\partial g_{vel}/\partial v` for
+        non-holonomic constraints. Used for the constraint force direction.
+        :param hg: Current SE(3) frames, ``(n_nodes, 4, 4)``.
+        :param v: Current velocities, ``(n_nodes, 6)``.
+        :param solve_dofs: Free DOF indices, ``(n_solve,)``.
+        :return: Velocity Jacobian at solve DOFs, ``(n_nonholonomic_constraints, n_solve)``.
+        """
+        n_c = self.n_nonholonomic_constraints
+        a_full = jnp.zeros((n_c, self.n_dof))
+        offset = 0
+        for con in self.multibody_constraints:
+            if con.is_holonomic:
+                continue
+            hg_j = con.hg_ref if con.is_grounded else hg[con.node_j]
+            v_j = jnp.zeros(6) if con.is_grounded else v[con.node_j]
+            av_i, av_j = con.a_vel_local(hg[con.node_i], hg_j, v[con.node_i], v_j)
+            nc = con.n_constraints
+            dofs_i = con.node_i * 6 + jnp.arange(6)
+            a_full = a_full.at[offset : offset + nc, dofs_i].set(av_i)
+            if not con.is_grounded:
+                dofs_j = con.node_j * 6 + jnp.arange(6)
+                a_full = a_full.at[offset : offset + nc, dofs_j].set(av_j)
+            offset += nc
+        return a_full[:, solve_dofs]
+
+    def _compute_nonholonomic_a_phi(
+        self,
+        hg: Array,
+        v: Array,
+        solve_dofs: Array,
+        phi: Array | None = None,
+    ) -> Array:
+        r"""
+        Assemble configuration Jacobian :math:`\partial g_{vel}/\partial \varphi`
+        for non-holonomic constraints.
+        :param hg: Base SE(3) frames, ``(n_nodes, 4, 4)``.
+        :param v: Current velocities, ``(n_nodes, 6)``.
+        :param solve_dofs: Free DOF indices, ``(n_solve,)``.
+        :param phi: Accumulated configuration increment, ``(n_nodes, 6)`` or ``None``.
+        :return: Configuration Jacobian at solve DOFs, ``(n_nonholonomic_constraints, n_solve)``.
+        """
+        n_c = self.n_nonholonomic_constraints
+        a_full = jnp.zeros((n_c, self.n_dof))
+        offset = 0
+        for con in self.multibody_constraints:
+            if con.is_holonomic:
+                continue
+            phi_i = phi[con.node_i] if phi is not None else None
+            hg_j = con.hg_ref if con.is_grounded else hg[con.node_j]
+            v_j = jnp.zeros(6) if con.is_grounded else v[con.node_j]
+            phi_j = (
+                None
+                if con.is_grounded
+                else (phi[con.node_j] if phi is not None else None)
+            )
+            ap_i, ap_j = con.a_phi_local(
+                hg[con.node_i],
+                hg_j,
+                v[con.node_i],
+                v_j,
+                phi_i,
+                phi_j,
+            )
+            nc = con.n_constraints
+            dofs_i = con.node_i * 6 + jnp.arange(6)
+            a_full = a_full.at[offset : offset + nc, dofs_i].set(ap_i)
+            if not con.is_grounded:
+                dofs_j = con.node_j * 6 + jnp.arange(6)
+                a_full = a_full.at[offset : offset + nc, dofs_j].set(ap_j)
+            offset += nc
+        return a_full[:, solve_dofs]
+
+    def _solve_constrained(
+        self,
+        sys_mat_solve: Array,
+        f_res_solve: Array,
+        hg_eval: Array,
+        solve_dofs: Array,
+        hg_base: Array | None = None,
+        phi: Array | None = None,
+        v: Array | None = None,
+        gamma_prime: float | Array | None = None,
+    ) -> tuple[Array, Array, Array]:
+        r"""
+        Solve the augmented system with Lagrange multipliers, supporting both holonomic and non-holonomic constraints.
+        :param sys_mat_solve: System matrix at solve DOFs, ``(n_solve, n_solve)``.
+        :param f_res_solve: Force residual at solve DOFs, ``(n_solve,)``.
+        :param hg_eval: SE(3) frames for constraint evaluation, ``(n_nodes, 4, 4)``.
+        :param solve_dofs: Free DOF indices, ``(n_solve,)``.
+        :param hg_base: Base frames for Jacobian computation (defaults to ``hg_eval``).
+        :param phi: Accumulated configuration increment, ``(n_nodes, 6)``.
+        :param v: Current nodal velocities for non-holonomic constraints, ``(n_nodes, 6)``.
+        :param gamma_prime: Newmark parameter for non-holonomic constraints.
+        :return: ``(delta_phi, lagrange_multipliers, constraint_violation)``.
+        """
+        hg_jac = hg_base if hg_base is not None else hg_eval
+
+        n_s = sys_mat_solve.shape[0]
+        n_h = self.n_holonomic_constraints
+        n_nh = self.n_nonholonomic_constraints
+        n_c = n_h + n_nh
+
+        aug = jnp.zeros((n_s + n_c, n_s + n_c))
+        aug = aug.at[:n_s, :n_s].set(sys_mat_solve)
+
+        rhs_parts: list[Array] = [f_res_solve]
+        violation_parts: list[Array] = []
+
+        if n_h > 0:
+            viol_h = self._compute_holonomic_violation(hg_eval)
+            jac_h = self._compute_holonomic_jacobian(hg_jac, solve_dofs, phi)
+            aug = aug.at[:n_s, n_s : n_s + n_h].set(-jac_h.T)
+            aug = aug.at[n_s : n_s + n_h, :n_s].set(jac_h)
+            rhs_parts.append(-viol_h)
+            violation_parts.append(viol_h)
+
+        if n_nh > 0:
+            assert v is not None
+            vel_viol_nh = self._compute_nonholonomic_vel_violation(hg_eval, v)
+            a_vel_solve = self._compute_nonholonomic_a_vel(hg_eval, v, solve_dofs)
+            a_phi_solve = self._compute_nonholonomic_a_phi(hg_jac, v, solve_dofs, phi)
+            aug = aug.at[:n_s, n_s + n_h : n_s + n_c].set(-a_vel_solve.T)
+            aug = aug.at[n_s + n_h : n_s + n_c, :n_s].set(
+                a_phi_solve + gamma_prime * a_vel_solve
+            )
+            rhs_parts.append(-vel_viol_nh)
+            violation_parts.append(vel_viol_nh)
+
+        rhs = jnp.concatenate(rhs_parts)
+        sol = jnp.linalg.solve(aug, rhs)
+
+        return sol[:n_s], sol[n_s:], jnp.concatenate(violation_parts)
+
     def compute_centre_of_mass(self, hg: Array) -> Array:
         r"""
         Compute the centre of mass for an arbitrary system.
@@ -2145,9 +2411,19 @@ class BaseBeamStructure:
             )
 
             # solve for configuration increment, (n_solve_dofs, )
-            d_varphi_np1 = (
-                jnp.linalg.solve(k_t_solve_n, f_res_solve_n) * self.relaxation_factor
-            )
+            if self.n_holonomic_constraints:
+                d_varphi_np1, _, _ = self._solve_constrained(
+                    sys_mat_solve=k_t_solve_n,
+                    f_res_solve=f_res_solve_n,
+                    hg_eval=hg_n,
+                    solve_dofs=solve_dofs,
+                )
+                d_varphi_np1 *= self.relaxation_factor
+            else:
+                d_varphi_np1 = (
+                    jnp.linalg.solve(k_t_solve_n, f_res_solve_n)
+                    * self.relaxation_factor
+                )
 
             # update configuration, (n_nodes, 4, 4)
             hg_np1_full = self.update_hg(
@@ -2340,6 +2616,9 @@ class BaseBeamStructure:
         )
 
         solve_dofs_arr: Array = jnp.array(solve_dofs)
+        prescribed_dofs_arr: Array = jnp.array(
+            sorted(set(range(self.n_dof)) - set(solve_dofs)), dtype=int
+        )
 
         def _update(
             i_load_step: int,
@@ -2454,7 +2733,22 @@ class BaseBeamStructure:
             sys_mat = sys_mat_full[jnp.ix_(solve_dofs_arr, solve_dofs_arr)]
 
             # solve for configuration increment, (n_solve_dofs, )
-            d_n_np1 = jnp.linalg.solve(sys_mat, f_res_n_solve) * self.relaxation_factor
+            if self.multibody_constraints:
+                d_n_np1, _, _ = self._solve_constrained(
+                    sys_mat_solve=sys_mat,
+                    f_res_solve=f_res_n_solve,
+                    hg_eval=hg_update,
+                    solve_dofs=solve_dofs_arr,
+                    hg_base=hg_n,
+                    phi=phi_alpha,
+                    v=q_alpha.v,
+                    gamma_prime=self.time_integrator.gamma_prime,
+                )
+                d_n_np1 *= self.relaxation_factor
+            else:
+                d_n_np1 = (
+                    jnp.linalg.solve(sys_mat, f_res_n_solve) * self.relaxation_factor
+                )
             phi_np1 = phi_alpha.ravel().at[solve_dofs_arr].add(d_n_np1).reshape(-1, 6)
 
             # update configuration, velocities and accelerations
@@ -2571,13 +2865,35 @@ class BaseBeamStructure:
             """
 
             # predictor step
-            phi_init, q_init = self.time_integrator.predict_q(
-                struct_sol.get_minimal_states(i_ts - 1)
-            )
+            q_nm1 = struct_sol.get_minimal_states(i_ts - 1)
+            phi_init, q_init = self.time_integrator.predict_q(q_nm1)
             phi_alpha_init, q_alpha_init = self.time_integrator.compute_q_alpha(
-                q_nm1=struct_sol.get_minimal_states(i_ts - 1),
+                q_nm1=q_nm1,
                 q_n=q_init,
                 phi_n=phi_init,
+            )
+
+            # prescribed DOFs should not be influenced by the time integration
+            phi_alpha_init = (
+                phi_alpha_init.ravel().at[prescribed_dofs_arr].set(0.0).reshape(-1, 6)
+            )
+            q_alpha_init.v = (
+                q_alpha_init.v.ravel()
+                .at[prescribed_dofs_arr]
+                .set(q_nm1.v.ravel()[prescribed_dofs_arr])
+                .reshape(-1, 6)
+            )
+            q_alpha_init.v_dot = (
+                q_alpha_init.v_dot.ravel()
+                .at[prescribed_dofs_arr]
+                .set(q_nm1.v_dot.ravel()[prescribed_dofs_arr])
+                .reshape(-1, 6)
+            )
+            q_alpha_init.a = (
+                q_alpha_init.a.ravel()
+                .at[prescribed_dofs_arr]
+                .set(q_nm1.a.ravel()[prescribed_dofs_arr])
+                .reshape(-1, 6)
             )
 
             q_alpha_init.varphi = None  # this value is not used during the loop

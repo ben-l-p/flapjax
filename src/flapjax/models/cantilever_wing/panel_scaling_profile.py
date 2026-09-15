@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import copy
 import csv
-import os
 import time
 from collections.abc import Callable
 from pathlib import Path
@@ -15,44 +14,11 @@ run on one core only. This may take ~1 hour to run, as the compile cost is rathe
 well as the large cases taking in the order of seconds to complete a single step.
 """
 
-# JAX/BLAS backends read env vars at import time, so os.environ must be set
-# before the JAX and flapjax imports below
-
-SINGLE_CORE: bool = True
-os.environ["JAX_PLATFORMS"] = "cpu"
-if SINGLE_CORE:
-    # pin to a single CPU core so timing reflects raw compute cost.
-    os.environ["XLA_FLAGS"] = (
-        "--xla_cpu_multi_thread_eigen=false --xla_force_host_platform_device_count=1"
-    )
-    for _var in (
-        "OMP_NUM_THREADS",
-        "MKL_NUM_THREADS",
-        "OPENBLAS_NUM_THREADS",
-        "NUMEXPR_NUM_THREADS",
-    ):
-        os.environ[_var] = "1"
-else:
-    # use every available core
-    _n_cores = str(os.cpu_count() or 1)
-    for _var in (
-        "OMP_NUM_THREADS",
-        "MKL_NUM_THREADS",
-        "OPENBLAS_NUM_THREADS",
-        "NUMEXPR_NUM_THREADS",
-        "VECLIB_MAXIMUM_THREADS",
-    ):
-        os.environ[_var] = _n_cores
-
 # jax imports need to be after setting environment variables
 import jax
 from jax import Array
 from jax import numpy as jnp
 
-from flapjax.aero.data_structures import GridDiscretisation
-from flapjax.aero.flowfields import ConstantFlowField
-from flapjax.aero.utils import make_rectangular_grid
-from flapjax.aero.uvlm import UVLM
 from flapjax.coupled import (
     AeroelasticCase,
     CoupledAeroelastic,
@@ -61,7 +27,7 @@ from flapjax.coupled.data_structures import (
     AeroelasticDesignVariables,
     AeroelasticFullStates,
 )
-from flapjax.structure import BeamStructure
+from flapjax.models.cantilever_wing.cantilever_wing import generate_cantilever_wing
 from flapjax.structure.utils import get_solve_dofs
 from flapjax.utils.data_structures import ConvergenceSettings
 
@@ -79,65 +45,25 @@ CSV_FIELDS: tuple[str, ...] = (
 )
 
 
+FIXED_ITER = ConvergenceSettings(
+    max_n_iter=3,
+    rel_disp_tol=None,
+    abs_disp_tol=None,
+    rel_force_tol=None,
+    abs_force_tol=None,
+)
+
+STATIC_CONVERGENCE = ConvergenceSettings(
+    max_n_iter=100,
+    rel_disp_tol=1e-5,
+    abs_disp_tol=1e-8,
+    rel_force_tol=1e-5,
+    abs_force_tol=1e-8,
+)
+
+
 def build_wing(m: int, n: int, m_star: int) -> CoupledAeroelastic:
-    n_nodes = n + 1
-    b_ref, c_ref, ea = 6.0, 1.0, 0.2
-    u_inf = jnp.array((20.0, 0.0, 2.0))
-    u_inf_mag = jnp.linalg.norm(u_inf)
-    k_cs = jnp.diag(jnp.array((1e7, 1e7, 1e7, 1e5, 1e7, 2e4)))
-    m_cs = jnp.diag(jnp.array((10.0, 10.0, 10.0, 10.0, 10.0, 10.0)))
-
-    conn = jnp.zeros((n, 2), dtype=int)
-    conn = conn.at[:, 0].set(jnp.arange(n))
-    conn = conn.at[:, 1].set(jnp.arange(1, n + 1))
-    beam = BeamStructure(
-        num_nodes=n_nodes,
-        connectivity=conn,
-        y_vector=jnp.array((0.0, 0.0, 1.0)),
-        spectral_radius=1.0,
-    )
-
-    gd = GridDiscretisation(m=m, n=n, m_star=m_star)
-    uvlm = UVLM(
-        grid_shapes=[gd],
-        dof_mapping=jnp.arange(n_nodes),
-        mirror_point=jnp.zeros(3),
-        mirror_normal=jnp.array((0.0, 1.0, 0.0)),
-        gamma_dot_relaxation=0.7,
-        batch_size=None,
-    )
-    wing = CoupledAeroelastic(beam, uvlm)
-
-    beam_coords = (
-        jnp.zeros((n_nodes, 3)).at[:, 1].set(jnp.linspace(0.0, b_ref, n_nodes))
-    )
-    grid = make_rectangular_grid(m, n, c_ref, ea)
-    dt = c_ref / (u_inf_mag * m)
-    delta_w = dt * u_inf_mag * jnp.logspace(0.0, 0.9, m_star)
-    wing.set_design_variables(
-        coords=beam_coords,
-        k_cs=k_cs,
-        m_cs=m_cs,
-        m_lumped=None,
-        dt=dt,
-        flowfield=ConstantFlowField(u_inf=u_inf, rho=1.225, relative_motion=True),
-        delta_w=delta_w,
-        x0_aero=grid,
-    )
-
-    # enforce exactly three FSI and three structural iterations per timestep so per-config
-    # work is deterministic and comparable across panel counts
-    fixed_iter = ConvergenceSettings(
-        max_n_iter=3,
-        rel_disp_tol=None,
-        abs_disp_tol=None,
-        rel_force_tol=None,
-        abs_force_tol=None,
-    )
-    wing.fsi_convergence_settings = fixed_iter
-    wing.structure.struct_convergence_settings = fixed_iter
-
-    return wing
+    return generate_cantilever_wing(n_nodes=n + 1, m=m, m_star=m_star)
 
 
 def objective(
@@ -212,6 +138,9 @@ def run_config(m: int, n: int, m_star: int, metric: str, csv_path: Path) -> None
         prescribed_dofs=jnp.arange(6),
         horseshoe=True,
     )
+
+    wing.fsi_convergence_settings = FIXED_ITER
+    wing.structure.struct_convergence_settings = FIXED_ITER
 
     base: dict[str, int | float] = {
         "m": m,
@@ -365,8 +294,8 @@ if __name__ == "__main__":
 
     # fresh CSVs each run
     # Comment these two lines out to resume a previous partial sweep.
-    # bound_csv.unlink(missing_ok=True)
-    # wake_csv.unlink(missing_ok=True)
+    bound_csv.unlink(missing_ok=True)
+    wake_csv.unlink(missing_ok=True)
 
     # baseline parameters
     n_fixed = 20
@@ -377,7 +306,7 @@ if __name__ == "__main__":
     run_sweep(
         label="bound",
         sweep_param="m",
-        sweep_values=[2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64],
+        sweep_values=[8, 12, 16, 24, 32, 48, 64],
         fixed={"n": n_fixed, "m_star": m_star_fixed},
         csv_path=bound_csv,
         skip_dense_above=16,

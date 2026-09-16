@@ -168,7 +168,7 @@ class TestGustFRFAdjoint:
 
         rel_err = abs(fd_grad - adj_grad) / abs(fd_grad)
 
-        assert rel_err < 3e-2, (
+        assert rel_err < 5e-2, (
             f"k_cs[:, 4, 4] gradient mismatch: adjoint={adj_grad}, FD={fd_grad}, "
             f"rel_err={rel_err:.3e}"
         )

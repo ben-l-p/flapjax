@@ -583,6 +583,8 @@
       
         
       
+        
+      
     
     
     
@@ -660,6 +662,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../simple_hale_hinged_gust/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trimmed Simple HALE with Hinged Wingtips - Gust Response
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../patil_wing_control/" class="md-nav__link">
         
   
@@ -708,10 +738,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
         
           
-          <label class="md-nav__link" for="__nav_2_3_3" id="__nav_2_3_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
             
   
   
@@ -729,8 +759,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_3">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -889,10 +919,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_3_5" id="__nav_2_3_5_label" tabindex="0">
             
   
   
@@ -910,8 +940,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_3_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2546,14 +2576,14 @@ case.structure.beta_k = float(struct_damping_ratio / (jnp.pi * lco_freq_hz))</di
 <span class="n">k_root</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span>
     <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">k_translation</span><span class="p">,</span> <span class="n">k_translation</span><span class="p">,</span> <span class="n">k_translation</span><span class="p">,</span> <span class="n">k_pitch</span><span class="p">,</span> <span class="n">k_roll</span><span class="p">,</span> <span class="n">k_yaw</span><span class="p">))</span>
 <span class="p">)</span>
-<span class="k">case</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">nodal_constraints</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">SpringDamper</span><span class="p">(</span>
+<span class="k">case</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">constraints</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"root_spring_damper"</span><span class="p">:</span> <span class="n">SpringDamper</span><span class="p">(</span>
         <span class="n">node_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">k</span><span class="o">=</span><span class="n">k_root</span><span class="p">,</span>
         <span class="n">c</span><span class="o">=</span><span class="n">root_zeta</span> <span class="o">*</span> <span class="n">k_root</span><span class="p">,</span>
         <span class="n">hg_ref</span><span class="o">=</span><span class="n">case</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">hg0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
     <span class="p">),</span>
-<span class="p">)</span>
+<span class="p">}</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-5"># root spring/damper: soft in roll/pitch, stiff in translation and yaw.
 # damping applied to all 6 degrees of freedom, although only significant on the less stiff ones
@@ -2566,14 +2596,14 @@ root_zeta = 2e-2
 k_root = jnp.diag(
     jnp.array((k_translation, k_translation, k_translation, k_pitch, k_roll, k_yaw))
 )
-case.structure.nodal_constraints = (
-    SpringDamper(
+case.structure.constraints = {
+    "root_spring_damper": SpringDamper(
         node_index=0,
         k=k_root,
         c=root_zeta * k_root,
         hg_ref=case.structure.hg0[0],
     ),
-)</div>
+}</div>
 </div>
 </div>
 </div>

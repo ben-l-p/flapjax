@@ -581,6 +581,8 @@
       
         
       
+        
+      
     
     
     
@@ -658,6 +660,34 @@
   
   
     <li class="md-nav__item">
+      <a href="simple_hale_hinged_gust/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trimmed Simple HALE with Hinged Wingtips - Gust Response
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="patil_wing_control/" class="md-nav__link">
         
   
@@ -706,10 +736,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
         
           
-          <label class="md-nav__link" for="__nav_2_3_3" id="__nav_2_3_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
             
   
   
@@ -727,8 +757,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_3">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -885,10 +915,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_5" >
         
           
-          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_3_5" id="__nav_2_3_5_label" tabindex="0">
             
   
   
@@ -906,8 +936,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1573,8 +1603,13 @@ write <code>.vtu</code> and <code>.pvd</code> files to disk, which can be visual
   routine to find the thrust and elevator deflection that satisfy trim conditions, before using the aeroelastic
   <code>dynamic_solve()</code> routine to find the time-domain response of the aircraft. This tutorial demonstrates using
   batching to efficiently parallelise for multiple gust cases at once.s</li>
+<li><a href="simple_hale_hinged_gust/">Simple HALE hinged wingtip gust response</a> - Variant of the above with
+  free-hinging wingtips, using <code>MultibodyHinge</code> constraints. Demonstrates trimming a multibody aircraft, where
+  the trim solver also finds the equilibrium hinge angles, before flying it through the gust as a free-flying
+  body.<ul>
 <li><a href="patil_wing_control/">Patil wing open-loop control</a> — Open-loop control of ailerons for a pair of very
-  flexible wings mounted on a central hinge, performing a roll manoeuvre. Makes use of the aeroelastic <code>trim()</code>
+  flexible wings mounted on a central hinge, performing a roll manoeuvre. Makes use of the aeroelastic
+  <code>trim()</code>
   and
   <code>dynamic_solve()</code> routines to find the time-domain response.</li>
 <li>Pazy wing (both straight and swept configurations)<ul>
@@ -1584,15 +1619,20 @@ write <code>.vtu</code> and <code>.pvd</code> files to disk, which can be visual
   parallel. Evolution of the tip deflection is plotted.</li>
 <li>Deformed mode
   frequencies <a href="straight_pazy_deformed_modes/">straight</a>, <a href="swept_pazy_deformed_modes/">swept</a> —
-  Evolution of the first five natural frequencies with tip displacement, controlled via freestream velocity and
+  Evolution of the first five natural frequencies with tip displacement, controlled via freestream velocity
+  and
   making use of the <code>static_solve()</code>
   and structural <code>modal()</code> routines.</li>
 <li>Flutter analysis <a href="straight_pazy_flutter/">straight</a>, <a href="swept_pazy_flutter/">swept</a> — Compute the
   stability of the wing across a grid of angles of attack and freestream velocities using the coupled
   <code>linearise()</code> routine.</li>
-<li>Time-domain LCO <a href="straight_pazy_lco/">straight</a>, <a href="swept_pazy_lco/">swept</a> — Time-domain limit-cycle
-  oscillation computation for the wing, plotting the deflection of the beam tip over time, obtained using the
+<li>Time-domain LCO <a href="straight_pazy_lco/">straight</a>, <a href="swept_pazy_lco/">swept</a> — Time-domain
+  limit-cycle
+  oscillation computation for the wing, plotting the deflection of the beam tip over time, obtained using
+  the
   <code>static_solve()</code> and <code>dynamic_solve()</code> routines.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

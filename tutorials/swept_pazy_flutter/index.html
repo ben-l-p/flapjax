@@ -583,6 +583,8 @@
       
         
       
+        
+      
     
     
     
@@ -660,6 +662,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../simple_hale_hinged_gust/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trimmed Simple HALE with Hinged Wingtips - Gust Response
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../patil_wing_control/" class="md-nav__link">
         
   
@@ -708,10 +738,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
         
           
-          <label class="md-nav__link" for="__nav_2_3_3" id="__nav_2_3_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
             
   
   
@@ -729,8 +759,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_3">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -889,10 +919,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_3_5" id="__nav_2_3_5_label" tabindex="0">
             
   
   
@@ -910,8 +940,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_3_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2576,8 +2606,7 @@ norm = cast(Normalize, Normalize(vmin=float(u_inf_mags.min()), vmax=float(u_inf_
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">eigs_at_velocity</span><span class="p">(</span><span class="n">u_mag</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">wing</span><span class="p">:</span> <span class="n">CoupledAeroelastic</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
-    <span class="c1"># this function is mapped across the input velocities, allowing multiple design points to be evaluated in</span>
-    <span class="c1"># parallel</span>
+    <span class="c1"># this function is mapped across the input velocities, allowing multiple design points to be evaluated in parallel</span>
     <span class="n">inner_wing</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">wing</span><span class="p">)</span>
 
     <span class="c1"># set the required design variables for this case</span>
@@ -2617,8 +2646,7 @@ norm = cast(Normalize, Normalize(vmin=float(u_inf_mags.min()), vmax=float(u_inf_
     <span class="k">return</span> <span class="n">eigvals</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-4">def eigs_at_velocity(u_mag: Array, wing: CoupledAeroelastic) -&gt; Array:
-    # this function is mapped across the input velocities, allowing multiple design points to be evaluated in
-    # parallel
+    # this function is mapped across the input velocities, allowing multiple design points to be evaluated in parallel
     inner_wing = deepcopy(wing)
 
     # set the required design variables for this case

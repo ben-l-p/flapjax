@@ -1159,6 +1159,153 @@ class LinearCoupled(
 
         return evals[idx]
 
+    def modal_rescaled(
+        self,
+        velocity: float | Array,
+        density: float | Array,
+        chord: float | Array,
+        n_modes: int | None = None,
+        freq_range: tuple[float | Array, float | Array] = (0.0, jnp.inf),
+        damp_range: tuple[float | Array, float | Array] = (-jnp.inf, jnp.inf),
+        min_struct_content: float | Array = 0.0,
+        remove_complex_conjugate: bool = True,
+        sort: Literal["frequency", "damping"] = "frequency",
+    ) -> Array:
+        r"""
+        Compute eigenvalues of the rescaled linear system at a new velocity, density, and chord length without
+        re-linearising.
+        :param velocity: Freestream velocity magnitude(s) at the new condition(s), scalar or ``(*n_points,)``.
+        :param density: Flow density(s) at the new condition(s), scalar or broadcastable with ``velocity``.
+        :param chord: Reference chord length(s) at the new condition(s), scalar or broadcastable with ``velocity``.
+        :param n_modes: Number of modes to keep. If ``None``, all eigenvalues are returned.
+        :param freq_range: (min, max) natural frequency window in Hz.
+        :param damp_range: (min, max) damping-ratio window.
+        :param min_struct_content: Minimum structural eigenvector energy fraction in ``[0, 1]``.
+        :param remove_complex_conjugate: Drop one partner from each conjugate pair.
+        :param sort: Sort eigenvalues by ``"frequency"`` or ``"damping"``.
+        :return: Continuous-time eigenvalues of the rescaled system(s), ``(n_out,)`` for scalar
+            inputs or ``(*n_points, n_out)`` for batched inputs.
+        """
+        velocity, density, chord = jnp.broadcast_arrays(
+            jnp.asarray(velocity, dtype=float),
+            jnp.asarray(density, dtype=float),
+            jnp.asarray(chord, dtype=float),
+        )
+        batch_shape = velocity.shape
+
+        def _single(velocity_: Array, density_: Array, chord_: Array) -> Array:
+            r"""
+            Rescale and diagonalise the linear system at a single (velocity, density, chord) point.
+            """
+            # reference conditions
+            u_ref = self._case.aero.flowfield.u_inf_mag
+            rho_ref = self._case.aero.flowfield.rho
+            m_chord = self.reference.aero.gamma_b[0].shape[0]
+
+            dt_new = chord_ / (m_chord * velocity_)
+
+            # discretise structural system at new dt
+            struct_cont = self.structure.linearise_continuous()
+            n_struct = struct_cont.a.shape[0]
+            eye_s = jnp.eye(n_struct)
+
+            mat_inv_new = jnp.linalg.inv(eye_s - struct_cont.a * 0.5 * dt_new)
+            a_struct_new = mat_inv_new @ (eye_s + struct_cont.a * 0.5 * dt_new)
+            b_struct_new = mat_inv_new @ (struct_cont.b * dt_new)
+
+            f_ext_slice = self.structure.input_slices["f_ext"].slices
+            b_d_f_ref = self.structure.sys.b[:, f_ext_slice]
+            b_d_f_new = b_struct_new[:, f_ext_slice]
+
+            # rescaled A matrix
+            a_ref = self.sys.a
+
+            # structural and aero index ranges in the coupled state vector
+            q_start = self.state_slices["q"].slices.start
+            q_dot_end = self.state_slices["q_dot"].slices.stop
+            struct_slice = slice(q_start, q_dot_end)
+
+            # reference structural discrete-time A_d
+            a_struct_ref = self.structure.sys.a
+
+            # aero-induced contribution in the structural rows
+            struct_rows = a_ref[struct_slice, :]
+            delta = struct_rows.at[:, struct_slice].add(-a_struct_ref)
+
+            # extract force Jacobian
+            force_jac = jnp.linalg.pinv(b_d_f_ref) @ delta
+
+            # per-column force scaling
+            n_total = a_ref.shape[0]
+            q_state_slice = self.state_slices["q"].slices
+            base_force_scale = (density_ * velocity_) / (rho_ref * u_ref)
+            force_col_scale = jnp.ones(n_total) * base_force_scale
+            force_col_scale = force_col_scale.at[q_state_slice].set(
+                (density_ * velocity_**2) / (rho_ref * u_ref**2)
+            )
+            delta_new = b_d_f_new @ (force_jac * force_col_scale[None, :])
+
+            a_new = a_ref.at[struct_slice, :].set(delta_new)
+            a_new = a_new.at[struct_slice, struct_slice].add(a_struct_new)
+
+            vel_ratio = velocity_ / u_ref
+            a_new = a_new.at[:q_start, q_state_slice].multiply(vel_ratio)
+
+            # eigenvalue computation
+            evals_d, evecs = jnp.linalg.eig(a_new)
+            evals = jnp.log(evals_d) / dt_new
+
+            omega_damped = jnp.abs(evals.imag)
+            damping = -evals.real / jnp.abs(evals)
+            omega_natural = omega_damped / jnp.sqrt(1.0 - damping**2)
+            freq_natural_hz = omega_natural / (2.0 * jnp.pi)
+
+            match sort:
+                case "frequency":
+                    idx = omega_natural.argsort()
+                case "damping":
+                    idx = damping.argsort()
+
+            if remove_complex_conjugate:
+                partner = conjugate_partner_mask(
+                    freq_hz=freq_natural_hz, damping=damping, tiebreaker=evals.real
+                )
+                idx = idx[jnp.argsort(partner[idx], stable=True)]
+
+            q_slice = self.state_slices["q"].slices
+            q_dot_slice = self.state_slices["q_dot"].slices
+            evec_sq = jnp.abs(evecs) ** 2
+            struct_content = (
+                evec_sq[q_slice].sum(axis=0) + evec_sq[q_dot_slice].sum(axis=0)
+            ) / evec_sq.sum(axis=0)
+
+            in_range = (
+                (freq_natural_hz[idx] >= freq_range[0])
+                & (freq_natural_hz[idx] <= freq_range[1])
+                & (damping[idx] >= damp_range[0])
+                & (damping[idx] <= damp_range[1])
+                & (struct_content[idx] >= min_struct_content)
+            )
+            idx = idx[jnp.argsort(~in_range, stable=True)]
+
+            if n_modes is not None:
+                idx = idx[:n_modes]
+
+            return evals[idx]
+
+        if batch_shape == ():
+            return _single(velocity, density, chord)
+
+        n_points = velocity.size
+
+        # map scaling across multiple points
+        evals_flat = vmap(_single)(
+            velocity.reshape(n_points),
+            density.reshape(n_points),
+            chord.reshape(n_points),
+        )  # (n_points, n_out)
+        return evals_flat.reshape(*batch_shape, evals_flat.shape[-1])
+
     # noinspection PyMethodOverriding
     def run(
         self,

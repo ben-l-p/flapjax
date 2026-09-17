@@ -20,7 +20,7 @@ def _hinged_beam(hinge_axis: Array, gravity: Array):
         num_nodes=n_nodes,
         connectivity=conn,
         y_vector=jnp.array((0.0, 0.0, 1.0)),
-        constraints=[hinge],
+        constraints={"hinge": hinge},
         gravity=gravity,
         spectral_radius=1.0,
     )

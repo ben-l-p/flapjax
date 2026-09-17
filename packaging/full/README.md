@@ -15,7 +15,7 @@ Two PyPI distributions are provided:
 | `flapjax`      | Library only                              |
 | `flapjax-full` | Library + test suite + tutorial notebooks |
 
-Install one distribution — they provide the same `flapjax` import path.
+Install one distribution - they provide the same `flapjax` import path.
 
 ```bash
 pip install flapjax        # minimal

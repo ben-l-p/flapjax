@@ -35,7 +35,8 @@ from flapjax.coupled.gradients.utils import (
     group_key,
     parse_groups,
 )
-from flapjax.structure import StructureDesignVariables
+from flapjax.structure import BeamStructure, StructureDesignVariables
+from flapjax.structure.constraints import HardConstraint, MultibodyHinge
 from flapjax.structure.data_structures import OptionalJacobians, StructureMinimalStates
 from flapjax.structure.gradients.data_structures import (
     StructureFullStates,
@@ -1451,6 +1452,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         trim_cs: Sequence[str | Sequence[str]] | str | None,
         thrust_nodes: Sequence[str | Sequence[str]] | str | None,
         trim_orientation: str | Sequence[str] | None = "x",
+        trim_hinges: Sequence[str | Sequence[str]] | str | None = None,
         trim_f_abs_tolerance: float = 1e-2,
         f_ext_follower: Array | None = None,
         f_ext_dead: Array | None = None,
@@ -1477,6 +1479,8 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         tied together and share a single thrust value).
         :param trim_orientation: Inertial axis (or axes if a sequence is provided) around which the aircraft is
         rotated about at the clamp to achieve trim.
+        :param trim_hinges: Names of ``MultibodyHinge`` constraints (keys into the structure's named constraints)
+        whose rotation should be solved as a trim variable.
         :param trim_f_abs_tolerance: Absolute maximum force residual at the clamped nodes for convergence to be achieved.
         :param f_ext_follower: External follower forces, [n_nodes, 6].
         :param f_ext_dead: external dead forces, [n_nodes, 6].
@@ -1493,14 +1497,21 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         :return: Aeroelastic solution object for the trimmed aircraft.
         """
 
-        # parse groups for paired thrust nodes/control surfaces
+        # parse groups for paired thrust nodes/control surfaces/hinges
         cs_groups: list[tuple[str, ...]] = parse_groups(trim_cs, "trim_cs")
         thrust_groups: list[tuple[str, ...]] = parse_groups(
             thrust_nodes, "thrust_nodes"
         )
+        hinge_groups: list[tuple[str, ...]] = parse_groups(trim_hinges, "trim_hinges")
 
         check_unique_members(cs_groups, "trim_cs")
         check_unique_members(thrust_groups, "thrust_nodes")
+        check_unique_members(hinge_groups, "trim_hinges")
+
+        if hinge_groups and method == "adjoint":
+            raise ValueError(
+                "trim_hinges is only supported with method='finite_difference'."
+            )
 
         trim_orientation_: Sequence[str] = (
             [trim_orientation]
@@ -1532,6 +1543,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 k: self.structure.orientation_euler[ORIENTATION_DICT[k]]
                 for k in trim_orientation_
             },
+            hinge_angle={group_key(g): jnp.array(0.0) for g in hinge_groups},
         )
 
         ae_sol_init = self.reference_configuration(
@@ -1604,6 +1616,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 horseshoe=horseshoe,
                 cs_groups=cs_groups,
                 thrust_groups=thrust_groups,
+                hinge_groups=hinge_groups,
                 trim_orientation=trim_orientation_,
             )
 
@@ -1630,6 +1643,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                     horseshoe=horseshoe,
                     cs_groups=cs_groups,
                     thrust_groups=thrust_groups,
+                    hinge_groups=hinge_groups,
                     trim_orientation=trim_orientation_,
                     trim_relaxation=trim_relaxation,
                 )
@@ -1678,6 +1692,10 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             remove_checks=True,
         )
 
+        if hinge_groups:
+            # release the angle-pinning constraint used to condition the trim solve
+            self._revert_hinge_trim(hinge_groups)
+
         return ae_sol, trim_variables
 
     def trim_angles_to_euler(self, trim_angles: dict[str, Array]) -> Array:
@@ -1694,6 +1712,140 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         return orientation_euler
 
     @staticmethod
+    def _rebuild_hinge(
+        old: MultibodyHinge, prescribed_angle: Array | float | None
+    ) -> MultibodyHinge:
+        """Reconstruct a MultibodyHinge with the same geometry/spring/damping but a different prescribed angle. A
+        prescribed angle of None will release it."""
+        return MultibodyHinge(
+            node_i=old.node_i,
+            node_j=old.node_j,
+            axis=old.axis,
+            hg_rel_ref=old.hg_rel_ref,
+            spring_stiffness=old.spring_stiffness,
+            damping=old.damping,
+            prescribed_angle=prescribed_angle,
+        )
+
+    @staticmethod
+    def _set_hinge_constraints(
+        structure: BeamStructure, updates: dict[str, MultibodyHinge]
+    ) -> None:
+        """Substitute the named hinge constraints in place on ``structure``."""
+        named = dict(structure.constraints)
+        named.update(updates)
+        structure.constraints = named
+
+    @staticmethod
+    def _apply_hinge_trim(
+        structure: BeamStructure,
+        hinge_angle: dict[str, Array],
+        hinge_groups: Sequence[Sequence[str]],
+    ) -> None:
+        """Pin each named hinge to a given angle."""
+        per_member = expand_groups(hinge_angle, hinge_groups)
+        if not per_member:
+            return
+        updates: dict[str, MultibodyHinge] = {}
+        for name, angle in per_member.items():
+            old = structure.constraints.get(name)
+            if not isinstance(old, MultibodyHinge):
+                raise TypeError(
+                    f"trim_hinges entry {name} not MultibodyHinge constraint."
+                )
+            updates[name] = CoupledAeroelastic._rebuild_hinge(old, angle)
+        CoupledAeroelastic._set_hinge_constraints(structure, updates)
+
+    def _revert_hinge_trim(self, hinge_groups: Sequence[Sequence[str]]) -> None:
+        """Release the trimmed hinges back to free (zero-stiffness) joints once trim has converged."""
+        names = [name for group in hinge_groups for name in group]
+        updates: dict[str, MultibodyHinge] = {}
+        for name in names:
+            old = self.structure.constraints[name]
+            if not isinstance(old, MultibodyHinge):
+                raise TypeError(
+                    f"trim_hinges entry {name} not a MultibodyHinge constraint"
+                )
+            updates[name] = self._rebuild_hinge(old, None)
+        self._set_hinge_constraints(self.structure, updates)
+
+    @staticmethod
+    def _hinge_moment_residual(
+        structure: BeamStructure,
+        ae_sol: AeroelasticCase,
+        hinge_groups: Sequence[Sequence[str]],
+        prescribed_dofs: tuple[int, ...],
+    ) -> Array:
+        """
+        Re-solve the converged system once more at the trimmed equilibrium to obtain the Lagrange multiplier
+        on each prescribed hinge's angle-pinning constraint row.
+        """
+        struct_case = ae_sol.structure
+        hg = struct_case.hg
+        rmat = hg[:, :3, :3]
+
+        f_dead_total: Array | None = None
+        if struct_case.f_ext_dead is not None:
+            f_dead_total = transform_nodal_vect(struct_case.f_ext_dead, rmat)
+        if struct_case.f_ext_aero is not None:
+            f_aero_global = transform_nodal_vect(struct_case.f_ext_aero, rmat)
+            f_dead_total = (
+                f_aero_global if f_dead_total is None else f_dead_total + f_aero_global
+            )
+
+        solve_dofs = jnp.array(
+            get_solve_dofs(n_dof=structure.n_dof, prescribed_dofs=prescribed_dofs)
+        )
+        d = structure.make_d(hg)
+        p_d = structure.make_p_d(d)
+        eps = structure.make_eps(d)
+        m_t = structure.make_m_t(d) if structure.use_gravity else None
+
+        k_t_full = structure.make_k_t_full(
+            d=d, p_d=p_d, eps=eps, f_ext_dead=f_dead_total, rmat=rmat, m_t=m_t
+        )
+        k_t_full = structure.apply_nodal_constraint_tangent(
+            mat=k_t_full, hg=hg, i_ts=0, gamma_prime=None
+        )
+        k_t_solve = k_t_full[jnp.ix_(solve_dofs, solve_dofs)]
+
+        f_res_solve, _ = structure.make_f_res(
+            solve_dofs=solve_dofs,
+            p_d=p_d,
+            eps=eps,
+            hg=hg,
+            f_ext_follower_n=struct_case.f_ext_follower,
+            f_ext_dead_n=f_dead_total,
+            thrust_n=structure.thrust_reference,
+            dynamic=False,
+            m_t=m_t,
+            c_l=None,
+            c_l_lumped=None,
+            v=None,
+            v_dot=None,
+        )
+        _, lam, _ = structure.solve_constrained(
+            sys_mat_solve=k_t_solve,
+            f_res_solve=f_res_solve,
+            hg_eval=hg,
+            solve_dofs=solve_dofs,
+        )
+
+        offsets: dict[str, int] = {}
+        running = 0
+        for name, con in structure.constraints.items():
+            if isinstance(con, HardConstraint) and con.is_holonomic:
+                offsets[name] = running
+                running += con.n_constraints
+
+        def _row(name_: str) -> Array:
+            con_ = structure.constraints[name_]
+            assert isinstance(con_, HardConstraint)
+            return lam[offsets[name_] + con_.n_constraints - 1]
+
+        return jnp.stack([sum(_row(name) for name in group) for group in hinge_groups])
+
+    @staticmethod
     def _trim_solve_f_clamp(
         inner_case: CoupledAeroelastic,
         trim_variables: TrimVariables,
@@ -1706,8 +1858,14 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         horseshoe: bool,
         cs_groups: Sequence[Sequence[str]],
         thrust_groups: Sequence[Sequence[str]],
+        hinge_groups: Sequence[Sequence[str]] = (),
     ) -> tuple[AeroelasticCase, Array]:
         """Push trim variables into inner_case, run a static solve, and return ``(solution, clamp-force residual)``."""
+        CoupledAeroelastic._apply_hinge_trim(
+            structure=inner_case.structure,
+            hinge_angle=trim_variables.hinge_angle,
+            hinge_groups=hinge_groups,
+        )
         inner_case.set_design_variables(
             coords=inner_case.structure.x0_reference,
             k_cs=inner_case.structure.k_cs,
@@ -1742,6 +1900,14 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 horseshoe=horseshoe,
             )
         f_clamp = ae_sol.structure.f_res.ravel()[jnp.array(zero_force_dofs)]
+        if hinge_groups:
+            hinge_moment = CoupledAeroelastic._hinge_moment_residual(
+                structure=inner_case.structure,
+                ae_sol=ae_sol,
+                hinge_groups=hinge_groups,
+                prescribed_dofs=prescribed_dofs,
+            )
+            f_clamp = jnp.concatenate([f_clamp, hinge_moment])
         return ae_sol, f_clamp
 
     @staticmethod
@@ -1751,6 +1917,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         cs_groups: Sequence[Sequence[str]],
         thrust_groups: Sequence[Sequence[str]],
         trim_orientation: Sequence[str],
+        hinge_groups: Sequence[Sequence[str]] = (),
     ) -> TrimVariables:
         """Subtract the flat trim_update vector from the current variables and return a new TrimVariables."""
         idx = 0
@@ -1768,10 +1935,18 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         for k in trim_orientation:
             updated_trim_angles[k] = trim_variables.trim_angles[k] - trim_update[idx]
             idx += 1
+        updated_hinge_angle = {}
+        for group in hinge_groups:
+            key = group_key(group)
+            updated_hinge_angle[key] = (
+                trim_variables.hinge_angle[key] - trim_update[idx]
+            )
+            idx += 1
         return TrimVariables(
             cs_ang=updated_cs_ang,
             thrust=updated_thrust,
             trim_angles=updated_trim_angles,
+            hinge_angle=updated_hinge_angle,
         )
 
     @staticmethod
@@ -1921,6 +2096,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         cs_groups: Sequence[Sequence[str]],
         thrust_groups: Sequence[Sequence[str]],
         trim_orientation: Sequence[str],
+        hinge_groups: Sequence[Sequence[str]] = (),
     ) -> tuple[Array, Array, AeroelasticCase]:
         """
         Obtain the Broyden Jacobian with a forward finite-difference sweep: perturb each trim variable in turn by
@@ -1938,6 +2114,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             horseshoe=horseshoe,
             cs_groups=cs_groups,
             thrust_groups=thrust_groups,
+            hinge_groups=hinge_groups,
         )
 
         def eval_perturbed(tv_p_: TrimVariables) -> Array:
@@ -1953,6 +2130,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 horseshoe=horseshoe,
                 cs_groups=cs_groups,
                 thrust_groups=thrust_groups,
+                hinge_groups=hinge_groups,
             )
             return (f_p - f_clamp_0) / fd_step
 
@@ -1966,6 +2144,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 },
                 thrust=trim_variables.thrust,
                 trim_angles=trim_variables.trim_angles,
+                hinge_angle=trim_variables.hinge_angle,
             )
             columns.append(eval_perturbed(tv_p))
         for group in thrust_groups:
@@ -1977,6 +2156,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                     for kk, v in trim_variables.thrust.items()
                 },
                 trim_angles=trim_variables.trim_angles,
+                hinge_angle=trim_variables.hinge_angle,
             )
             columns.append(eval_perturbed(tv_p))
         for k in trim_orientation:
@@ -1987,13 +2167,24 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                     kk: (v + fd_step if kk == k else v)
                     for kk, v in trim_variables.trim_angles.items()
                 },
+                hinge_angle=trim_variables.hinge_angle,
+            )
+            columns.append(eval_perturbed(tv_p))
+        for group in hinge_groups:
+            group_k = group_key(group)
+            tv_p = TrimVariables(
+                cs_ang=trim_variables.cs_ang,
+                thrust=trim_variables.thrust,
+                trim_angles=trim_variables.trim_angles,
+                hinge_angle={
+                    kk: (v + fd_step if kk == group_k else v)
+                    for kk, v in trim_variables.hinge_angle.items()
+                },
             )
             columns.append(eval_perturbed(tv_p))
 
-        n_zero_force = len(zero_force_dofs)
-        b_approx = (
-            jnp.stack(columns, axis=1) if columns else jnp.zeros((n_zero_force, 0))
-        )
+        n_residual = len(zero_force_dofs) + len(hinge_groups)
+        b_approx = jnp.stack(columns, axis=1) if columns else jnp.zeros((n_residual, 0))
         return b_approx, f_clamp_0, ae_sol_0
 
     @staticmethod
@@ -2016,6 +2207,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         cs_groups: Sequence[Sequence[str]],
         thrust_groups: Sequence[Sequence[str]],
         trim_orientation: Sequence[str],
+        hinge_groups: Sequence[Sequence[str]] = (),
     ) -> tuple[int, CoupledAeroelastic, TrimVariables, AeroelasticCase, Array, Array]:
         """
         One Broyden trim iteration: take a step using the current Jacobian approximation, re-solve at the new point,
@@ -2028,6 +2220,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             cs_groups=cs_groups,
             thrust_groups=thrust_groups,
             trim_orientation=trim_orientation,
+            hinge_groups=hinge_groups,
         )
 
         ae_sol_new, f_clamp_new = CoupledAeroelastic._trim_solve_f_clamp(
@@ -2042,6 +2235,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             horseshoe=horseshoe,
             cs_groups=cs_groups,
             thrust_groups=thrust_groups,
+            hinge_groups=hinge_groups,
         )
 
         s = -trim_update  # actual step taken in trim-variable space

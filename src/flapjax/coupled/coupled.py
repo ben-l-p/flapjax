@@ -244,6 +244,7 @@ class BaseCoupledAeroelastic:
                 prescribed_dofs=prescribed_dofs,
                 load_steps=load_steps,
                 print_header=False,
+                postprocess_constraints=False,
             )
 
             # compute the full varphi delta
@@ -305,6 +306,10 @@ class BaseCoupledAeroelastic:
         )
 
         fsi_converge_status.print_line(dynamic=False)
+
+        struct_case.constraint_data = self.structure.postprocess_constraints(
+            hg=struct_case.hg
+        )
 
         return AeroelasticCase(structure=struct_case, aero=aero_case)
 

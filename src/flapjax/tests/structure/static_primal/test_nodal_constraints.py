@@ -51,7 +51,9 @@ class TestSpringDamper:
 
         # soft constraint case with very stiff spring
         spring = SpringDamper(node_index=0, k=jnp.eye(6) * 1e10, hg_ref=jnp.eye(4))
-        beam_soft = _cantilever_beam(n_nodes=cls.n_nodes, constraints=[spring])
+        beam_soft = _cantilever_beam(
+            n_nodes=cls.n_nodes, constraints={"spring": spring}
+        )
         res_soft = beam_soft.static_solve(prescribed_dofs=(), f_ext_dead=tip_force)
 
         assert jnp.allclose(res_soft.hg[0, :3, 3], 0.0, atol=1e-8), (
@@ -75,7 +77,7 @@ class TestSpringDamper:
         tip_force = jnp.zeros((cls.n_nodes, 6)).at[-1, 2].set(f)
 
         spring = SpringDamper(node_index=0, k=jnp.eye(6) * k, hg_ref=jnp.eye(4))
-        beam = _cantilever_beam(n_nodes=cls.n_nodes, constraints=[spring])
+        beam = _cantilever_beam(n_nodes=cls.n_nodes, constraints={"spring": spring})
         sol = beam.static_solve(prescribed_dofs=(), f_ext_dead=tip_force)
 
         # root z-displacement should equal force / stiffness

@@ -28,7 +28,6 @@ class SoftConstraint(ABC):
         :return: Nodal force, ``(6, )``.
         """
 
-    @abstractmethod
     def k_tangent(self, hg: Array, i_ts: int) -> Array:
         r"""
         Effective stiffness contribution :math:`-\partial \mathbf{f_{res}}/\partial \boldsymbol{\varphi}`.
@@ -36,6 +35,7 @@ class SoftConstraint(ABC):
         :param i_ts: Time-step index.
         :return: Nodal stiffness contribution, ``(6, 6)``.
         """
+        return jnp.zeros((6, 6))
 
     def c_tangent(self, hg: Array, i_ts: int) -> Array:
         r"""
@@ -50,6 +50,13 @@ class SoftConstraint(ABC):
         r"""
         Called once ``hg0`` is populated so subclasses can default their reference frame to the node's initial pose.
         :param hg0: Full nodal initial-frame array, ``(n_nodes, 4, 4)``.
+        """
+
+    def postprocess(self, hg: Array) -> dict[str, Array]:
+        r"""
+        Extract derived quantities from the converged solution that are given in the returned structure object.
+        :param hg: Nodal SE(3) frames, ``(n_nodes, 4, 4)`` or ``(n_tstep, n_nodes, 4, 4)``.
+        :return: Dict of named result arrays.
         """
 
 
@@ -291,15 +298,63 @@ class HardConstraint(ABC):
                 v_j,
             )
 
-        return jax.jacfwd(vel_violation_delta_i)(jnp.zeros(6)), jax.jacfwd(vel_violation_delta_j)(
-            jnp.zeros(6)
-        )
+        return jax.jacfwd(vel_violation_delta_i)(jnp.zeros(6)), jax.jacfwd(
+            vel_violation_delta_j
+        )(jnp.zeros(6))
+
+    @property
+    def has_f_res(self) -> bool:
+        r"""Whether this constraint contributes internal forces, for example if it includes a srping or damper."""
+        return False
+
+    def f_res(
+        self,
+        hg_i: Array,
+        hg_j: Array,
+        v_i: Array,
+        v_j: Array,
+    ) -> tuple[Array, Array]:
+        r"""
+        Internal force contributions at nodes i and j.
+        :param hg_i: SE(3) frame of node i, ``(4, 4)``.
+        :param hg_j: SE(3) frame of node j, ``(4, 4)``.
+        :param v_i: Local velocity of node i, ``(6, )``.
+        :param v_j: Local velocity of node j, ``(6, )``.
+        :return: ``(f_i, f_j)`` each ``(6, )``.
+        """
+        return jnp.zeros(6), jnp.zeros(6)
+
+    def k_tangent(self, hg_i: Array, hg_j: Array) -> Array:
+        r"""
+        Tangent stiffness contribution from constraint, ``(12, 12)``.
+        :param hg_i: SE(3) frame of node i, ``(4, 4)``.
+        :param hg_j: SE(3) frame of node j, ``(4, 4)``.
+        :return: Tangent stiffness, ``(12, 12)``.
+        """
+        return jnp.zeros((12, 12))
+
+    def c_tangent(self, hg_i: Array, hg_j: Array) -> Array:
+        r"""
+        Tangent damping contribution from constraint, ``(12, 12)``.
+        :param hg_i: SE(3) frame of node i, ``(4, 4)``.
+        :param hg_j: SE(3) frame of node j, ``(4, 4)``.
+        :return: Tangent damping, ``(12, 12)``.
+        """
+        return jnp.zeros((12, 12))
 
     def resolve_hg_ref(self, hg0: Array) -> None:
         r"""
         Called once ``hg0`` is populated so subclasses can default their reference frame to the initial relative pose.
         :param hg0: Full nodal initial-frame array, ``(n_nodes, 4, 4)``.
         """
+
+    def postprocess(self, hg: Array) -> dict[str, Array]:
+        r"""
+        Extract derived quantities from the converged solution.
+        :param hg: Nodal SE(3) frames, ``(n_nodes, 4, 4)`` or ``(n_tstep, n_nodes, 4, 4)``.
+        :return: Dict of named result arrays.
+        """
+        return {}
 
 
 def _hinge_projection(axis: Array) -> tuple[Array, Array]:
@@ -331,10 +386,18 @@ class MultibodyHinge(HardConstraint):
     r"""
     Hinge joint between two nodes. Constrains the relative configuration to allow only rotation about the
     specified axis (5 scalar constraints: 3 translation + 2 perpendicular rotation).
+
+    Optionally includes a linear rotational spring and/or damper about the hinge axis.
     """
 
-    _static: ClassVar[tuple[str, ...]] = ("node_i", "node_j", "_hg_ref_from_hg0")
-    n_constraints: ClassVar[int] = 5
+    _static: ClassVar[tuple[str, ...]] = (
+        "node_i",
+        "node_j",
+        "_hg_ref_from_hg0",
+        "spring_stiffness",
+        "damping",
+        "_prescribed",
+    )
 
     def __init__(
         self,
@@ -343,6 +406,9 @@ class MultibodyHinge(HardConstraint):
         *,
         axis: Array,
         hg_rel_ref: Array | None = None,
+        spring_stiffness: float = 0.0,
+        damping: float = 0.0,
+        prescribed_angle: Array | float | None = None,
     ) -> None:
         r"""
         :param node_i: Index of first node.
@@ -351,6 +417,10 @@ class MultibodyHinge(HardConstraint):
         :param axis: Hinge axis direction ``(3, )``, given in the frame of ``hg_rel_ref``.
         :param hg_rel_ref: Reference relative SE(3) pose of the hinge ``(4, 4)``, or ``None`` to default to the initial
         relative pose.
+        :param spring_stiffness: Scalar rotational spring stiffness about the hinge axis (N·m/rad).
+        :param damping: Scalar rotational damping about the hinge axis (N·m·s/rad).
+        :param prescribed_angle: If not ``None``, adds a 6th holonomic constraint pinning the hinge rotation to this
+        angle. This makes the joint fully rigid, and allows for a determined static problem.
         """
         self.node_i: int = int(node_i)
         self.node_j: int | None = None if node_j is None else int(node_j)
@@ -360,6 +430,18 @@ class MultibodyHinge(HardConstraint):
         self._hg_ref_from_hg0: bool = hg_rel_ref is None
         self.hg_rel_ref: Array = jnp.eye(4) if hg_rel_ref is None else hg_rel_ref
 
+        self.spring_stiffness: float = float(spring_stiffness)
+        self.damping: float = float(damping)
+
+        self._prescribed: bool = prescribed_angle is not None
+        self.prescribed_angle: Array = jnp.asarray(
+            0.0 if prescribed_angle is None else prescribed_angle
+        )
+
+    @property
+    def n_constraints(self) -> int:
+        return 6 if self._prescribed else 5
+
     def resolve_hg_ref(self, hg0: Array) -> None:
         if self._hg_ref_from_hg0:
             self.hg_rel_ref = hg_inv(hg0[self.node_i]) @ hg0[self.node_j]
@@ -367,7 +449,87 @@ class MultibodyHinge(HardConstraint):
     def violation(self, hg_i: Array, hg_j: Array) -> Array:
         hg_rel = hg_inv(hg_i) @ hg_j
         d_error = hg_to_d(self.hg_rel_ref, hg_rel)
-        return self.projection @ d_error
+        base = self.projection @ d_error
+        if self._prescribed:
+            angle_err = (self.axis @ d_error[3:]) - self.prescribed_angle
+            return jnp.concatenate([base, angle_err[None]])
+        return base
+
+    def hinge_angle(self, hg_i: Array, hg_j: Array) -> Array:
+        r"""
+        Extract rotation angle about the hinge axis, relative to the reference configuration.
+        :param hg_i: SE(3) frame of node i, ``(4, 4)``.
+        :param hg_j: SE(3) frame of node j, ``(4, 4)``.
+        :return: Hinge angle (rad), scalar.
+        """
+        hg_rel = hg_inv(hg_i) @ hg_j
+        d_error = hg_to_d(self.hg_rel_ref, hg_rel)
+        return self.axis @ d_error[3:]
+
+    @property
+    def has_f_res(self) -> bool:
+        return self.spring_stiffness != 0.0 or self.damping != 0.0
+
+    def f_res(
+        self,
+        hg_i: Array,
+        hg_j: Array,
+        v_i: Array,
+        v_j: Array,
+    ) -> tuple[Array, Array]:
+        r"""
+        Spring-damper force contributions at nodes i and j.
+        :param hg_i: SE(3) frame of node i, ``(4, 4)``.
+        :param hg_j: SE(3) frame of node j, ``(4, 4)``.
+        :param v_i: Local velocity of node i, ``(6, )``.
+        :param v_j: Local velocity of node j, ``(6, )``.
+        :return: Forces ``(f_i, f_j)``, each ``(6, )``.
+        """
+
+        def _theta(d_ij: Array) -> Array:
+            return self.hinge_angle(hg_i @ exp_se3(d_ij[:6]), hg_j @ exp_se3(d_ij[6:]))
+
+        z12 = jnp.zeros(12)
+        theta = _theta(z12)
+        dtheta = jax.grad(_theta)(z12)
+        dtheta_di, dtheta_dj = dtheta[:6], dtheta[6:]
+
+        theta_dot = dtheta_di @ v_i + dtheta_dj @ v_j
+        f_scalar = -self.spring_stiffness * theta - self.damping * theta_dot
+
+        return f_scalar * dtheta_di, f_scalar * dtheta_dj
+
+    def k_tangent(self, hg_i: Array, hg_j: Array) -> Array:
+        r"""
+        Tangent stiffness from the hinge spring, ``(12, 12)``.
+        """
+
+        def _potential(d_ij: Array) -> Array:
+            theta = self.hinge_angle(hg_i @ exp_se3(d_ij[:6]), hg_j @ exp_se3(d_ij[6:]))
+            return 0.5 * self.spring_stiffness * theta**2
+
+        return jax.jacfwd(jax.grad(_potential))(jnp.zeros(12))
+
+    def c_tangent(self, hg_i: Array, hg_j: Array) -> Array:
+        r"""
+        Tangent damping from the hinge damper, ``(12, 12)``.
+        """
+
+        def _theta(d_ij: Array) -> Array:
+            return self.hinge_angle(hg_i @ exp_se3(d_ij[:6]), hg_j @ exp_se3(d_ij[6:]))
+
+        dtheta = jax.grad(_theta)(jnp.zeros(12))
+        return self.damping * jnp.outer(dtheta, dtheta)
+
+    def postprocess(self, hg: Array) -> dict[str, Array]:
+        def _angle(h: Array) -> Array:
+            return self.hinge_angle(h[self.node_i], h[self.node_j])
+
+        # account for single and multi timestep cases
+        if hg.ndim == 3:
+            return {"angle": _angle(hg)}
+        else:
+            return {"angle": jax.vmap(_angle)(hg)}
 
 
 @make_pytree
@@ -412,6 +574,24 @@ class GroundedHinge(HardConstraint):
     def violation(self, hg_i: Array, hg_j: Array) -> Array:
         d_error = hg_to_d(hg_j, hg_i)
         return self.projection @ d_error
+
+    def hinge_angle(self, hg_i: Array) -> Array:
+        r"""
+        Scalar rotation angle about the hinge axis, relative to the reference frame.
+        :param hg_i: SE(3) frame of the constrained node, ``(4, 4)``.
+        :return: Hinge angle (rad), scalar.
+        """
+        d_error = hg_to_d(self._hg_ref, hg_i)
+        return self.axis @ d_error[3:]
+
+    def postprocess(self, hg: Array) -> dict[str, Array]:
+        def _angle(h: Array) -> Array:
+            return self.hinge_angle(h[self.node_i])
+
+        if hg.ndim == 3:
+            return {"angle": _angle(hg)}
+        else:
+            return {"angle": jax.vmap(_angle)(hg)}
 
     def jacobian_local(
         self,

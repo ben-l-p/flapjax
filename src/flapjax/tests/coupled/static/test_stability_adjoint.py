@@ -39,7 +39,7 @@ def _build_wing(u_inf_mag: float) -> CoupledAeroelastic:
         node_multiplier=1,
         skin=True,
     )
-    # Strict tolerances — the adjoint's linear solve inherits any FSI stall.
+    # strict tolerances
     conv = ConvergenceSettings(
         max_n_iter=50,
         abs_disp_tol=1e-10,

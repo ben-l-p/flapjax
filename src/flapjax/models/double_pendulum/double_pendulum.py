@@ -50,7 +50,7 @@ def generate_double_pendulum(
         num_nodes=n_nodes,
         connectivity=conn,
         y_vector=jnp.array((0.0, 0.0, 1.0)),
-        constraints=[root_hinge, mid_hinge],
+        constraints={"root_hinge": root_hinge, "mid_hinge": mid_hinge},
         gravity=jnp.array(gravity),
         spectral_radius=0.9,
     )

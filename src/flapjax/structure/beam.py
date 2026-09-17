@@ -108,6 +108,18 @@ class BaseBeamStructure:
     )
 
     @property
+    def nodal_constraints(self) -> tuple[SoftConstraint, ...]:
+        return tuple(
+            c for c in self.constraints.values() if isinstance(c, SoftConstraint)
+        )
+
+    @property
+    def multibody_constraints(self) -> tuple[HardConstraint, ...]:
+        return tuple(
+            c for c in self.constraints.values() if isinstance(c, HardConstraint)
+        )
+
+    @property
     def k_cs(self) -> Array:
         if self._k_cs is None:
             raise ValueError("k_cs has not been set")
@@ -164,12 +176,7 @@ class BaseBeamStructure:
         alpha_m: float = 0.0,
         beta_k: float = 0.0,
         struct_convergence_settings: ConvergenceSettings = DEFAULT_STRUCT_CONVERGENCE_SETTINGS,
-        constraints: (
-            SoftConstraint
-            | HardConstraint
-            | Sequence[SoftConstraint | HardConstraint]
-            | None
-        ) = None,
+        constraints: (dict[str, SoftConstraint | HardConstraint] | None) = None,
     ) -> None:
         r"""
         Initialise BaseBeamStructure class with all non-design parameters.
@@ -194,21 +201,20 @@ class BaseBeamStructure:
         :param alpha_m: Mass-proportional Rayleigh damping coefficient.
         :param beta_k: Stiffness-proportional Rayleigh damping coefficient.
         :param struct_convergence_settings: Structure convergence settings.
-        :param constraints: Optional constraint or sequence of constraints.
+        :param constraints: Named dict ``{name: constraint}``, or None, which add
         """
 
         check_type(num_nodes, int)
 
-        # split mixed constraint input into soft and hard
         if constraints is None:
-            constraints = ()
-        elif isinstance(constraints, (SoftConstraint, HardConstraint)):
-            constraints = (constraints,)
-        soft_constraints = tuple(
-            c for c in constraints if isinstance(c, SoftConstraint)
-        )
+            named_constraints: dict[str, SoftConstraint | HardConstraint] = {}
+        elif isinstance(constraints, dict):
+            named_constraints = constraints
+        else:
+            raise ValueError("Invalid constraint input")
+
         hard_constraints = tuple(
-            c for c in constraints if isinstance(c, HardConstraint)
+            c for c in named_constraints.values() if isinstance(c, HardConstraint)
         )
 
         check_arr_shape(connectivity, (None, 2), "connectivity")
@@ -364,8 +370,7 @@ class BaseBeamStructure:
 
         self.time_integrator = None
 
-        self.nodal_constraints: Sequence[SoftConstraint] = soft_constraints
-        self.multibody_constraints: Sequence[HardConstraint] = hard_constraints
+        self.constraints: dict[str, SoftConstraint | HardConstraint] = named_constraints
 
     def set_design_variables(
         self,
@@ -1407,7 +1412,7 @@ class BaseBeamStructure:
 
         return mat
 
-    def _apply_nodal_constraint_tangent(
+    def apply_nodal_constraint_tangent(
         self,
         mat: Array,
         hg: Array,
@@ -1431,6 +1436,21 @@ class BaseBeamStructure:
                 mat = mat.at[jnp.ix_(dofs, dofs)].add(
                     gamma_prime * con.c_tangent(hg_i, i_ts)
                 )
+
+        # hard constraint tangent contributions (e.g. hinge spring-damper)
+        for con in self.multibody_constraints:
+            if con.has_f_res:
+                dofs_i = con.node_i * 6 + jnp.arange(6)
+                dofs_j = con.node_j * 6 + jnp.arange(6)
+                dofs_ij = jnp.concatenate([dofs_i, dofs_j])
+                k_12 = con.k_tangent(hg[con.node_i], hg[con.node_j])
+                mat = mat.at[jnp.ix_(dofs_ij, dofs_ij)].add(k_12)
+                if gamma_prime is not None:
+                    # add damping terms
+                    mat = mat.at[jnp.ix_(dofs_ij, dofs_ij)].add(
+                        gamma_prime * con.c_tangent(hg[con.node_i], hg[con.node_j])
+                    )
+
         return mat
 
     @property
@@ -1453,6 +1473,19 @@ class BaseBeamStructure:
             for con in self.multibody_constraints
             if not con.is_holonomic
         )
+
+    def postprocess_constraints(self, hg: Array) -> dict[str, dict[str, Array]]:
+        r"""
+        Postprocess all constraints to extract derived quantities (e.g. hinge angles).
+        :param hg: Nodal SE(3) frames, ``(n_nodes, 4, 4)`` or ``(n_tstep, n_nodes, 4, 4)``.
+        :return: Nested dict ``{constraint_name: {quantity_name: Array}}``.
+        """
+        data: dict[str, dict[str, Array]] = {}
+        for name, con in self.constraints.items():
+            pp = con.postprocess(hg)
+            if pp:
+                data[name] = pp
+        return data
 
     def _compute_holonomic_violation(self, hg: Array) -> Array:
         r"""
@@ -1602,7 +1635,7 @@ class BaseBeamStructure:
             offset += nc
         return a_full[:, solve_dofs]
 
-    def _solve_constrained(
+    def solve_constrained(
         self,
         sys_mat_solve: Array,
         f_res_solve: Array,
@@ -2250,6 +2283,19 @@ class BaseBeamStructure:
             f_res_vect = f_res_vect.at[dofs].add(f_constraint)
             f_abs_sum_vect = f_abs_sum_vect.at[dofs].add(jnp.abs(f_constraint))
 
+        # hard constraint force contributions (e.g. hinge spring-damper)
+        for con in self.multibody_constraints:
+            if con.has_f_res:
+                v_i = v[con.node_i] if dynamic else jnp.zeros(6)
+                v_j = v[con.node_j] if dynamic else jnp.zeros(6)
+                f_i, f_j = con.f_res(hg[con.node_i], hg[con.node_j], v_i, v_j)
+                dofs_i = con.node_i * 6 + jnp.arange(6)
+                dofs_j = con.node_j * 6 + jnp.arange(6)
+                f_res_vect = f_res_vect.at[dofs_i].add(f_i)
+                f_res_vect = f_res_vect.at[dofs_j].add(f_j)
+                f_abs_sum_vect = f_abs_sum_vect.at[dofs_i].add(jnp.abs(f_i))
+                f_abs_sum_vect = f_abs_sum_vect.at[dofs_j].add(jnp.abs(f_j))
+
         # Rayleigh structural damping
         if dynamic and (self.alpha_m != 0.0 or self.beta_k != 0.0):
             if self.beta_k != 0.0 and k_t_assembled is None:
@@ -2313,6 +2359,7 @@ class BaseBeamStructure:
         load_steps: int = 1,
         *,
         print_header: bool = True,
+        postprocess_constraints: bool = True,
     ) -> StructureCase:
         r"""
         Perform static solve of the structure under external loads.
@@ -2322,6 +2369,7 @@ class BaseBeamStructure:
         :param prescribed_dofs: Index of degrees of freedom which are prescribed (not solved for).
         :param load_steps: Number of load steps to apply the external loads over.
         :param print_header: If False, suppress the "Static Solve" table header and trailing line.
+        :param postprocess_constraints: If True, apply constraint postprocessing to the final solution.
         :return: StructureCase object containing results of the static analysis.
         """
 
@@ -2386,7 +2434,7 @@ class BaseBeamStructure:
                 m_t=m_t,
             )
             # apply nodal constraint contributions
-            k_t_full_n = self._apply_nodal_constraint_tangent(
+            k_t_full_n = self.apply_nodal_constraint_tangent(
                 mat=k_t_full_n, hg=hg_n, i_ts=0, gamma_prime=None
             )
             k_t_solve_n = k_t_full_n[jnp.ix_(solve_dofs, solve_dofs)]
@@ -2412,7 +2460,7 @@ class BaseBeamStructure:
 
             # solve for configuration increment, (n_solve_dofs, )
             if self.n_holonomic_constraints:
-                d_varphi_np1, _, _ = self._solve_constrained(
+                d_varphi_np1, _, _ = self.solve_constrained(
                     sys_mat_solve=k_t_solve_n,
                     f_res_solve=f_res_solve_n,
                     hg_eval=hg_n,
@@ -2519,7 +2567,7 @@ class BaseBeamStructure:
         varphi = self.compute_varphi_from_hg(hg)
         f_elem = self.make_f_elem(eps=eps)  # compute loads in each element
 
-        return StructureCase(
+        result = StructureCase(
             hg=hg,
             conn=self.connectivity,
             o0=self.o0,
@@ -2539,6 +2587,9 @@ class BaseBeamStructure:
             prescribed_dofs=prescribed_dofs_,
             t=jnp.zeros(1),
         )
+        if postprocess_constraints:
+            result.constraint_data = self.postprocess_constraints(hg)
+        return result
 
     @overload
     def base_dynamic_solve(
@@ -2724,7 +2775,7 @@ class BaseBeamStructure:
                 ti=self.time_integrator,
             )
             # add nodal constraint contributions
-            sys_mat_full = self._apply_nodal_constraint_tangent(
+            sys_mat_full = self.apply_nodal_constraint_tangent(
                 mat=sys_mat_full,
                 hg=hg_update,
                 i_ts=i_ts,
@@ -2734,7 +2785,7 @@ class BaseBeamStructure:
 
             # solve for configuration increment, (n_solve_dofs, )
             if self.multibody_constraints:
-                d_n_np1, _, _ = self._solve_constrained(
+                d_n_np1, _, _ = self.solve_constrained(
                     sys_mat_solve=sys_mat,
                     f_res_solve=f_res_n_solve,
                     hg_eval=hg_update,
@@ -3349,6 +3400,8 @@ class BaseBeamStructure:
                 cs_vel_t,
             ),
         )
+
+        struct_case.constraint_data = self.postprocess_constraints(struct_case.hg)
 
         if include_aero:
             if aero_case is None:

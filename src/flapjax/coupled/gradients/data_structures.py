@@ -43,10 +43,12 @@ class TrimVariables:
         cs_ang: dict[str, Array],
         thrust: dict[str, Array],
         trim_angles: dict[str, Array],
+        hinge_angle: dict[str, Array] | None = None,
     ):
         self.cs_ang: dict[str, Array] = cs_ang
         self.thrust: dict[str, Array] = thrust
         self.trim_angles: dict[str, Array] = trim_angles
+        self.hinge_angle: dict[str, Array] = {} if hinge_angle is None else hinge_angle
 
     _INNER_WIDTH: ClassVar[int] = 104
     _ITER_W: ClassVar[int] = 5
@@ -57,6 +59,7 @@ class TrimVariables:
         specs.extend((k, "deg", 5, ".2f") for k in self.cs_ang)
         specs.extend((k, "N", 9, ".2e") for k in self.thrust)
         specs.extend((k, "deg", 5, ".2f") for k in self.trim_angles)
+        specs.extend((k, "deg", 5, ".2f") for k in self.hinge_angle)
         if f_clamp is not None:
             specs.extend((f"f{i}", "N", 9, ".2e") for i in range(f_clamp.shape[0]))
         return specs
@@ -92,6 +95,7 @@ class TrimVariables:
         values.extend(jnp.rad2deg(_scalar(v)) for v in self.cs_ang.values())
         values.extend(_scalar(v) for v in self.thrust.values())
         values.extend(jnp.rad2deg(_scalar(v)) for v in self.trim_angles.values())
+        values.extend(jnp.rad2deg(_scalar(v)) for v in self.hinge_angle.values())
         if f_clamp is not None:
             values.extend(_scalar(f_clamp[i]) for i in range(f_clamp.shape[0]))
 

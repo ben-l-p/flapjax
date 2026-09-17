@@ -47,7 +47,7 @@ class TestAutoNodeCreation:
             num_nodes=5,
             connectivity=jnp.array([[0, 1], [1, 2], [2, 3], [3, 4]]),
             y_vector=jnp.array((0.0, 0.0, 1.0)),
-            constraints=[hinge],
+            constraints={"hinge": hinge},
         )
         assert beam.n_nodes == 6  # check node count is increased to 6
         assert hinge.node_j == 5  # check new node is added to end
@@ -61,7 +61,7 @@ class TestAutoNodeCreation:
             num_nodes=5,
             connectivity=jnp.array([[0, 1], [1, 2], [2, 3], [3, 4]]),
             y_vector=jnp.array((0.0, 0.0, 1.0)),
-            constraints=[hinge],
+            constraints={"hinge": hinge},
         )
         coords = jnp.stack(
             (jnp.linspace(0, 1, 5), jnp.zeros(5), jnp.zeros(5)),
@@ -110,7 +110,7 @@ def _hinged_beam():
         num_nodes=N_NODES,
         connectivity=conn,
         y_vector=jnp.array((0.0, 0.0, 1.0)),
-        constraints=[hinge],
+        constraints={"hinge": hinge},
     )
 
     x_left = jnp.linspace(0.0, L / 2, N_NODES_PER_SEG)

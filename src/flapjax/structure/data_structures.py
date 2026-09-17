@@ -84,6 +84,7 @@ class StructureCase:
         f_iner_gyr: Array | None = None,
         i_ts: int | None = None,
         local: bool = True,
+        constraint_data: dict[str, dict[str, Array]] | None = None,
     ):
         self.hg: Array = hg
         self.conn: tuple[tuple[int, int], ...] = conn
@@ -116,6 +117,7 @@ class StructureCase:
             n_dof=varphi.shape[-2] * 6, prescribed_dofs=self.prescribed_dofs
         )
         self.local: bool = local
+        self.constraint_data: dict[str, dict[str, Array]] = constraint_data if constraint_data is not None else {}
 
     @property
     def x(self) -> Array:
@@ -218,6 +220,7 @@ class StructureCase:
             t=jnp.array(0.0),
             i_ts=-1,
             prescribed_dofs=self.prescribed_dofs,
+            constraint_data=self.constraint_data,
         )
 
         if t is None:
@@ -261,6 +264,7 @@ class StructureCase:
             thrust_nodes=self.thrust_nodes,
             thrust_direction=self.thrust_direction,
             prescribed_dofs=self.prescribed_dofs,
+            constraint_data=self.constraint_data,
         )
 
     def __getitem__(self, i_ts: int) -> StructureCase:
@@ -299,6 +303,10 @@ class StructureCase:
             t=self.t[i_ts],
             i_ts=i_ts,
             prescribed_dofs=self.prescribed_dofs,
+            constraint_data={
+                name: {k: v[i_ts, ...] for k, v in quantities.items()}
+                for name, quantities in self.constraint_data.items()
+            },
         )
 
     def get_full_states(self, i_ts: int | Array | None = None) -> StructureFullStates:

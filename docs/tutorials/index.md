@@ -25,23 +25,31 @@ write ``.vtu`` and ``.pvd`` files to disk, which can be visualised in ParaView.
       routine to find the thrust and elevator deflection that satisfy trim conditions, before using the aeroelastic
       ``dynamic_solve()`` routine to find the time-domain response of the aircraft. This tutorial demonstrates using
       batching to efficiently parallelise for multiple gust cases at once.s
-    - [Patil wing open-loop control](patil_wing_control.ipynb) — Open-loop control of ailerons for a pair of very
-      flexible wings mounted on a central hinge, performing a roll manoeuvre. Makes use of the aeroelastic ``trim()``
-      and
-      ``dynamic_solve()`` routines to find the time-domain response.
-    - Pazy wing (both straight and swept configurations)
-        - Static
-          deflection [straight](straight_pazy_static_deflection.ipynb), [swept](swept_pazy_static_deflection.ipynb) —
-          Grid of cases with varying root angles of attack and velocity, running the ``static_solve()`` routine in
-          parallel. Evolution of the tip deflection is plotted.
-        - Deformed mode
-          frequencies [straight](straight_pazy_deformed_modes.ipynb), [swept](swept_pazy_deformed_modes.ipynb) —
-          Evolution of the first five natural frequencies with tip displacement, controlled via freestream velocity and
-          making use of the ``static_solve()``
-          and structural ``modal()`` routines.
-        - Flutter analysis [straight](straight_pazy_flutter.ipynb), [swept](swept_pazy_flutter.ipynb) — Compute the
-          stability of the wing across a grid of angles of attack and freestream velocities using the coupled
-          ``linearise()`` routine.
-        - Time-domain LCO [straight](straight_pazy_lco.ipynb), [swept](swept_pazy_lco.ipynb) — Time-domain limit-cycle
-          oscillation computation for the wing, plotting the deflection of the beam tip over time, obtained using the
-          ``static_solve()`` and ``dynamic_solve()`` routines.
+    - [Simple HALE hinged wingtip gust response](simple_hale_hinged_gust.ipynb) - Variant of the above with
+      free-hinging wingtips, using ``MultibodyHinge`` constraints. Demonstrates trimming a multibody aircraft, where
+      the trim solver also finds the equilibrium hinge angles, before flying it through the gust as a free-flying
+      body.
+        - [Patil wing open-loop control](patil_wing_control.ipynb) — Open-loop control of ailerons for a pair of very
+          flexible wings mounted on a central hinge, performing a roll manoeuvre. Makes use of the aeroelastic
+          ``trim()``
+          and
+          ``dynamic_solve()`` routines to find the time-domain response.
+        - Pazy wing (both straight and swept configurations)
+            - Static
+              deflection [straight](straight_pazy_static_deflection.ipynb), [swept](swept_pazy_static_deflection.ipynb) —
+              Grid of cases with varying root angles of attack and velocity, running the ``static_solve()`` routine in
+              parallel. Evolution of the tip deflection is plotted.
+            - Deformed mode
+              frequencies [straight](straight_pazy_deformed_modes.ipynb), [swept](swept_pazy_deformed_modes.ipynb) —
+              Evolution of the first five natural frequencies with tip displacement, controlled via freestream velocity
+              and
+              making use of the ``static_solve()``
+              and structural ``modal()`` routines.
+            - Flutter analysis [straight](straight_pazy_flutter.ipynb), [swept](swept_pazy_flutter.ipynb) — Compute the
+              stability of the wing across a grid of angles of attack and freestream velocities using the coupled
+              ``linearise()`` routine.
+            - Time-domain LCO [straight](straight_pazy_lco.ipynb), [swept](swept_pazy_lco.ipynb) — Time-domain
+              limit-cycle
+              oscillation computation for the wing, plotting the deflection of the beam tip over time, obtained using
+              the
+              ``static_solve()`` and ``dynamic_solve()`` routines.

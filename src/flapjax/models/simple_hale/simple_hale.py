@@ -10,8 +10,11 @@ from flapjax.aero.flowfields import (
 from flapjax.aero.utils import add_control_surface, make_rectangular_grid
 from flapjax.aero.uvlm import UVLM
 from flapjax.algebra.array_utils import ArrayList
+from flapjax.algebra.so3 import exp_so3
 from flapjax.coupled import CoupledAeroelastic
 from flapjax.structure import BeamStructure
+from flapjax.structure.constraints import MultibodyHinge
+from flapjax.structure.data_structures import OptionalJacobians
 
 FLOWFIELD_DEFAULT = ConstantFlowField(
     rho=1.225,
@@ -32,6 +35,13 @@ def generate_simple_hale(
     n_fin: int = 4,
     n_half_tail: int = 4,
     m_star: int = 20,
+    alpha: Array | float = 0.0,
+    roll: Array | float = 0.0,
+    beta: Array | float = 0.0,
+    flare_angle: Array | float | None = None,
+    hinge_spring_stiffness: float = 0.0,
+    hinge_damping: float = 0.0,
+    dihedral_ang: Array | float = 20.0 / 180.0 * jnp.pi,
 ) -> CoupledAeroelastic:
     r"""
     Generate the simple HALE aircraft. Reference parameters are derived from the SHARPy case.
@@ -46,6 +56,14 @@ def generate_simple_hale(
     :param n_fin: Number of height-wise panels in the tail fin.
     :param n_half_tail: Number of spanwise panels for each horizontal stabiliser half.
     :param m_star: Number of trailing wake panels.
+    :param alpha: Reference angle of attack.
+    :param roll: Reference roll angle.
+    :param beta: Reference sideslip angle.
+    :param flare_angle: If set, free-hinging wingtips will be used, where this sets the angle of the hinge axis relative
+    to the wing plane. If None, no free-hinging wingtips are used.
+    :param hinge_spring_stiffness: Rotational spring stiffness for the hinge joints (N·m/rad).
+    :param hinge_damping: Rotational damping for the hinge joints (N·m·s/rad).
+    :param dihedral_ang: Dihedral angle of the outer wing segment.
     :return: HALE aircraft object.
     """
     # geometry
@@ -57,7 +75,6 @@ def generate_simple_hale(
     height_tail: float = 2.5
     elastic_axis_wing: float = 0.3
     elastic_axis_tail: float = 0.5
-    dihedral_ang: Array = jnp.deg2rad(20.0)
     dihedral_fraction: float = 0.25
 
     # structural properties
@@ -80,19 +97,22 @@ def generate_simple_hale(
 
     # other variables
     dt: float = c_wing / (m_wing * float(jnp.linalg.norm(flowfield.u_inf)))
-    alpha: float = 0.0
-    roll: float = 0.0
-    beta: float = 0.0
+
+    multibody: bool = flare_angle is not None
+
+    # dihedral folds about the hinge's own axis (misaligned from pure x by the flare angle) so that the
+    # reference geometry is consistent with the hinge; falls back to the pure chordwise axis if unhinged
+    left_hinge_axis = (
+        jnp.array((jnp.cos(flare_angle), -jnp.sin(flare_angle), 0.0))
+        if multibody
+        else jnp.array((1.0, 0.0, 0.0))
+    )
 
     # useful reference coordinates
     left_wing_junction_coord = jnp.array((0.0, (1.0 - dihedral_fraction) * b_wing, 0.0))
-    left_wing_tip_coord = left_wing_junction_coord + jnp.array(
-        (
-            0.0,
-            dihedral_fraction * b_wing * jnp.cos(dihedral_ang),
-            dihedral_fraction * b_wing * jnp.sin(dihedral_ang),
-        )
-    )
+    left_wing_tip_coord = left_wing_junction_coord + exp_so3(
+        left_hinge_axis * dihedral_ang
+    ) @ jnp.array((0.0, dihedral_fraction * b_wing, 0.0))
     tail_base_coord = jnp.array((l_fuselage, 0.0, 0.0))
     tail_root_coord = jnp.array((l_fuselage, 0.0, height_tail))
     left_tail_tip_coord = tail_root_coord + jnp.array((0.0, b_tail, 0.0))
@@ -250,6 +270,25 @@ def generate_simple_hale(
         axis=0,
     )
 
+    # multibody constraints for free-hinging wingtips
+    if multibody:
+        # add hinges at the wingtip base
+        left_hinge = MultibodyHinge(
+            node_i=int(left_wing_coord_index[n_inner_wing]),
+            axis=left_hinge_axis,
+            spring_stiffness=hinge_spring_stiffness,
+            damping=hinge_damping,
+        )
+        right_hinge = MultibodyHinge(
+            node_i=int(right_wing_coord_index[n_inner_wing]),
+            axis=left_hinge_axis * jnp.array((1.0, -1.0, 1.0)),
+            spring_stiffness=hinge_spring_stiffness,
+            damping=hinge_damping,
+        )
+        constraints = {"left_hinge": left_hinge, "right_hinge": right_hinge}
+    else:
+        constraints = None
+
     structure = BeamStructure(
         num_nodes=coords.shape[0],
         connectivity=conn,
@@ -262,6 +301,13 @@ def generate_simple_hale(
         thrust_direction={"thrust": jnp.array((-1.0, 0.0, 0.0))},
         relaxation_factor=0.7,
         spectral_radius=0.5,
+        constraints=constraints,
+        optional_jacobians=OptionalJacobians(
+            d_f_ext_dead_d_n=multibody,
+            d_f_grav_d_n=multibody,
+        )
+        if multibody
+        else None,
     )
 
     # aerodynamic_grids
@@ -269,6 +315,20 @@ def generate_simple_hale(
     wing_x0 = make_rectangular_grid(
         m=m_wing, n=2 * n_half_wing, chord=c_wing, ea=elastic_axis_wing
     )
+
+    # add aerodynamic changes for flare angle
+    if multibody:
+        idx_hinge = n_outer_wing
+        hinge_strip = wing_x0[:, idx_hinge, :]
+
+        delta_hinge = jnp.tan(flare_angle) * hinge_strip[:, 0]
+
+        left_hinge_strip = hinge_strip.at[:, 1].set(-delta_hinge)
+        right_hinge_strip = hinge_strip.at[:, 1].set(delta_hinge)
+
+        wing_x0 = wing_x0.at[:, idx_hinge, :].set(left_hinge_strip)
+        wing_x0 = wing_x0.at[:, -idx_hinge - 1, :].set(right_hinge_strip)
+
     wing_mapping = jnp.concatenate(
         (left_wing_coord_index[::-1], right_wing_coord_index[1:])
     )

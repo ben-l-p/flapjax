@@ -82,6 +82,7 @@ nav:
           - Flexible double pendulum: tutorials/double_pendulum.ipynb
       - Aeroelastic:
           - Simple HALE gust response: tutorials/simple_hale_gust.ipynb
+          - Simple HALE hinged wingtip gust response: tutorials/simple_hale_hinged_gust.ipynb
           - Patil wing open-loop control: tutorials/patil_wing_control.ipynb
           - Straight Pazy wing:
               - Static deflection: tutorials/straight_pazy_static_deflection.ipynb

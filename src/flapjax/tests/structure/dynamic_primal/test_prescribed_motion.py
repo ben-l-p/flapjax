@@ -49,7 +49,7 @@ class TestPrescribedMotion:
             hg_ref_t=hg_ref_t,
             c=jnp.eye(6) * 1e4,
         )
-        beam = _short_beam(cls.n_nodes, constraints=[pm])
+        beam = _short_beam(cls.n_nodes, constraints={"prescribed_motion": pm})
         return beam.dynamic_solve(
             init_state=None,
             prescribed_dofs=(),

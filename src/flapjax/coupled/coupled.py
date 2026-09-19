@@ -131,7 +131,7 @@ class BaseCoupledAeroelastic:
 
     def reference_configuration(
         self,
-        prescribed_dofs: Sequence[int] | Array | slice | int,
+        prescribed_dofs: Sequence[int] | Array | slice | int = (),
         horseshoe: bool = False,
         use_f_ext_follower: bool = False,
         use_f_ext_dead: bool = False,
@@ -139,7 +139,7 @@ class BaseCoupledAeroelastic:
     ) -> AeroelasticCase:
         r"""
         Obtain the static aeroelastic object describing the undeformed wing.
-        :param prescribed_dofs: Prescribed dofs for the structure.
+        :param prescribed_dofs: Prescribed dofs for the structure. Defaults to no prescribed dofs.
         :param horseshoe: Horseshoe flag.
         :param use_f_ext_follower: If true, allocate an array for follower forces.
         :param use_f_ext_dead: If true, allocate an array for dead forces.

@@ -217,13 +217,17 @@ class NonlinearBeamLinearAero:
 
     def reference_configuration(
         self,
-        prescribed_dofs: Sequence[int] | Array | slice | int,
+        prescribed_dofs: Sequence[int] | Array | slice | int = (),
         use_f_ext_follower: bool = False,
         use_f_ext_dead: bool = False,
     ) -> AeroelasticCase:
         r"""
         Aeroelastic snapshot built from the beam's reference configuration and
         the aero linearisation reference state.
+        :param prescribed_dofs: Prescribed DOFs for the beam structure. Defaults to no prescribed DOFs.
+        :param use_f_ext_follower: Whether to include follower forces in the reference configuration.
+        :param use_f_ext_dead: Whether to include dead forces in the reference configuration.
+        :return: Aeroelastic snapshot at the reference configuration.
         """
         prescribed_dofs_tuple = self.structure.make_prescribed_dofs_tuple(
             prescribed_dofs

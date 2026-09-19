@@ -597,7 +597,7 @@ class BaseBeamStructure:
 
     def reference_configuration(
         self,
-        prescribed_dofs: Sequence[int] | Array | slice | int,
+        prescribed_dofs: Sequence[int] | Array | slice | int = (),
         use_f_ext_follower: bool = True,
         use_f_ext_dead: bool = True,
         use_f_aero: bool = True,
@@ -605,6 +605,11 @@ class BaseBeamStructure:
     ) -> StructureCase:
         r"""
         Get the reference configuration of the structure.
+        :param prescribed_dofs: Prescribed degrees of freedom, which are not solved for. Defaults to no prescribed DoFs.
+        :param use_f_ext_follower: Whether to include follower forces in the reference configuration.
+        :param use_f_ext_dead: Whether to include dead forces in the reference configuration.
+        :param use_f_aero: Whether to include aerodynamic forces in the reference configuration.
+        :param use_f_grav: Whether to include gravitational forces in the reference configuration.
         :return: Structure dataclass containing reference configuration.
         """
         prescribed_dofs = self.make_prescribed_dofs_tuple(prescribed_dofs)

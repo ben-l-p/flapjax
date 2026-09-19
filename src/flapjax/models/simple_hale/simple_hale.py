@@ -2,11 +2,7 @@ from jax import Array
 from jax import numpy as jnp
 
 from flapjax.aero.data_structures import GridDiscretisation
-from flapjax.aero.flowfields import (
-    ConstantFlowField,
-    FlowField,
-    OneMinusCosineFlowField,
-)
+from flapjax.aero.flowfields import ConstantFlowField, FlowField
 from flapjax.aero.utils import add_control_surface, make_rectangular_grid
 from flapjax.aero.uvlm import UVLM
 from flapjax.algebra.array_utils import ArrayList
@@ -420,45 +416,3 @@ def generate_simple_hale(
     )
 
     return wing
-
-
-if __name__ == "__main__":
-    # trim the simple hale aircraft and run a gust case
-    u_inf_mag: float = 10.0
-    gust_intensity: float = 0.2
-    gust_length: float = 1.0 * u_inf_mag  # 1 second gust duration
-    physical_time: float = 10.0
-
-    flowfield_ = OneMinusCosineFlowField(
-        u_inf=jnp.array((u_inf_mag, 0.0, 0.0)),
-        rho=1.225,
-        relative_motion=True,
-        gust_length=gust_length,
-        gust_amplitude=gust_intensity * u_inf_mag,
-        gust_x0=jnp.array((-2.0 * gust_length, 0.0, 0.0)),
-    )
-
-    # create aircraft model
-    hale = generate_simple_hale(flowfield=flowfield_, sigma_wing=1.5)
-    n_tstep = int(physical_time / float(hale.aero.dt)) + 1
-
-    # trim the aircraft
-    static_sol, trim_vars = hale.trim(
-        prescribed_dofs=jnp.arange(6),
-        zero_force_dofs=(0, 2, 4),  # balance drag, lift, and pitching moment
-        trim_cs="elevator",
-        thrust_nodes="thrust",
-        trim_orientation="y",
-        horseshoe=False,
-    )
-
-    # run gust case
-    dynamic_init = hale.initialise_dynamic(static_case=static_sol, prescribed_dofs=())
-
-    # noinspection bad-argument-type
-    dynamic_sol = hale.dynamic_solve(
-        init_case=dynamic_init, prescribed_dofs=(), n_tstep=n_tstep
-    )
-
-    # plot the transient
-    dynamic_sol.plot("./simple_hale/")

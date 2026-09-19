@@ -28,8 +28,9 @@ def generate_swept_pazy_wing(
     m: int = 12,
     m_star: int = 120,
     sweep_angle: Literal[10, 20] = 10,
-    tip_mass: Literal["LE", "TE", "LE_CORRECTED", "TE_CORRECTED"]
-    | None = "LE_CORRECTED",
+    tip_mass: (
+        Literal["LE", "TE", "LE_CORRECTED", "TE_CORRECTED"] | None
+    ) = "LE_CORRECTED",
     node_multiplier: int = 1,
     gravity: bool | Array = False,
     flowfield: FlowField = DEFAULT_FLOWFIELD,

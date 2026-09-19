@@ -72,6 +72,10 @@ extra_javascript:
 
 nav:
   - Home: index.md
+  - Inputs and outputs:
+      - inputs_outputs/index.md
+      - Inputs: inputs_outputs/inputs.md
+      - Outputs: inputs_outputs/outputs.md
   - Tutorials:
       - tutorials/index.md
       - Structure:

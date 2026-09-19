@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../beam/">
+        <link rel="prev" href="../inputs/">
       
       
-        <link rel="next" href="../coupling/">
+        <link rel="next" href="../../tutorials/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>UVLM - FLAPJAX</title>
+        <title>Outputs - FLAPJAX</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#unsteady-vortex-lattice-method-uvlm" class="md-skip">
+        <a href="#outputs" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              UVLM
+              Outputs
             
           </span>
         </div>
@@ -286,6 +286,8 @@
       
   
   
+    
+  
   
   
     
@@ -308,15 +310,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../inputs_outputs/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -340,7 +342,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -360,7 +362,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../inputs_outputs/inputs/" class="md-nav__link">
+      <a href="../inputs/" class="md-nav__link">
         
   
   
@@ -385,10 +387,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../inputs_outputs/outputs/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outputs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -404,6 +433,164 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-solution-objects-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Solution objects at a glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-static-dynamic-and-batched-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Static, dynamic, and batched solutions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-structural-outputs-structurecase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Structural outputs — StructureCase
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Structural outputs — StructureCase">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kinematics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kinematics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bookkeeping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bookkeeping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-frame-convention-local-vs-global" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Frame convention: local vs. global
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-aerodynamic-outputs-aerocase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Aerodynamic outputs — AeroCase
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-coupled-aeroelastic-outputs-aeroelasticcase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Coupled aeroelastic outputs — AeroelasticCase
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-trim-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Trim outputs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-visualising-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Visualising results
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1442,8 +1629,6 @@
       
   
   
-    
-  
   
   
     
@@ -1472,15 +1657,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../theory/" class="md-nav__link ">
               
   
   
@@ -1504,7 +1689,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1524,7 +1709,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../beam/" class="md-nav__link">
+      <a href="../../theory/beam/" class="md-nav__link">
         
   
   
@@ -1549,19 +1734,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../theory/uvlm/" class="md-nav__link">
         
   
   
@@ -1577,7 +1753,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -1590,7 +1765,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../coupling/" class="md-nav__link">
+      <a href="../../theory/coupling/" class="md-nav__link">
         
   
   
@@ -1618,7 +1793,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../linear/" class="md-nav__link">
+      <a href="../../theory/linear/" class="md-nav__link">
         
   
   
@@ -1646,7 +1821,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../adjoint/" class="md-nav__link">
+      <a href="../../theory/adjoint/" class="md-nav__link">
         
   
   
@@ -1694,6 +1869,152 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-solution-objects-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Solution objects at a glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-static-dynamic-and-batched-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Static, dynamic, and batched solutions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-structural-outputs-structurecase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Structural outputs — StructureCase
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Structural outputs — StructureCase">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kinematics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kinematics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bookkeeping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bookkeeping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-frame-convention-local-vs-global" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Frame convention: local vs. global
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-aerodynamic-outputs-aerocase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Aerodynamic outputs — AeroCase
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-coupled-aeroelastic-outputs-aeroelasticcase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Coupled aeroelastic outputs — AeroelasticCase
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-trim-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Trim outputs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-visualising-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Visualising results
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1709,7 +2030,7 @@
 
 
   
-    <a href="https://github.com/ben-l-p/flapjax/edit/main/docs/theory/uvlm.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/ben-l-p/flapjax/edit/main/docs/inputs_outputs/outputs.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1717,101 +2038,377 @@
   
 
 
-<h1 id="unsteady-vortex-lattice-method-uvlm">Unsteady Vortex Lattice Method (UVLM)<a class="headerlink" href="#unsteady-vortex-lattice-method-uvlm" title="Permanent link">&para;</a></h1>
-<p>We model the aerodynamics using the unsteady vortex lattice method (UVLM), which allows for time domain aerodynamic
-predictions under the assumption of low speed attached flows and enables arbitrary deformations. The UVLM allows for
-lifting aerodynamic bodies to be represented as panels with no thickness. A summany of the numerics is presented here,
-however, are given in more detail by <a href="https://doi.org/10.1017/CBO9780511810329">Katz and Plotkin</a>.</p>
-<p>We here use subscript <span class="arithmatex">\(\bullet_b\)</span> to denote a bound grid quantity, and <span class="arithmatex">\(\bullet_w\)</span> to denote a wake property. For a
-given strip on the aerodynamic grid, we can obtain the inertial coordinates and velocities of its <span class="arithmatex">\(i\)</span>-th node as a
-function of the structural coordinates and time derivatives</p>
-<div class="arithmatex">\[
-\begin{Bmatrix} \pmb{\zeta}_{b, ij} \\ 1 \end{Bmatrix} = \mathbf{H}_j \begin{Bmatrix} \pmb{\zeta}_{b0, ij} \\ 1 \end{Bmatrix}
-\]</div>
-<div class="arithmatex">\[
-\begin{Bmatrix} \dot{\pmb{\zeta}}_{b, ij} \\ 1 \end{Bmatrix} = \dot{\mathbf{H}}_j \begin{Bmatrix} \pmb{\zeta}_{b0, ij} \\ 1 \end{Bmatrix}
-\]</div>
-<p>where <span class="arithmatex">\(\mathbf{H}_j\)</span> is the <span class="arithmatex">\(j\)</span>-th beam node SE (3) coordinate, and <span class="arithmatex">\(\pmb{\zeta}_{b0}\)</span> gives the aerodynamic grid
-coordinates in the local frame of reference, with a representation of an aerodynamic bound and wake grid shown below.
-This grid is set when setting the design variables of a <code>UVLM</code> instance with the <code>zeta_b0</code> input.</p>
-<p><img alt="Representative aerodynamic geometry for the UVLM mapped onto a deformed beam." src="../../figures/uvlm_grid.png" />
-<em>Representative aerodynamic geometry for the UVLM mapped onto a deformed beam. The local grid coordinates $$</em></p>
-<p>For the steady vortex lattice method (VLM) problem, the aerodynamic system can be solved by enforcing flow tangential to
-the body at collocation points <span class="arithmatex">\(\pmb{\zeta}_c\)</span>, which are chosen to be at the centre of the aerodynamic panels</p>
-<div class="arithmatex">\[
-\left (\pmb{\mathcal{A}} \pmb{\Gamma}_b + \pmb{\nu}_{\infty}\right) \cdot \mathbf{n} = \mathbf{0}
-\]</div>
-<p>where <span class="arithmatex">\(\pmb{\mathcal{A}}\)</span> is the aerodynamic influence matrix (AIC), which maps the influence of each vortex ring to
-each collocation point; <span class="arithmatex">\(\mathbf{\Gamma}_b\)</span> is a vector of bound panel circulation strengths, and <span class="arithmatex">\(\pmb{\nu}_{\infty}\)</span>
-is the velocity induced by the freestream at the collocation points. This solution is projected onto the surface
-normals <span class="arithmatex">\(\mathbf{n}\)</span>, which are obtained as a function of the bound grid coordinates <span class="arithmatex">\(\pmb{\zeta}_b\)</span>. As circulation is
-propagated from the training edge of the bound body into the wake to satisfy the Kutta condition, this infers a constant
-circulation strength along wake streamlines for a steady case. As such, the wake influence can be summed into the
-trailing edge influence in matrix <span class="arithmatex">\(\pmb{\mathcal{A}}\)</span>. This system can be readily solved for <span class="arithmatex">\(\mathbf{\Gamma}_b\)</span>.</p>
-<p>From this solution, steady aerodynamic forcing can be obtained for each filament vector <span class="arithmatex">\(\mathbf{k}_0^{\text{filament}}\)</span>
-on the grid</p>
-<div class="arithmatex">\[
-\mathfrak{f}^{\text{filament}}_{\text{steady}} = \rho \Gamma \pmb{\nu} \times \mathbf{k}_0^{\text{filament}}
-\]</div>
-<p>where velocity <span class="arithmatex">\(\pmb{\nu}\)</span> is evaluated at the midpoint of the given filament, and it includes contributions from both
-the freestream and the vortex filaments. The circulation <span class="arithmatex">\(\Gamma\)</span> here refers to the effective circulation; for
-filaments shared between two vortex rings, this is the difference in the circulation strengths of the rings. The forcing
-can be split from filament midpoints to being at the aerodynamic grid nodes before being projected onto the beam and
-transformed into the local frame of reference to obtain forces and moments for compatibility with the structural
-equations as</p>
-<div class="arithmatex">\[
-\mathbf{f}_{\text{aero}, j} = \sum_{i=1}^{m} \begin{Bmatrix} \mathbf{R}^{\top}_j \, \mathfrak{f}_{\text{steady}, ij} \\ \pmb{\zeta}_{0, ij} \times \left (\mathbf{R}^{\top}_j \, \mathfrak{f}_{\text{steady}, ij}\right) \end{Bmatrix}
-\]</div>
-<p>with <span class="arithmatex">\(\mathfrak{f}\)</span> used to denote aerodynamic forcing on the aerodynamic grid, and <span class="arithmatex">\(\mathbf{f}\)</span> being projected onto
-the beam.</p>
-<p>For the unsteady case, we introduce lag terms from the wake that need to be captured, as the current UVLM solution
-depends on data from the previous step. The aerodynamic system can be solved as</p>
-<div class="arithmatex">\[
-\left (\pmb{\mathcal{A}}_b \pmb{\Gamma}_b + \pmb{\mathcal{A}}_w \pmb{\Gamma}_w + \pmb{\nu}_{\infty} - \dot{\pmb{\zeta}}_c\right) \cdot \mathbf{n} = \mathbf{0}
-\]</div>
-<p>where <span class="arithmatex">\(\pmb{\mathcal{A}}_b\)</span> and <span class="arithmatex">\(\pmb{\mathcal{A}}_w\)</span> are AIC matrices mapping from the bound and wake aerodynamic grids
-to the collocation points, respectively, as these are not combined as in the steady case. Here <span class="arithmatex">\(\dot{\pmb{\zeta}}_c\)</span> is
-the velocity of the collocation points, found from the interpolation of <span class="arithmatex">\(\dot{\pmb{\zeta}}_b\)</span>. Computing the steady
-forcing requires including the velocity of the bound grid to find the velocity of the flow relative to the filament
-midpoint, but it is otherwise unchanged. As we consider apparent mass effects, unsteady forcing for a single panel is
-given as</p>
-<div class="arithmatex">\[
-\mathfrak{f}_{\text{unsteady}}^{\text{panel}} = \rho \dot{\Gamma} S \mathbf{n}
-\]</div>
-<p>where the forcing can be split from the panel centroid to its surrounding grid nodes and projected onto the beam, as
-with the steady forcing. The time derivative of circulation can lead to instabilities when coupled with a dynamic
-structure due to a feedback loop created between structural acceleration and unsteady aerodynamic forcing. To remedy
-this, we filter the derivative as</p>
-<div class="arithmatex">\[
-\dot{\mathbf{\Gamma}}_{n} \approx \frac{g}{h} \left (\mathbf{\Gamma}_n - \mathbf{\Gamma}_{n-1}\right) + (1-g) \dot{\mathbf{\Gamma}}_{n-1}
-\]</div>
-<p>where the choice to use first-order differences is made for convenience in the resulting tangent problem by only
-referring to one previous timestep, with <span class="arithmatex">\(g\)</span> as a filtering parameter. When using the code this parameter is set through
-<code>gamma_dot_relaxation</code> when creating a <code>UVLM</code> instance, with a default value of 0.7.</p>
-<p>The UVLM requires that circulation be convected into the wake, which introduces memory into the system. Two options for
-the convection scheme have been implemented:</p>
-<div class="arithmatex">\[
-\mathbf{\Gamma}_{w, n} = \pmb{\mathcal{W}}_{\Gamma} (\mathbf{\Gamma}_{b, n-1}, \mathbf{\Gamma}_{w, n-1})
-\]</div>
-<div class="arithmatex">\[
-\pmb{\zeta}_{w, n} = \pmb{\mathcal{W}}_{\zeta} (\pmb{\zeta}_{b, n}, \pmb{\zeta}_{w, n-1})
-\]</div>
-<p>Firstly there is the base scheme, which shifts both the wake grid and circulation strengths downstream by one panel
-length per timestep, resulting in a Courant–Friedrichs–Lewy number of one. This results in all wake panels having
-approximately the same length along the streamwise direction. Whilst this method is simple, it requires a large number
-of panels to construct a long wake, which can prove expensive. Alternatively, a variable-discretisation can be used.
-This allows for wake streamlines to have an arbitrary discretisation, where both the coordinates and circulation
-strengths are shifted downstream before being projected back onto a given discretisation. This allows for larger panels
-far downstream in the wake, which has shown a reduction in computational costs with minimal loss in accuracy. These can
-be toggled by settting <code>variable_wake_disc</code> when creating a <code>UVLM</code> instance. When using a variable discretisation,
-we must set <code>delta_w</code> when setting the design variables; this is a vector which encodes the length of each wake
-segment, from upstream to downstream.</p>
-<p>For both wakes types, there are two methods for convecting the wake coordinates <span class="arithmatex">\(\pmb{\zeta}_w\)</span>. By default we use a
-prescribed wake convected between time steps using only the background velocity. Alternatively, a free wake can be used,
-which also includes induced velocity from the vortex and results in a characteristic roll-up. However, a free wake adds
-considerable computational cost for only a small change in the results and is often omitted. These can be toggled by
-setting the <code>free_wake</code> parameter when creating a
-<code>UVLM</code> instance.</p>
+<h1 id="outputs">Outputs<a class="headerlink" href="#outputs" title="Permanent link">&para;</a></h1>
+<p>This page outlines the solver outputs: the primal solution objects returned by <code>static_solve</code> /
+<code>dynamic_solve</code> at each of the three levels (structure, aero, coupled), modal and flutter results, gust frequency
+responses, trim variables, and adjoint gradients. See <a href="../inputs/">Inputs</a> for how to build the model that produces
+these.</p>
+<hr />
+<h2 id="1-solution-objects-at-a-glance">1. Solution objects at a glance<a class="headerlink" href="#1-solution-objects-at-a-glance" title="Permanent link">&para;</a></h2>
+<p>Structural problems return a <code>StructureCase</code>, aerodynamic problems return an <code>AeroCase</code>, and coupled aeroelastic
+problems return an <code>AeroelasticCase</code> that wraps both through <code>.structure</code> and <code>.aero</code>.</p>
+<hr />
+<h2 id="2-static-dynamic-and-batched-solutions">2. Static, dynamic, and batched solutions<a class="headerlink" href="#2-static-dynamic-and-batched-solutions" title="Permanent link">&para;</a></h2>
+<p>These classes are used for a range of problems:</p>
+<ul>
+<li><strong>Static solutions</strong> — a single equilibrium configuration with no time history. Dynamic-only fields such as velocity
+  and acceleration are zeroed out. Array shapes have no leading time axis, for example node coordinates <code>structure.x</code>
+  are shape
+  <code>(n_nodes, 3)</code> and bound circulation of a single surface <code>aero.gamma</code> is <code>(m, n)</code>.</li>
+<li><strong>Dynamic snapshot</strong> — a single timestep with all dynamic fields populated. Data has the same shape as for static
+  solutions.</li>
+<li><strong>Dynamic (batched)</strong> — many timesteps stacked with a leading <code>n_tstep</code> axis on every array, for example node
+  coordinates <code>structure.x</code> are shape <code>(n_tstep, n_nodes, 3)</code> and bound circulation of a single surface <code>aero.gamma</code> is
+  <code>(n_tstep, m, n)</code>.
+  We can extract a single snapshot from a batched trajectory using <code>case[i_ts]</code>, which returns a dynamic snapshot.</li>
+</ul>
+<p>Use <code>.is_dynamic</code> and <code>.is_batched</code> to tell which type of solution you have at runtime.</p>
+<div class="highlight"><pre><span></span><code><span class="n">static_result</span> <span class="o">=</span> <span class="n">wing</span><span class="o">.</span><span class="n">static_solve</span><span class="p">(</span><span class="n">prescribed_dofs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)))</span>
+<span class="n">static_result</span><span class="o">.</span><span class="n">is_dynamic</span><span class="p">()</span>  <span class="c1"># False</span>
+<span class="n">static_result</span><span class="o">.</span><span class="n">is_batched</span><span class="p">()</span>  <span class="c1"># False</span>
+
+<span class="n">dynamic_result</span> <span class="o">=</span> <span class="n">wing</span><span class="o">.</span><span class="n">dynamic_solve</span><span class="p">(</span><span class="n">init_case</span><span class="o">=</span><span class="n">static_result</span><span class="p">,</span> <span class="n">n_tstep</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">dynamic_result</span><span class="o">.</span><span class="n">is_batched</span><span class="p">()</span>  <span class="c1"># True</span>
+<span class="n">dynamic_result</span><span class="o">.</span><span class="n">is_dynamic</span><span class="p">()</span>  <span class="c1"># True</span>
+
+<span class="n">snapshot</span> <span class="o">=</span> <span class="n">dynamic_result</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span>  <span class="c1"># extract the timestep index 50 snapshot from the batched trajectory</span>
+<span class="n">snapshot</span><span class="o">.</span><span class="n">is_batched</span><span class="p">()</span>  <span class="c1"># False</span>
+<span class="n">snapshot</span><span class="o">.</span><span class="n">is_dynamic</span><span class="p">()</span>  <span class="c1"># True</span>
+</code></pre></div>
+<hr />
+<h2 id="3-structural-outputs-structurecase">3. Structural outputs — <code>StructureCase</code><a class="headerlink" href="#3-structural-outputs-structurecase" title="Permanent link">&para;</a></h2>
+<p>Note that the below shapes are for a single snapshot (static or dynamic). Batched solutions have a leading <code>n_tstep</code>
+axis on every array.</p>
+<h3 id="kinematics">Kinematics<a class="headerlink" href="#kinematics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Shape</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code></td>
+<td><code>(n_nodes, 3)</code></td>
+<td>Nodal global position.</td>
+</tr>
+<tr>
+<td><code>rmat</code></td>
+<td><code>(n_nodes, 3, 3)</code></td>
+<td>Nodal rotation matrix, given relative to the reference configuration.</td>
+</tr>
+<tr>
+<td><code>eps</code></td>
+<td><code>(n_elem, 6)</code></td>
+<td>Element strain vector; extensional/shear strain (0:3) and bending/torsional curvature (3:6).</td>
+</tr>
+<tr>
+<td><code>hg</code></td>
+<td><code>(n_nodes, 4, 4)</code></td>
+<td>Nodal SE(3) homogeneous transform — position and orientation of each cross-section in the global frame.</td>
+</tr>
+<tr>
+<td><code>varphi</code></td>
+<td><code>(n_nodes, 6)</code></td>
+<td>Nodal configuration/twist vector: the <span class="arithmatex">\(\mathfrak{se}(3)\)</span> logarithm mapping the reference configuration to the current <code>hg</code>. This is the minimal coordinate system used internally by the solver.</td>
+</tr>
+<tr>
+<td><code>d</code></td>
+<td><code>(n_elem, 6)</code></td>
+<td>Element relative configuration vector — the SE(3) twist between an element's two end nodes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="forces">Forces<a class="headerlink" href="#forces" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Shape</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>f_ext_follower</code></td>
+<td><code>(n_nodes, 6)</code> or <code>None</code></td>
+<td>Applied follower force/moment, if given from the solver inputs.</td>
+</tr>
+<tr>
+<td><code>f_ext_dead</code></td>
+<td><code>(n_nodes, 6)</code> or <code>None</code></td>
+<td>Applied dead force/moment, if given from the solver inputs.</td>
+</tr>
+<tr>
+<td><code>f_ext_aero</code></td>
+<td><code>(n_nodes, 6)</code> or <code>None</code></td>
+<td>Aerodynamic forcing projected onto the beam nodes.</td>
+</tr>
+<tr>
+<td><code>f_grav</code></td>
+<td><code>(n_nodes, 6)</code> or <code>None</code></td>
+<td>Gravitational force/moment (<code>None</code> if no <code>gravity</code> vector was set on the structure).</td>
+</tr>
+<tr>
+<td><code>f_int</code></td>
+<td><code>(n_nodes, 6)</code></td>
+<td>Nodal force/moment contribution due to element stresses.</td>
+</tr>
+<tr>
+<td><code>f_elem</code></td>
+<td><code>(n_elem, 6)</code></td>
+<td>Element-wise internal forces/moments.</td>
+</tr>
+<tr>
+<td><code>f_res</code></td>
+<td><code>(n_nodes, 6)</code></td>
+<td>Residual (out-of-balance) nodal force/moment from the Newton solve. At prescribed DOFs, this equals the reaction force.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dynamics">Dynamics<a class="headerlink" href="#dynamics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Shape</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>v</code></td>
+<td><code>(n_nodes, 6)</code></td>
+<td>Nodal velocity.</td>
+</tr>
+<tr>
+<td><code>v_dot</code></td>
+<td><code>(n_nodes, 6)</code></td>
+<td>Nodal acceleration.</td>
+</tr>
+<tr>
+<td><code>a</code></td>
+<td><code>(n_nodes, 6)</code></td>
+<td>Generalised-<span class="arithmatex">\(\alpha\)</span> pseudo-acceleration auxiliary variable, used for time integration.</td>
+</tr>
+<tr>
+<td><code>f_iner_gyr</code></td>
+<td><code>(n_nodes, 6)</code></td>
+<td>Inertial/gyroscopic forces.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bookkeeping">Bookkeeping<a class="headerlink" href="#bookkeeping" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Shape / type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t</code></td>
+<td>scalar or <code>(n_tstep,)</code></td>
+<td>Time.</td>
+</tr>
+<tr>
+<td><code>i_ts</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td>Timestep index.</td>
+</tr>
+<tr>
+<td><code>prescribed_dofs</code> / <code>.free_dofs</code></td>
+<td><code>tuple[int, ...]</code></td>
+<td>Degree of freedom indices (of <code>n_nodes * 6</code>) that were removed vs. solved.</td>
+</tr>
+<tr>
+<td><code>thrust</code></td>
+<td><code>dict[str, Array]</code></td>
+<td>Named thrust magnitude(s), matching the <code>thrust_nodes</code> passed to <code>BeamStructure</code>.</td>
+</tr>
+<tr>
+<td><code>local</code></td>
+<td><code>bool</code></td>
+<td>Frame flag — see below.</td>
+</tr>
+<tr>
+<td><code>constraint_data</code></td>
+<td><code>dict[str, dict[str, Array]]</code></td>
+<td>Per-named-constraint derived quantities, (see <a href="../inputs/#constraints">Inputs</a>). For <code>MultibodyHinge</code> / <code>GroundedHinge</code> this is <code>{"angle": Array}</code> — the hinge rotation in radians.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-frame-convention-local-vs-global">4. Frame convention: local vs. global<a class="headerlink" href="#4-frame-convention-local-vs-global" title="Permanent link">&para;</a></h2>
+<p><code>StructureCase</code> (and <code>AeroelasticCase.structure</code>) carries a <code>local: bool</code> flag, <code>True</code> by default on every case
+returned by a solve. When <code>local=True</code>, the following force/velocity/acceleration fields are expressed as components
+in each node's local frame of reference:</p>
+<ul>
+<li><code>f_ext_follower</code></li>
+<li><code>f_ext_dead</code></li>
+<li><code>f_ext_aero</code></li>
+<li><code>f_grav</code></li>
+<li><code>f_int</code></li>
+<li><code>f_res</code></li>
+<li><code>f_iner_gyr</code></li>
+<li><code>v</code></li>
+<li><code>v_dot</code></li>
+<li><code>a</code></li>
+</ul>
+<p>This is because the solver naturally expresses these values in their local frame. Call <code>.to_global()</code> on the solution
+object to rotate these properties into the global/inertial frame, or <code>.to_local()</code> to reverse it. Nodal position and
+orientation are always in the
+global frame.</p>
+<hr />
+<h2 id="5-aerodynamic-outputs-aerocase">5. Aerodynamic outputs — <code>AeroCase</code><a class="headerlink" href="#5-aerodynamic-outputs-aerocase" title="Permanent link">&para;</a></h2>
+<p>Every field below is per-surface — an <code>ArrayList</code> of length <code>n_surf</code>, ordered the same as <code>surf_b_names</code>. For example,
+to access the bound circulation of the first aerodynamic surface we use <code>AeroCase.gamma_b[0]</code>, The following property
+shapes are given per surface:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Shape (per surface)</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>zeta_b</code></td>
+<td><code>(m+1, n+1, 3)</code></td>
+<td>Bound-grid coordinates in the global frame..</td>
+</tr>
+<tr>
+<td><code>zeta_b_dot</code></td>
+<td><code>(m+1, n+1_n, 3)</code></td>
+<td>Bound grid vertex velocities.</td>
+</tr>
+<tr>
+<td><code>zeta_w</code></td>
+<td><code>(m_star, n+1, 3)</code></td>
+<td>Wake grid vertex coordinates.</td>
+</tr>
+<tr>
+<td><code>gamma_b</code></td>
+<td><code>(m, n)</code></td>
+<td>Bound panel circulation strength.</td>
+</tr>
+<tr>
+<td><code>gamma_w</code></td>
+<td><code>(m_star, n)</code></td>
+<td>Wake panel circulation strength.</td>
+</tr>
+<tr>
+<td><code>gamma_b_dot</code></td>
+<td><code>(m, n)</code></td>
+<td>Time derivative of bound circulation, driving the unsteady/added-mass force.</td>
+</tr>
+<tr>
+<td><code>f_steady</code></td>
+<td><code>(m+1, n+1, 3)</code></td>
+<td>Steady (Kutta–Joukowski) force contribution per aerodynamic grid node.</td>
+</tr>
+<tr>
+<td><code>f_unsteady</code></td>
+<td><code>(m+1, n+1, 3)</code></td>
+<td>Unsteady/apparent-mass force contribution per aerodynamic grid node.</td>
+</tr>
+<tr>
+<td><code>alpha</code></td>
+<td><code>(n,)</code></td>
+<td>Per-spanwise-strip effective angle of attack.</td>
+</tr>
+<tr>
+<td><code>cs_ang</code></td>
+<td><code>dict[str, Array]</code></td>
+<td>Control-surface deflection time history, <code>{name: ()}</code> snapshot or <code>{name: (n_tstep,)}</code> batched.</td>
+</tr>
+<tr>
+<td><code>cs_vel</code></td>
+<td><code>dict[str, Array]</code></td>
+<td>Control-surface angular velocity time history.</td>
+</tr>
+<tr>
+<td><code>c</code>, <code>nc</code></td>
+<td><code>(m, n, 3)</code></td>
+<td>Bound panel collocation points and normals.</td>
+</tr>
+<tr>
+<td><code>t</code>, <code>i_ts</code></td>
+<td>As above</td>
+<td>Time / timestep index.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-coupled-aeroelastic-outputs-aeroelasticcase">6. Coupled aeroelastic outputs — <code>AeroelasticCase</code><a class="headerlink" href="#6-coupled-aeroelastic-outputs-aeroelasticcase" title="Permanent link">&para;</a></h2>
+<p><code>AeroelasticCase</code> is a thin wrapper: <code>.structure: StructureCase</code> and <code>.aero: AeroCase</code>, as returned by
+<code>CoupledAeroelastic.static_solve</code> / <code>.dynamic_solve</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">case</span> <span class="o">=</span> <span class="n">wing</span><span class="o">.</span><span class="n">static_solve</span><span class="p">(</span><span class="n">prescribed_dofs</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="k">case</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># tip position, shape (3)</span>
+<span class="k">case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">gamma_b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># bound circulation on the first surface, shape (m, n)</span>
+<span class="k">case</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">f_ext_aero</span>  <span class="c1"># aero forcing projected onto the beam</span>
+</code></pre></div>
+<hr />
+<h2 id="7-trim-outputs">7. Trim outputs<a class="headerlink" href="#7-trim-outputs" title="Permanent link">&para;</a></h2>
+<p><code>CoupledAeroelastic.trim(...)</code> returns <code>(AeroelasticCase, TrimVariables)</code> — the trimmed equilibrium
+solution, and the trim variables that were solved for. These trim variables are given through:</p>
+<table>
+<thead>
+<tr>
+<th><code>TrimVariables</code> field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cs_ang</code></td>
+<td><code>dict[str, Array]</code></td>
+<td>Trimmed control-surface deflection(s), rad.</td>
+</tr>
+<tr>
+<td><code>thrust</code></td>
+<td><code>dict[str, Array]</code></td>
+<td>Trimmed thrust value(s), N.</td>
+</tr>
+<tr>
+<td><code>trim_angles</code></td>
+<td><code>dict[str, Array]</code></td>
+<td>Rigid trim orientation, rad.</td>
+</tr>
+<tr>
+<td><code>hinge_angle</code></td>
+<td><code>dict[str, Array]</code></td>
+<td>Trimmed <code>MultibodyHinge</code> rotation(s), rad.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-visualising-results">8. Visualising results<a class="headerlink" href="#8-visualising-results" title="Permanent link">&para;</a></h2>
+<p>We use the VTK file format for visualisation of the 3D structural and aerodynamic problems, which can be viewed in
+ParaView. These files can be written by calling the <code>.plot(...)</code> methods on solution objects:</p>
+<ul>
+<li><code>StructureCase.plot(...)</code> — Plot the deformed beam. Writes a single <code>.vtu</code> for a static case, or a <code>.pvd</code> +
+  per-timestep <code>.vtu</code> series for a
+  batched case..</li>
+<li><code>AeroCase.plot(...)</code> — Plots the aerodynamic grid. Writes per-surface <code>.vts</code> grids for a single timestep, or a
+  <code>.pvd</code> + per-timestep <code>.vts</code> for a batched case.
+  series.</li>
+<li><code>AeroelasticCase.plot(...)</code> — calls both of the above.</li>
+</ul>
+<p>All VTK output (<code>.vtu</code>, <code>.vts</code>, <code>.pvd</code>) is intended for ParaView. Batched results are stitched into a single <code>.pvd</code>
+collection so the whole time series opens and animates in one step.</p>
+<p>It can often be handy to visualise the reference configuration when creating a model, to ensure that for example the
+connectivity is correct. This can easily be done by using the <code>.get_reference()</code> method to get a solution object
+representing the reference configuration, and then calling <code>.plot(...)</code> on that.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># plot the reference configuration to paraview</span>
+<span class="n">wing</span><span class="o">.</span><span class="n">get_reference</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">"plot_dir/"</span><span class="p">)</span>  
+</code></pre></div>
 
 
 

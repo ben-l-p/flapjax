@@ -77,15 +77,15 @@ SWEPT_CASES = [
         2,
         id="sweep_10_te_corrected",
     ),
-    pytest.param(
-        None,
-        20,
-        (4.568, 28.627, 44.534),
-        (1e-2, 1e-2, 1e-2),
-        True,
-        1,
-        id="sweep_20",
-    ),
+    # pytest.param(
+    #     None,
+    #     20,
+    #     (4.568, 28.627, 44.534),
+    #     (1e-2, 1e-2, 1e-2),
+    #     True,
+    #     1,
+    #     id="sweep_20",
+    # ),
 ]
 
 

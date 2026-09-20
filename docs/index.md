@@ -114,6 +114,8 @@ creates the model in the form of a Python object. A common workflow is as follow
     - Manually extracting information from the solution object. Details on what is available in the solution object can
       be found in the reference documentation.
 
+Python type hinting is used extensively to inform the user of the expected input and output types for each function.
+
 ```angular2html
 # (1) - create the model with some user defined function
 aircraft = create_model(u_inf, rho, ...)

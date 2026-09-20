@@ -29,11 +29,17 @@ write ``.vtu`` and ``.pvd`` files to disk, which can be visualised in ParaView.
       free-hinging wingtips, using ``MultibodyHinge`` constraints. Demonstrates trimming a multibody aircraft, where
       the trim solver also finds the equilibrium hinge angles, before flying it through the gust as a free-flying
       body.
+        - [Cantilever wing adjoint](cantilever_wing_adjoint.ipynb) — Cantilever wing subject to a one-minus-cosine
+          gust, using the coupled ``static_adjoint()`` and ``dynamic_adjoint()`` routines to compute the gradient of
+          the peak wing root bending moment with respect to structural and aerodynamic design variables.
         - [Patil wing open-loop control](patil_wing_control.ipynb) — Open-loop control of ailerons for a pair of very
           flexible wings mounted on a central hinge, performing a roll manoeuvre. Makes use of the aeroelastic
           ``trim()``
           and
           ``dynamic_solve()`` routines to find the time-domain response.
+        - [Patil wing optimal roll manoeuvre](patil_wing_optimal_roll.ipynb) — Follow-on to the open-loop control
+          tutorial that instead optimises the control-surface velocity profiles with an SLSQP outer loop, using
+          gradients of a target roll angle objective from the coupled dynamic adjoint.
         - Pazy wing (both straight and swept configurations)
             - Static
               deflection [straight](straight_pazy_static_deflection.ipynb), [swept](swept_pazy_static_deflection.ipynb) —

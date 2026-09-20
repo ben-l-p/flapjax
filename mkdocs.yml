@@ -87,7 +87,9 @@ nav:
       - Aeroelastic:
           - Simple HALE gust response: tutorials/simple_hale_gust.ipynb
           - Simple HALE hinged wingtip gust response: tutorials/simple_hale_hinged_gust.ipynb
+          - Cantilever wing adjoint: tutorials/cantilever_wing_adjoint.ipynb
           - Patil wing open-loop control: tutorials/patil_wing_control.ipynb
+          - Patil wing optimal roll manoeuvre: tutorials/patil_wing_optimal_roll.ipynb
           - Straight Pazy wing:
               - Static deflection: tutorials/straight_pazy_static_deflection.ipynb
               - Deformed mode frequencies: tutorials/straight_pazy_deformed_modes.ipynb

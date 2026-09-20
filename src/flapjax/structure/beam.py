@@ -167,7 +167,7 @@ class BaseBeamStructure:
         k_cs_index: Array | None = None,
         m_cs_index: Array | None = None,
         m_lumped_index: Array | None = None,
-        gravity: Array | None = None,
+        gravity: Array | Sequence[float] | None = None,
         thrust_nodes: dict[str, int] | None = None,
         thrust_direction: dict[str, Array] | None = None,
         optional_jacobians: OptionalJacobians | None = None,
@@ -289,7 +289,9 @@ class BaseBeamStructure:
         # grads inverse action for the reference rotations
         self.ad_inv_o0: Array = jnp.zeros((self.n_elem, 6, 6))
 
-        # gravity_vec settings
+        # gravity settings
+        if not isinstance(gravity, jnp.ndarray) and gravity is not None:
+            gravity = jnp.array(gravity)
         self.use_gravity: bool = gravity is not None and bool(jnp.any(gravity))
         if self.use_gravity:
             assert gravity is not None
@@ -3417,6 +3419,45 @@ class BaseBeamStructure:
             (zero).
             """
 
+            if include_aero:
+                assert aero_sol is not None
+                assert fsi_convergence_status_ is not None
+                assert cs_ang_t_ is not None
+                assert cs_vel_t_ is not None
+                aero_sol_ok: AeroCase = aero_sol
+                fsi_convergence_status_ok: ConvergenceStatus = fsi_convergence_status_
+                cs_ang_t_ok: dict[str, Array] = cs_ang_t_
+                cs_vel_t_ok: dict[str, Array] = cs_vel_t_
+                false_branch = lambda: time_step_loop(
+                    i_ts,
+                    struct_sol,
+                    struct_convergence_status_,
+                    aero_sol_ok,
+                    fsi_convergence_status_ok,
+                    thrust_t_,
+                    cs_ang_t_ok,
+                    cs_vel_t_ok,
+                )
+            else:
+                assert aero_sol is None
+                assert fsi_convergence_status_ is None
+                assert cs_ang_t_ is None
+                assert cs_vel_t_ is None
+                aero_sol_none: None = aero_sol
+                fsi_convergence_status_none: None = fsi_convergence_status_
+                cs_ang_t_none: None = cs_ang_t_
+                cs_vel_t_none: None = cs_vel_t_
+                false_branch = lambda: time_step_loop(
+                    i_ts,
+                    struct_sol,
+                    struct_convergence_status_,
+                    aero_sol_none,
+                    fsi_convergence_status_none,
+                    thrust_t_,
+                    cs_ang_t_none,
+                    cs_vel_t_none,
+                )
+
             (
                 struct_sol,
                 struct_convergence_status_,
@@ -3436,16 +3477,7 @@ class BaseBeamStructure:
                     cs_ang_t_,
                     cs_vel_t_,
                 ),
-                lambda: time_step_loop(
-                    i_ts,
-                    struct_sol,
-                    struct_convergence_status_,
-                    aero_sol,
-                    fsi_convergence_status_,
-                    thrust_t_,
-                    cs_ang_t_,
-                    cs_vel_t_,
-                ),
+                false_branch,
             )
 
             has_nan = struct_convergence_status_.has_nan
@@ -3457,7 +3489,7 @@ class BaseBeamStructure:
             jax.lax.cond(
                 new_diverged & ~diverged,
                 lambda: warn(
-                    "NaN detected in dynamic solve at time step {i_ts} - skipping remaining time steps.",
+                    "NaN detected in dynamic solve at time step {i_ts} (t={t_val:.03e}) - skipping remaining time steps.",
                     i_ts=i_ts,
                     t_val=t[i_ts],
                 ),

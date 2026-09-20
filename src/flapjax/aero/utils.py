@@ -20,8 +20,18 @@ type KernelFunction = Callable[[Array, Array], Array]
 type PolarFunction = Callable[[Array], tuple[Array, Array, Array]]
 
 
+# Local "spanwise" axis shared by control-surface hinges (add_control_surface) and built-in geometric twist
+# (make_rectangular_grid): both are rotations of the local chord/camber (x, z) section about this axis.
+HINGE_AXIS_DEFAULT = jnp.array((0.0, 1.0, 0.0))
+
+
 def make_rectangular_grid(
-    m: int, n: int, chord: Array | float, ea: Array | float
+    m: int,
+    n: int,
+    chord: Array | float,
+    ea: Array | float,
+    camber_line: tuple[Array, Array] | None = None,
+    twist: Array | float = 0.0,
 ) -> Array:
     r"""
     Create a rectangular aerodynamic grid.
@@ -29,14 +39,27 @@ def make_rectangular_grid(
     :param n: Number of panels in the spanwise direction.
     :param chord: Surface chord length.
     :param ea: Elastic axis location as fraction of chord.
+    :param camber_line: Optional mean camber line as a pair ``(x/c, z/c)`` of equal-length vectors, giving
+    the camber-line height at a set of chordwise stations, with ``x/c`` running from 0 (leading edge)
+    to 1 (trailing edge). If None (default), the section is a flat plate.
+    :param twist: Built-in geometric twist angle in radians, uniform over the whole grid, applied by rotating the
+    local chord/camber section about the local spanwise axis (``HINGE_AXIS_DEFAULT``). This is a purely
+    aerodynamic incidence offset: unlike a beam's ``y_vector``-defined twist (which only reorients the
+    structural cross-section's stiffness/mass axes), it actually changes the panels' angle of attack, since a
+    uniform twist produces no curvature for the structural solver to pick up on its own. Default 0 (no twist).
     :return: Local grid points for planar wing, ``(zeta_m, zeta_n, 3)``.
     """
 
+    x_over_c = jnp.linspace(0.0, 1.0, m + 1)
     grid = jnp.zeros((m + 1, n + 1, 3))
-    return grid.at[..., 0].set((jnp.linspace(0.0, chord, m + 1) - ea * chord)[:, None])
-
-
-HINGE_AXIS_DEFAULT = jnp.array((0.0, 1.0, 0.0))
+    grid = grid.at[..., 0].set((x_over_c * chord - ea * chord)[:, None])
+    if camber_line is not None:
+        camber_x, camber_z = camber_line
+        z_over_c = jnp.interp(x_over_c, camber_x, camber_z)
+        grid = grid.at[..., 2].set((z_over_c * chord)[:, None])
+    rmat = exp_so3(HINGE_AXIS_DEFAULT * twist)
+    grid = jnp.einsum("ij,mnj->mni", rmat, grid)
+    return grid
 
 
 def add_control_surface(

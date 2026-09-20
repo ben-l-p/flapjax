@@ -26,6 +26,7 @@ dependencies = [
     "matplotlib>=3.8.4",
     "equinox>=0.13",
     "ipython>=9.16.1",
+    "ipykernel>=7.3.0",
 ]
 
 [project.urls]

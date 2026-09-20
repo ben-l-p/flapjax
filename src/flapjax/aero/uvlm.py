@@ -801,11 +801,6 @@ class UVLM:
         effective angle of attack.
         """
 
-        if horseshoe and any(gd.m_star == 0 for gd in self.grid_disc):
-            warn(
-                "Horseshoe wake requested but m_star == 0 for at least one surface, skipping horseshoe wake."
-            )
-
         zeta_b_n = self.hg_to_zeta_b(
             hg_n=hg_n if hg_n is not None else self.hg_ref, cs_ang_n=cs_ang_n
         )

@@ -16667,7 +16667,92 @@ of this</p>
 <span class="normal">3418</span>
 <span class="normal">3419</span>
 <span class="normal">3420</span>
-<span class="normal">3421</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
+<span class="normal">3421</span>
+<span class="normal">3422</span>
+<span class="normal">3423</span>
+<span class="normal">3424</span>
+<span class="normal">3425</span>
+<span class="normal">3426</span>
+<span class="normal">3427</span>
+<span class="normal">3428</span>
+<span class="normal">3429</span>
+<span class="normal">3430</span>
+<span class="normal">3431</span>
+<span class="normal">3432</span>
+<span class="normal">3433</span>
+<span class="normal">3434</span>
+<span class="normal">3435</span>
+<span class="normal">3436</span>
+<span class="normal">3437</span>
+<span class="normal">3438</span>
+<span class="normal">3439</span>
+<span class="normal">3440</span>
+<span class="normal">3441</span>
+<span class="normal">3442</span>
+<span class="normal">3443</span>
+<span class="normal">3444</span>
+<span class="normal">3445</span>
+<span class="normal">3446</span>
+<span class="normal">3447</span>
+<span class="normal">3448</span>
+<span class="normal">3449</span>
+<span class="normal">3450</span>
+<span class="normal">3451</span>
+<span class="normal">3452</span>
+<span class="normal">3453</span>
+<span class="normal">3454</span>
+<span class="normal">3455</span>
+<span class="normal">3456</span>
+<span class="normal">3457</span>
+<span class="normal">3458</span>
+<span class="normal">3459</span>
+<span class="normal">3460</span>
+<span class="normal">3461</span>
+<span class="normal">3462</span>
+<span class="normal">3463</span>
+<span class="normal">3464</span>
+<span class="normal">3465</span>
+<span class="normal">3466</span>
+<span class="normal">3467</span>
+<span class="normal">3468</span>
+<span class="normal">3469</span>
+<span class="normal">3470</span>
+<span class="normal">3471</span>
+<span class="normal">3472</span>
+<span class="normal">3473</span>
+<span class="normal">3474</span>
+<span class="normal">3475</span>
+<span class="normal">3476</span>
+<span class="normal">3477</span>
+<span class="normal">3478</span>
+<span class="normal">3479</span>
+<span class="normal">3480</span>
+<span class="normal">3481</span>
+<span class="normal">3482</span>
+<span class="normal">3483</span>
+<span class="normal">3484</span>
+<span class="normal">3485</span>
+<span class="normal">3486</span>
+<span class="normal">3487</span>
+<span class="normal">3488</span>
+<span class="normal">3489</span>
+<span class="normal">3490</span>
+<span class="normal">3491</span>
+<span class="normal">3492</span>
+<span class="normal">3493</span>
+<span class="normal">3494</span>
+<span class="normal">3495</span>
+<span class="normal">3496</span>
+<span class="normal">3497</span>
+<span class="normal">3498</span>
+<span class="normal">3499</span>
+<span class="normal">3500</span>
+<span class="normal">3501</span>
+<span class="normal">3502</span>
+<span class="normal">3503</span>
+<span class="normal">3504</span>
+<span class="normal">3505</span>
+<span class="normal">3506</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">struct_case</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">struct_convergence_status</span><span class="p">:</span> <span class="n">ConvergenceStatus</span><span class="p">,</span>
@@ -17426,10 +17511,94 @@ of this</p>
             <span class="p">),</span>
         <span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">time_step_loop_checked</span><span class="p">(</span>
+        <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">struct_sol</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
+        <span class="n">struct_convergence_status_</span><span class="p">:</span> <span class="n">ConvergenceStatus</span><span class="p">,</span>
+        <span class="n">aero_sol</span><span class="p">:</span> <span class="n">AeroCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fsi_convergence_status_</span><span class="p">:</span> <span class="n">ConvergenceStatus</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">thrust_t_</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+        <span class="n">cs_ang_t_</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cs_vel_t_</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">diverged</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
+        <span class="n">StructureCase</span><span class="p">,</span>
+        <span class="n">ConvergenceStatus</span><span class="p">,</span>
+        <span class="n">AeroCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ConvergenceStatus</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">Array</span><span class="p">,</span>
+    <span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">        Wraps ``time_step_loop`` with a check for solution divergence. Once a NaN is detected, this becomes a no-op</span>
+<span class="sd">        for all remaining time steps. The corresponding time history entries are left at their initialised value</span>
+<span class="sd">        (zero).</span>
+<span class="sd">        """</span>
+
+        <span class="p">(</span>
+            <span class="n">struct_sol</span><span class="p">,</span>
+            <span class="n">struct_convergence_status_</span><span class="p">,</span>
+            <span class="n">aero_sol</span><span class="p">,</span>
+            <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+            <span class="n">thrust_t_</span><span class="p">,</span>
+            <span class="n">cs_ang_t_</span><span class="p">,</span>
+            <span class="n">cs_vel_t_</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span>
+            <span class="n">diverged</span><span class="p">,</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span>
+                <span class="n">struct_sol</span><span class="p">,</span>
+                <span class="n">struct_convergence_status_</span><span class="p">,</span>
+                <span class="n">aero_sol</span><span class="p">,</span>
+                <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+                <span class="n">thrust_t_</span><span class="p">,</span>
+                <span class="n">cs_ang_t_</span><span class="p">,</span>
+                <span class="n">cs_vel_t_</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">time_step_loop</span><span class="p">(</span>
+                <span class="n">i_ts</span><span class="p">,</span>
+                <span class="n">struct_sol</span><span class="p">,</span>
+                <span class="n">struct_convergence_status_</span><span class="p">,</span>
+                <span class="n">aero_sol</span><span class="p">,</span>
+                <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+                <span class="n">thrust_t_</span><span class="p">,</span>
+                <span class="n">cs_ang_t_</span><span class="p">,</span>
+                <span class="n">cs_vel_t_</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">has_nan</span> <span class="o">=</span> <span class="n">struct_convergence_status_</span><span class="o">.</span><span class="n">has_nan</span>
+        <span class="k">if</span> <span class="n">include_aero</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">fsi_convergence_status_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">has_nan</span> <span class="o">=</span> <span class="n">has_nan</span> <span class="o">|</span> <span class="n">fsi_convergence_status_</span><span class="o">.</span><span class="n">has_nan</span>
+        <span class="n">new_diverged</span> <span class="o">=</span> <span class="n">diverged</span> <span class="o">|</span> <span class="n">has_nan</span>
+
+        <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span>
+            <span class="n">new_diverged</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">diverged</span><span class="p">,</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">warn</span><span class="p">(</span>
+                <span class="s2">"NaN detected in dynamic solve at time step </span><span class="si">{i_ts}</span><span class="s2"> - skipping remaining time steps."</span><span class="p">,</span>
+                <span class="n">i_ts</span><span class="o">=</span><span class="n">i_ts</span><span class="p">,</span>
+                <span class="n">t_val</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="n">i_ts</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">struct_sol</span><span class="p">,</span>
+            <span class="n">struct_convergence_status_</span><span class="p">,</span>
+            <span class="n">aero_sol</span><span class="p">,</span>
+            <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+            <span class="n">thrust_t_</span><span class="p">,</span>
+            <span class="n">cs_ang_t_</span><span class="p">,</span>
+            <span class="n">cs_vel_t_</span><span class="p">,</span>
+            <span class="n">new_diverged</span><span class="p">,</span>
+        <span class="p">)</span>
+
     <span class="n">struct_case</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">aero_case</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">fori_loop</span><span class="p">(</span>
         <span class="mi">1</span><span class="p">,</span>
         <span class="n">n_tstep</span><span class="p">,</span>
-        <span class="k">lambda</span> <span class="n">i_ts</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">time_step_loop</span><span class="p">(</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">i_ts</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">time_step_loop_checked</span><span class="p">(</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span>
         <span class="p">(</span>
             <span class="n">struct_case</span><span class="p">,</span>
             <span class="n">struct_convergence_status</span><span class="p">,</span>
@@ -17438,6 +17607,7 @@ of this</p>
             <span class="n">thrust_t</span><span class="p">,</span>
             <span class="n">cs_ang_t</span><span class="p">,</span>
             <span class="n">cs_vel_t</span><span class="p">,</span>
+            <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
         <span class="p">),</span>
     <span class="p">)</span>
 
@@ -17677,92 +17847,7 @@ from the initial state.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3423</span>
-<span class="normal">3424</span>
-<span class="normal">3425</span>
-<span class="normal">3426</span>
-<span class="normal">3427</span>
-<span class="normal">3428</span>
-<span class="normal">3429</span>
-<span class="normal">3430</span>
-<span class="normal">3431</span>
-<span class="normal">3432</span>
-<span class="normal">3433</span>
-<span class="normal">3434</span>
-<span class="normal">3435</span>
-<span class="normal">3436</span>
-<span class="normal">3437</span>
-<span class="normal">3438</span>
-<span class="normal">3439</span>
-<span class="normal">3440</span>
-<span class="normal">3441</span>
-<span class="normal">3442</span>
-<span class="normal">3443</span>
-<span class="normal">3444</span>
-<span class="normal">3445</span>
-<span class="normal">3446</span>
-<span class="normal">3447</span>
-<span class="normal">3448</span>
-<span class="normal">3449</span>
-<span class="normal">3450</span>
-<span class="normal">3451</span>
-<span class="normal">3452</span>
-<span class="normal">3453</span>
-<span class="normal">3454</span>
-<span class="normal">3455</span>
-<span class="normal">3456</span>
-<span class="normal">3457</span>
-<span class="normal">3458</span>
-<span class="normal">3459</span>
-<span class="normal">3460</span>
-<span class="normal">3461</span>
-<span class="normal">3462</span>
-<span class="normal">3463</span>
-<span class="normal">3464</span>
-<span class="normal">3465</span>
-<span class="normal">3466</span>
-<span class="normal">3467</span>
-<span class="normal">3468</span>
-<span class="normal">3469</span>
-<span class="normal">3470</span>
-<span class="normal">3471</span>
-<span class="normal">3472</span>
-<span class="normal">3473</span>
-<span class="normal">3474</span>
-<span class="normal">3475</span>
-<span class="normal">3476</span>
-<span class="normal">3477</span>
-<span class="normal">3478</span>
-<span class="normal">3479</span>
-<span class="normal">3480</span>
-<span class="normal">3481</span>
-<span class="normal">3482</span>
-<span class="normal">3483</span>
-<span class="normal">3484</span>
-<span class="normal">3485</span>
-<span class="normal">3486</span>
-<span class="normal">3487</span>
-<span class="normal">3488</span>
-<span class="normal">3489</span>
-<span class="normal">3490</span>
-<span class="normal">3491</span>
-<span class="normal">3492</span>
-<span class="normal">3493</span>
-<span class="normal">3494</span>
-<span class="normal">3495</span>
-<span class="normal">3496</span>
-<span class="normal">3497</span>
-<span class="normal">3498</span>
-<span class="normal">3499</span>
-<span class="normal">3500</span>
-<span class="normal">3501</span>
-<span class="normal">3502</span>
-<span class="normal">3503</span>
-<span class="normal">3504</span>
-<span class="normal">3505</span>
-<span class="normal">3506</span>
-<span class="normal">3507</span>
-<span class="normal">3508</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3508</span>
 <span class="normal">3509</span>
 <span class="normal">3510</span>
 <span class="normal">3511</span>
@@ -17871,7 +17956,92 @@ from the initial state.</p>
 <span class="normal">3614</span>
 <span class="normal">3615</span>
 <span class="normal">3616</span>
-<span class="normal">3617</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
+<span class="normal">3617</span>
+<span class="normal">3618</span>
+<span class="normal">3619</span>
+<span class="normal">3620</span>
+<span class="normal">3621</span>
+<span class="normal">3622</span>
+<span class="normal">3623</span>
+<span class="normal">3624</span>
+<span class="normal">3625</span>
+<span class="normal">3626</span>
+<span class="normal">3627</span>
+<span class="normal">3628</span>
+<span class="normal">3629</span>
+<span class="normal">3630</span>
+<span class="normal">3631</span>
+<span class="normal">3632</span>
+<span class="normal">3633</span>
+<span class="normal">3634</span>
+<span class="normal">3635</span>
+<span class="normal">3636</span>
+<span class="normal">3637</span>
+<span class="normal">3638</span>
+<span class="normal">3639</span>
+<span class="normal">3640</span>
+<span class="normal">3641</span>
+<span class="normal">3642</span>
+<span class="normal">3643</span>
+<span class="normal">3644</span>
+<span class="normal">3645</span>
+<span class="normal">3646</span>
+<span class="normal">3647</span>
+<span class="normal">3648</span>
+<span class="normal">3649</span>
+<span class="normal">3650</span>
+<span class="normal">3651</span>
+<span class="normal">3652</span>
+<span class="normal">3653</span>
+<span class="normal">3654</span>
+<span class="normal">3655</span>
+<span class="normal">3656</span>
+<span class="normal">3657</span>
+<span class="normal">3658</span>
+<span class="normal">3659</span>
+<span class="normal">3660</span>
+<span class="normal">3661</span>
+<span class="normal">3662</span>
+<span class="normal">3663</span>
+<span class="normal">3664</span>
+<span class="normal">3665</span>
+<span class="normal">3666</span>
+<span class="normal">3667</span>
+<span class="normal">3668</span>
+<span class="normal">3669</span>
+<span class="normal">3670</span>
+<span class="normal">3671</span>
+<span class="normal">3672</span>
+<span class="normal">3673</span>
+<span class="normal">3674</span>
+<span class="normal">3675</span>
+<span class="normal">3676</span>
+<span class="normal">3677</span>
+<span class="normal">3678</span>
+<span class="normal">3679</span>
+<span class="normal">3680</span>
+<span class="normal">3681</span>
+<span class="normal">3682</span>
+<span class="normal">3683</span>
+<span class="normal">3684</span>
+<span class="normal">3685</span>
+<span class="normal">3686</span>
+<span class="normal">3687</span>
+<span class="normal">3688</span>
+<span class="normal">3689</span>
+<span class="normal">3690</span>
+<span class="normal">3691</span>
+<span class="normal">3692</span>
+<span class="normal">3693</span>
+<span class="normal">3694</span>
+<span class="normal">3695</span>
+<span class="normal">3696</span>
+<span class="normal">3697</span>
+<span class="normal">3698</span>
+<span class="normal">3699</span>
+<span class="normal">3700</span>
+<span class="normal">3701</span>
+<span class="normal">3702</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">init_state</span><span class="p">:</span> <span class="n">StructureCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -32636,7 +32806,92 @@ of this</p>
 <span class="normal">3418</span>
 <span class="normal">3419</span>
 <span class="normal">3420</span>
-<span class="normal">3421</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
+<span class="normal">3421</span>
+<span class="normal">3422</span>
+<span class="normal">3423</span>
+<span class="normal">3424</span>
+<span class="normal">3425</span>
+<span class="normal">3426</span>
+<span class="normal">3427</span>
+<span class="normal">3428</span>
+<span class="normal">3429</span>
+<span class="normal">3430</span>
+<span class="normal">3431</span>
+<span class="normal">3432</span>
+<span class="normal">3433</span>
+<span class="normal">3434</span>
+<span class="normal">3435</span>
+<span class="normal">3436</span>
+<span class="normal">3437</span>
+<span class="normal">3438</span>
+<span class="normal">3439</span>
+<span class="normal">3440</span>
+<span class="normal">3441</span>
+<span class="normal">3442</span>
+<span class="normal">3443</span>
+<span class="normal">3444</span>
+<span class="normal">3445</span>
+<span class="normal">3446</span>
+<span class="normal">3447</span>
+<span class="normal">3448</span>
+<span class="normal">3449</span>
+<span class="normal">3450</span>
+<span class="normal">3451</span>
+<span class="normal">3452</span>
+<span class="normal">3453</span>
+<span class="normal">3454</span>
+<span class="normal">3455</span>
+<span class="normal">3456</span>
+<span class="normal">3457</span>
+<span class="normal">3458</span>
+<span class="normal">3459</span>
+<span class="normal">3460</span>
+<span class="normal">3461</span>
+<span class="normal">3462</span>
+<span class="normal">3463</span>
+<span class="normal">3464</span>
+<span class="normal">3465</span>
+<span class="normal">3466</span>
+<span class="normal">3467</span>
+<span class="normal">3468</span>
+<span class="normal">3469</span>
+<span class="normal">3470</span>
+<span class="normal">3471</span>
+<span class="normal">3472</span>
+<span class="normal">3473</span>
+<span class="normal">3474</span>
+<span class="normal">3475</span>
+<span class="normal">3476</span>
+<span class="normal">3477</span>
+<span class="normal">3478</span>
+<span class="normal">3479</span>
+<span class="normal">3480</span>
+<span class="normal">3481</span>
+<span class="normal">3482</span>
+<span class="normal">3483</span>
+<span class="normal">3484</span>
+<span class="normal">3485</span>
+<span class="normal">3486</span>
+<span class="normal">3487</span>
+<span class="normal">3488</span>
+<span class="normal">3489</span>
+<span class="normal">3490</span>
+<span class="normal">3491</span>
+<span class="normal">3492</span>
+<span class="normal">3493</span>
+<span class="normal">3494</span>
+<span class="normal">3495</span>
+<span class="normal">3496</span>
+<span class="normal">3497</span>
+<span class="normal">3498</span>
+<span class="normal">3499</span>
+<span class="normal">3500</span>
+<span class="normal">3501</span>
+<span class="normal">3502</span>
+<span class="normal">3503</span>
+<span class="normal">3504</span>
+<span class="normal">3505</span>
+<span class="normal">3506</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">struct_case</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">struct_convergence_status</span><span class="p">:</span> <span class="n">ConvergenceStatus</span><span class="p">,</span>
@@ -33395,10 +33650,94 @@ of this</p>
             <span class="p">),</span>
         <span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">time_step_loop_checked</span><span class="p">(</span>
+        <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">struct_sol</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
+        <span class="n">struct_convergence_status_</span><span class="p">:</span> <span class="n">ConvergenceStatus</span><span class="p">,</span>
+        <span class="n">aero_sol</span><span class="p">:</span> <span class="n">AeroCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fsi_convergence_status_</span><span class="p">:</span> <span class="n">ConvergenceStatus</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">thrust_t_</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+        <span class="n">cs_ang_t_</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cs_vel_t_</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">diverged</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
+        <span class="n">StructureCase</span><span class="p">,</span>
+        <span class="n">ConvergenceStatus</span><span class="p">,</span>
+        <span class="n">AeroCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ConvergenceStatus</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">Array</span><span class="p">,</span>
+    <span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">        Wraps ``time_step_loop`` with a check for solution divergence. Once a NaN is detected, this becomes a no-op</span>
+<span class="sd">        for all remaining time steps. The corresponding time history entries are left at their initialised value</span>
+<span class="sd">        (zero).</span>
+<span class="sd">        """</span>
+
+        <span class="p">(</span>
+            <span class="n">struct_sol</span><span class="p">,</span>
+            <span class="n">struct_convergence_status_</span><span class="p">,</span>
+            <span class="n">aero_sol</span><span class="p">,</span>
+            <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+            <span class="n">thrust_t_</span><span class="p">,</span>
+            <span class="n">cs_ang_t_</span><span class="p">,</span>
+            <span class="n">cs_vel_t_</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span>
+            <span class="n">diverged</span><span class="p">,</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span>
+                <span class="n">struct_sol</span><span class="p">,</span>
+                <span class="n">struct_convergence_status_</span><span class="p">,</span>
+                <span class="n">aero_sol</span><span class="p">,</span>
+                <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+                <span class="n">thrust_t_</span><span class="p">,</span>
+                <span class="n">cs_ang_t_</span><span class="p">,</span>
+                <span class="n">cs_vel_t_</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">time_step_loop</span><span class="p">(</span>
+                <span class="n">i_ts</span><span class="p">,</span>
+                <span class="n">struct_sol</span><span class="p">,</span>
+                <span class="n">struct_convergence_status_</span><span class="p">,</span>
+                <span class="n">aero_sol</span><span class="p">,</span>
+                <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+                <span class="n">thrust_t_</span><span class="p">,</span>
+                <span class="n">cs_ang_t_</span><span class="p">,</span>
+                <span class="n">cs_vel_t_</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">has_nan</span> <span class="o">=</span> <span class="n">struct_convergence_status_</span><span class="o">.</span><span class="n">has_nan</span>
+        <span class="k">if</span> <span class="n">include_aero</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">fsi_convergence_status_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">has_nan</span> <span class="o">=</span> <span class="n">has_nan</span> <span class="o">|</span> <span class="n">fsi_convergence_status_</span><span class="o">.</span><span class="n">has_nan</span>
+        <span class="n">new_diverged</span> <span class="o">=</span> <span class="n">diverged</span> <span class="o">|</span> <span class="n">has_nan</span>
+
+        <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span>
+            <span class="n">new_diverged</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">diverged</span><span class="p">,</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">warn</span><span class="p">(</span>
+                <span class="s2">"NaN detected in dynamic solve at time step </span><span class="si">{i_ts}</span><span class="s2"> - skipping remaining time steps."</span><span class="p">,</span>
+                <span class="n">i_ts</span><span class="o">=</span><span class="n">i_ts</span><span class="p">,</span>
+                <span class="n">t_val</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="n">i_ts</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">struct_sol</span><span class="p">,</span>
+            <span class="n">struct_convergence_status_</span><span class="p">,</span>
+            <span class="n">aero_sol</span><span class="p">,</span>
+            <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+            <span class="n">thrust_t_</span><span class="p">,</span>
+            <span class="n">cs_ang_t_</span><span class="p">,</span>
+            <span class="n">cs_vel_t_</span><span class="p">,</span>
+            <span class="n">new_diverged</span><span class="p">,</span>
+        <span class="p">)</span>
+
     <span class="n">struct_case</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">aero_case</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">fori_loop</span><span class="p">(</span>
         <span class="mi">1</span><span class="p">,</span>
         <span class="n">n_tstep</span><span class="p">,</span>
-        <span class="k">lambda</span> <span class="n">i_ts</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">time_step_loop</span><span class="p">(</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">i_ts</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">time_step_loop_checked</span><span class="p">(</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span>
         <span class="p">(</span>
             <span class="n">struct_case</span><span class="p">,</span>
             <span class="n">struct_convergence_status</span><span class="p">,</span>
@@ -33407,6 +33746,7 @@ of this</p>
             <span class="n">thrust_t</span><span class="p">,</span>
             <span class="n">cs_ang_t</span><span class="p">,</span>
             <span class="n">cs_vel_t</span><span class="p">,</span>
+            <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
         <span class="p">),</span>
     <span class="p">)</span>
 
@@ -33646,92 +33986,7 @@ from the initial state.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3423</span>
-<span class="normal">3424</span>
-<span class="normal">3425</span>
-<span class="normal">3426</span>
-<span class="normal">3427</span>
-<span class="normal">3428</span>
-<span class="normal">3429</span>
-<span class="normal">3430</span>
-<span class="normal">3431</span>
-<span class="normal">3432</span>
-<span class="normal">3433</span>
-<span class="normal">3434</span>
-<span class="normal">3435</span>
-<span class="normal">3436</span>
-<span class="normal">3437</span>
-<span class="normal">3438</span>
-<span class="normal">3439</span>
-<span class="normal">3440</span>
-<span class="normal">3441</span>
-<span class="normal">3442</span>
-<span class="normal">3443</span>
-<span class="normal">3444</span>
-<span class="normal">3445</span>
-<span class="normal">3446</span>
-<span class="normal">3447</span>
-<span class="normal">3448</span>
-<span class="normal">3449</span>
-<span class="normal">3450</span>
-<span class="normal">3451</span>
-<span class="normal">3452</span>
-<span class="normal">3453</span>
-<span class="normal">3454</span>
-<span class="normal">3455</span>
-<span class="normal">3456</span>
-<span class="normal">3457</span>
-<span class="normal">3458</span>
-<span class="normal">3459</span>
-<span class="normal">3460</span>
-<span class="normal">3461</span>
-<span class="normal">3462</span>
-<span class="normal">3463</span>
-<span class="normal">3464</span>
-<span class="normal">3465</span>
-<span class="normal">3466</span>
-<span class="normal">3467</span>
-<span class="normal">3468</span>
-<span class="normal">3469</span>
-<span class="normal">3470</span>
-<span class="normal">3471</span>
-<span class="normal">3472</span>
-<span class="normal">3473</span>
-<span class="normal">3474</span>
-<span class="normal">3475</span>
-<span class="normal">3476</span>
-<span class="normal">3477</span>
-<span class="normal">3478</span>
-<span class="normal">3479</span>
-<span class="normal">3480</span>
-<span class="normal">3481</span>
-<span class="normal">3482</span>
-<span class="normal">3483</span>
-<span class="normal">3484</span>
-<span class="normal">3485</span>
-<span class="normal">3486</span>
-<span class="normal">3487</span>
-<span class="normal">3488</span>
-<span class="normal">3489</span>
-<span class="normal">3490</span>
-<span class="normal">3491</span>
-<span class="normal">3492</span>
-<span class="normal">3493</span>
-<span class="normal">3494</span>
-<span class="normal">3495</span>
-<span class="normal">3496</span>
-<span class="normal">3497</span>
-<span class="normal">3498</span>
-<span class="normal">3499</span>
-<span class="normal">3500</span>
-<span class="normal">3501</span>
-<span class="normal">3502</span>
-<span class="normal">3503</span>
-<span class="normal">3504</span>
-<span class="normal">3505</span>
-<span class="normal">3506</span>
-<span class="normal">3507</span>
-<span class="normal">3508</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3508</span>
 <span class="normal">3509</span>
 <span class="normal">3510</span>
 <span class="normal">3511</span>
@@ -33840,7 +34095,92 @@ from the initial state.</p>
 <span class="normal">3614</span>
 <span class="normal">3615</span>
 <span class="normal">3616</span>
-<span class="normal">3617</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
+<span class="normal">3617</span>
+<span class="normal">3618</span>
+<span class="normal">3619</span>
+<span class="normal">3620</span>
+<span class="normal">3621</span>
+<span class="normal">3622</span>
+<span class="normal">3623</span>
+<span class="normal">3624</span>
+<span class="normal">3625</span>
+<span class="normal">3626</span>
+<span class="normal">3627</span>
+<span class="normal">3628</span>
+<span class="normal">3629</span>
+<span class="normal">3630</span>
+<span class="normal">3631</span>
+<span class="normal">3632</span>
+<span class="normal">3633</span>
+<span class="normal">3634</span>
+<span class="normal">3635</span>
+<span class="normal">3636</span>
+<span class="normal">3637</span>
+<span class="normal">3638</span>
+<span class="normal">3639</span>
+<span class="normal">3640</span>
+<span class="normal">3641</span>
+<span class="normal">3642</span>
+<span class="normal">3643</span>
+<span class="normal">3644</span>
+<span class="normal">3645</span>
+<span class="normal">3646</span>
+<span class="normal">3647</span>
+<span class="normal">3648</span>
+<span class="normal">3649</span>
+<span class="normal">3650</span>
+<span class="normal">3651</span>
+<span class="normal">3652</span>
+<span class="normal">3653</span>
+<span class="normal">3654</span>
+<span class="normal">3655</span>
+<span class="normal">3656</span>
+<span class="normal">3657</span>
+<span class="normal">3658</span>
+<span class="normal">3659</span>
+<span class="normal">3660</span>
+<span class="normal">3661</span>
+<span class="normal">3662</span>
+<span class="normal">3663</span>
+<span class="normal">3664</span>
+<span class="normal">3665</span>
+<span class="normal">3666</span>
+<span class="normal">3667</span>
+<span class="normal">3668</span>
+<span class="normal">3669</span>
+<span class="normal">3670</span>
+<span class="normal">3671</span>
+<span class="normal">3672</span>
+<span class="normal">3673</span>
+<span class="normal">3674</span>
+<span class="normal">3675</span>
+<span class="normal">3676</span>
+<span class="normal">3677</span>
+<span class="normal">3678</span>
+<span class="normal">3679</span>
+<span class="normal">3680</span>
+<span class="normal">3681</span>
+<span class="normal">3682</span>
+<span class="normal">3683</span>
+<span class="normal">3684</span>
+<span class="normal">3685</span>
+<span class="normal">3686</span>
+<span class="normal">3687</span>
+<span class="normal">3688</span>
+<span class="normal">3689</span>
+<span class="normal">3690</span>
+<span class="normal">3691</span>
+<span class="normal">3692</span>
+<span class="normal">3693</span>
+<span class="normal">3694</span>
+<span class="normal">3695</span>
+<span class="normal">3696</span>
+<span class="normal">3697</span>
+<span class="normal">3698</span>
+<span class="normal">3699</span>
+<span class="normal">3700</span>
+<span class="normal">3701</span>
+<span class="normal">3702</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">init_state</span><span class="p">:</span> <span class="n">StructureCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -52905,7 +53245,92 @@ of this</p>
 <span class="normal">3418</span>
 <span class="normal">3419</span>
 <span class="normal">3420</span>
-<span class="normal">3421</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
+<span class="normal">3421</span>
+<span class="normal">3422</span>
+<span class="normal">3423</span>
+<span class="normal">3424</span>
+<span class="normal">3425</span>
+<span class="normal">3426</span>
+<span class="normal">3427</span>
+<span class="normal">3428</span>
+<span class="normal">3429</span>
+<span class="normal">3430</span>
+<span class="normal">3431</span>
+<span class="normal">3432</span>
+<span class="normal">3433</span>
+<span class="normal">3434</span>
+<span class="normal">3435</span>
+<span class="normal">3436</span>
+<span class="normal">3437</span>
+<span class="normal">3438</span>
+<span class="normal">3439</span>
+<span class="normal">3440</span>
+<span class="normal">3441</span>
+<span class="normal">3442</span>
+<span class="normal">3443</span>
+<span class="normal">3444</span>
+<span class="normal">3445</span>
+<span class="normal">3446</span>
+<span class="normal">3447</span>
+<span class="normal">3448</span>
+<span class="normal">3449</span>
+<span class="normal">3450</span>
+<span class="normal">3451</span>
+<span class="normal">3452</span>
+<span class="normal">3453</span>
+<span class="normal">3454</span>
+<span class="normal">3455</span>
+<span class="normal">3456</span>
+<span class="normal">3457</span>
+<span class="normal">3458</span>
+<span class="normal">3459</span>
+<span class="normal">3460</span>
+<span class="normal">3461</span>
+<span class="normal">3462</span>
+<span class="normal">3463</span>
+<span class="normal">3464</span>
+<span class="normal">3465</span>
+<span class="normal">3466</span>
+<span class="normal">3467</span>
+<span class="normal">3468</span>
+<span class="normal">3469</span>
+<span class="normal">3470</span>
+<span class="normal">3471</span>
+<span class="normal">3472</span>
+<span class="normal">3473</span>
+<span class="normal">3474</span>
+<span class="normal">3475</span>
+<span class="normal">3476</span>
+<span class="normal">3477</span>
+<span class="normal">3478</span>
+<span class="normal">3479</span>
+<span class="normal">3480</span>
+<span class="normal">3481</span>
+<span class="normal">3482</span>
+<span class="normal">3483</span>
+<span class="normal">3484</span>
+<span class="normal">3485</span>
+<span class="normal">3486</span>
+<span class="normal">3487</span>
+<span class="normal">3488</span>
+<span class="normal">3489</span>
+<span class="normal">3490</span>
+<span class="normal">3491</span>
+<span class="normal">3492</span>
+<span class="normal">3493</span>
+<span class="normal">3494</span>
+<span class="normal">3495</span>
+<span class="normal">3496</span>
+<span class="normal">3497</span>
+<span class="normal">3498</span>
+<span class="normal">3499</span>
+<span class="normal">3500</span>
+<span class="normal">3501</span>
+<span class="normal">3502</span>
+<span class="normal">3503</span>
+<span class="normal">3504</span>
+<span class="normal">3505</span>
+<span class="normal">3506</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">struct_case</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">struct_convergence_status</span><span class="p">:</span> <span class="n">ConvergenceStatus</span><span class="p">,</span>
@@ -53664,10 +54089,94 @@ of this</p>
             <span class="p">),</span>
         <span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">time_step_loop_checked</span><span class="p">(</span>
+        <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">struct_sol</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
+        <span class="n">struct_convergence_status_</span><span class="p">:</span> <span class="n">ConvergenceStatus</span><span class="p">,</span>
+        <span class="n">aero_sol</span><span class="p">:</span> <span class="n">AeroCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fsi_convergence_status_</span><span class="p">:</span> <span class="n">ConvergenceStatus</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">thrust_t_</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+        <span class="n">cs_ang_t_</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cs_vel_t_</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">diverged</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
+        <span class="n">StructureCase</span><span class="p">,</span>
+        <span class="n">ConvergenceStatus</span><span class="p">,</span>
+        <span class="n">AeroCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ConvergenceStatus</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">Array</span><span class="p">,</span>
+    <span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">        Wraps ``time_step_loop`` with a check for solution divergence. Once a NaN is detected, this becomes a no-op</span>
+<span class="sd">        for all remaining time steps. The corresponding time history entries are left at their initialised value</span>
+<span class="sd">        (zero).</span>
+<span class="sd">        """</span>
+
+        <span class="p">(</span>
+            <span class="n">struct_sol</span><span class="p">,</span>
+            <span class="n">struct_convergence_status_</span><span class="p">,</span>
+            <span class="n">aero_sol</span><span class="p">,</span>
+            <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+            <span class="n">thrust_t_</span><span class="p">,</span>
+            <span class="n">cs_ang_t_</span><span class="p">,</span>
+            <span class="n">cs_vel_t_</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span>
+            <span class="n">diverged</span><span class="p">,</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span>
+                <span class="n">struct_sol</span><span class="p">,</span>
+                <span class="n">struct_convergence_status_</span><span class="p">,</span>
+                <span class="n">aero_sol</span><span class="p">,</span>
+                <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+                <span class="n">thrust_t_</span><span class="p">,</span>
+                <span class="n">cs_ang_t_</span><span class="p">,</span>
+                <span class="n">cs_vel_t_</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">time_step_loop</span><span class="p">(</span>
+                <span class="n">i_ts</span><span class="p">,</span>
+                <span class="n">struct_sol</span><span class="p">,</span>
+                <span class="n">struct_convergence_status_</span><span class="p">,</span>
+                <span class="n">aero_sol</span><span class="p">,</span>
+                <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+                <span class="n">thrust_t_</span><span class="p">,</span>
+                <span class="n">cs_ang_t_</span><span class="p">,</span>
+                <span class="n">cs_vel_t_</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">has_nan</span> <span class="o">=</span> <span class="n">struct_convergence_status_</span><span class="o">.</span><span class="n">has_nan</span>
+        <span class="k">if</span> <span class="n">include_aero</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">fsi_convergence_status_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">has_nan</span> <span class="o">=</span> <span class="n">has_nan</span> <span class="o">|</span> <span class="n">fsi_convergence_status_</span><span class="o">.</span><span class="n">has_nan</span>
+        <span class="n">new_diverged</span> <span class="o">=</span> <span class="n">diverged</span> <span class="o">|</span> <span class="n">has_nan</span>
+
+        <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span>
+            <span class="n">new_diverged</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">diverged</span><span class="p">,</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">warn</span><span class="p">(</span>
+                <span class="s2">"NaN detected in dynamic solve at time step </span><span class="si">{i_ts}</span><span class="s2"> - skipping remaining time steps."</span><span class="p">,</span>
+                <span class="n">i_ts</span><span class="o">=</span><span class="n">i_ts</span><span class="p">,</span>
+                <span class="n">t_val</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="n">i_ts</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">struct_sol</span><span class="p">,</span>
+            <span class="n">struct_convergence_status_</span><span class="p">,</span>
+            <span class="n">aero_sol</span><span class="p">,</span>
+            <span class="n">fsi_convergence_status_</span><span class="p">,</span>
+            <span class="n">thrust_t_</span><span class="p">,</span>
+            <span class="n">cs_ang_t_</span><span class="p">,</span>
+            <span class="n">cs_vel_t_</span><span class="p">,</span>
+            <span class="n">new_diverged</span><span class="p">,</span>
+        <span class="p">)</span>
+
     <span class="n">struct_case</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">aero_case</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">fori_loop</span><span class="p">(</span>
         <span class="mi">1</span><span class="p">,</span>
         <span class="n">n_tstep</span><span class="p">,</span>
-        <span class="k">lambda</span> <span class="n">i_ts</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">time_step_loop</span><span class="p">(</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">i_ts</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">time_step_loop_checked</span><span class="p">(</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span>
         <span class="p">(</span>
             <span class="n">struct_case</span><span class="p">,</span>
             <span class="n">struct_convergence_status</span><span class="p">,</span>
@@ -53676,6 +54185,7 @@ of this</p>
             <span class="n">thrust_t</span><span class="p">,</span>
             <span class="n">cs_ang_t</span><span class="p">,</span>
             <span class="n">cs_vel_t</span><span class="p">,</span>
+            <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
         <span class="p">),</span>
     <span class="p">)</span>
 
@@ -53915,92 +54425,7 @@ from the initial state.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3423</span>
-<span class="normal">3424</span>
-<span class="normal">3425</span>
-<span class="normal">3426</span>
-<span class="normal">3427</span>
-<span class="normal">3428</span>
-<span class="normal">3429</span>
-<span class="normal">3430</span>
-<span class="normal">3431</span>
-<span class="normal">3432</span>
-<span class="normal">3433</span>
-<span class="normal">3434</span>
-<span class="normal">3435</span>
-<span class="normal">3436</span>
-<span class="normal">3437</span>
-<span class="normal">3438</span>
-<span class="normal">3439</span>
-<span class="normal">3440</span>
-<span class="normal">3441</span>
-<span class="normal">3442</span>
-<span class="normal">3443</span>
-<span class="normal">3444</span>
-<span class="normal">3445</span>
-<span class="normal">3446</span>
-<span class="normal">3447</span>
-<span class="normal">3448</span>
-<span class="normal">3449</span>
-<span class="normal">3450</span>
-<span class="normal">3451</span>
-<span class="normal">3452</span>
-<span class="normal">3453</span>
-<span class="normal">3454</span>
-<span class="normal">3455</span>
-<span class="normal">3456</span>
-<span class="normal">3457</span>
-<span class="normal">3458</span>
-<span class="normal">3459</span>
-<span class="normal">3460</span>
-<span class="normal">3461</span>
-<span class="normal">3462</span>
-<span class="normal">3463</span>
-<span class="normal">3464</span>
-<span class="normal">3465</span>
-<span class="normal">3466</span>
-<span class="normal">3467</span>
-<span class="normal">3468</span>
-<span class="normal">3469</span>
-<span class="normal">3470</span>
-<span class="normal">3471</span>
-<span class="normal">3472</span>
-<span class="normal">3473</span>
-<span class="normal">3474</span>
-<span class="normal">3475</span>
-<span class="normal">3476</span>
-<span class="normal">3477</span>
-<span class="normal">3478</span>
-<span class="normal">3479</span>
-<span class="normal">3480</span>
-<span class="normal">3481</span>
-<span class="normal">3482</span>
-<span class="normal">3483</span>
-<span class="normal">3484</span>
-<span class="normal">3485</span>
-<span class="normal">3486</span>
-<span class="normal">3487</span>
-<span class="normal">3488</span>
-<span class="normal">3489</span>
-<span class="normal">3490</span>
-<span class="normal">3491</span>
-<span class="normal">3492</span>
-<span class="normal">3493</span>
-<span class="normal">3494</span>
-<span class="normal">3495</span>
-<span class="normal">3496</span>
-<span class="normal">3497</span>
-<span class="normal">3498</span>
-<span class="normal">3499</span>
-<span class="normal">3500</span>
-<span class="normal">3501</span>
-<span class="normal">3502</span>
-<span class="normal">3503</span>
-<span class="normal">3504</span>
-<span class="normal">3505</span>
-<span class="normal">3506</span>
-<span class="normal">3507</span>
-<span class="normal">3508</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3508</span>
 <span class="normal">3509</span>
 <span class="normal">3510</span>
 <span class="normal">3511</span>
@@ -54109,7 +54534,92 @@ from the initial state.</p>
 <span class="normal">3614</span>
 <span class="normal">3615</span>
 <span class="normal">3616</span>
-<span class="normal">3617</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
+<span class="normal">3617</span>
+<span class="normal">3618</span>
+<span class="normal">3619</span>
+<span class="normal">3620</span>
+<span class="normal">3621</span>
+<span class="normal">3622</span>
+<span class="normal">3623</span>
+<span class="normal">3624</span>
+<span class="normal">3625</span>
+<span class="normal">3626</span>
+<span class="normal">3627</span>
+<span class="normal">3628</span>
+<span class="normal">3629</span>
+<span class="normal">3630</span>
+<span class="normal">3631</span>
+<span class="normal">3632</span>
+<span class="normal">3633</span>
+<span class="normal">3634</span>
+<span class="normal">3635</span>
+<span class="normal">3636</span>
+<span class="normal">3637</span>
+<span class="normal">3638</span>
+<span class="normal">3639</span>
+<span class="normal">3640</span>
+<span class="normal">3641</span>
+<span class="normal">3642</span>
+<span class="normal">3643</span>
+<span class="normal">3644</span>
+<span class="normal">3645</span>
+<span class="normal">3646</span>
+<span class="normal">3647</span>
+<span class="normal">3648</span>
+<span class="normal">3649</span>
+<span class="normal">3650</span>
+<span class="normal">3651</span>
+<span class="normal">3652</span>
+<span class="normal">3653</span>
+<span class="normal">3654</span>
+<span class="normal">3655</span>
+<span class="normal">3656</span>
+<span class="normal">3657</span>
+<span class="normal">3658</span>
+<span class="normal">3659</span>
+<span class="normal">3660</span>
+<span class="normal">3661</span>
+<span class="normal">3662</span>
+<span class="normal">3663</span>
+<span class="normal">3664</span>
+<span class="normal">3665</span>
+<span class="normal">3666</span>
+<span class="normal">3667</span>
+<span class="normal">3668</span>
+<span class="normal">3669</span>
+<span class="normal">3670</span>
+<span class="normal">3671</span>
+<span class="normal">3672</span>
+<span class="normal">3673</span>
+<span class="normal">3674</span>
+<span class="normal">3675</span>
+<span class="normal">3676</span>
+<span class="normal">3677</span>
+<span class="normal">3678</span>
+<span class="normal">3679</span>
+<span class="normal">3680</span>
+<span class="normal">3681</span>
+<span class="normal">3682</span>
+<span class="normal">3683</span>
+<span class="normal">3684</span>
+<span class="normal">3685</span>
+<span class="normal">3686</span>
+<span class="normal">3687</span>
+<span class="normal">3688</span>
+<span class="normal">3689</span>
+<span class="normal">3690</span>
+<span class="normal">3691</span>
+<span class="normal">3692</span>
+<span class="normal">3693</span>
+<span class="normal">3694</span>
+<span class="normal">3695</span>
+<span class="normal">3696</span>
+<span class="normal">3697</span>
+<span class="normal">3698</span>
+<span class="normal">3699</span>
+<span class="normal">3700</span>
+<span class="normal">3701</span>
+<span class="normal">3702</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">init_state</span><span class="p">:</span> <span class="n">StructureCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>

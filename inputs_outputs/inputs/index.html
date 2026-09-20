@@ -2595,7 +2595,7 @@ the design variables for an aeroelastic system, both the structure and aero obje
 <tr>
 <td><code>x0_aero</code></td>
 <td><code>(n_surf,)(m+1, n+1, 3)</code></td>
-<td>Local aerodynamic grid coordinates for each surface. Can be a single <code>Array</code> for one surface or an <code>ArrayList</code>/<code>Sequence</code> for multiple surfaces.</td>
+<td>Local aerodynamic grid coordinates for each surface. Can be a single <code>Array</code> for one surface or an <code>ArrayList</code>/<code>Sequence</code> for multiple surfaces, each of shape <code>(m+1, n+1, 3)</code>. The chordwise coordinates should be ordered starting from the leading edge.</td>
 </tr>
 <tr>
 <td><code>delta_w</code></td>

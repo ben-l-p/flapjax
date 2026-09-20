@@ -11482,7 +11482,12 @@ this limit.</p>
 <span class="normal">1696</span>
 <span class="normal">1697</span>
 <span class="normal">1698</span>
-<span class="normal">1699</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim</span><span class="p">(</span>
+<span class="normal">1699</span>
+<span class="normal">1700</span>
+<span class="normal">1701</span>
+<span class="normal">1702</span>
+<span class="normal">1703</span>
+<span class="normal">1704</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">zero_force_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
@@ -11623,7 +11628,7 @@ this limit.</p>
         <span class="n">f_clamp_init</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">zero_force_dofs_</span><span class="p">)),</span> <span class="mf">1e10</span><span class="p">)</span>
         <span class="n">print_table_title</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Trim (Adjoint)"</span><span class="p">,</span> <span class="n">inner_width</span><span class="o">=</span><span class="mi">104</span><span class="p">)</span>
         <span class="n">trim_variables_init</span><span class="o">.</span><span class="n">print_header</span><span class="p">(</span><span class="n">f_clamp</span><span class="o">=</span><span class="n">f_clamp_init</span><span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">trim_variables</span><span class="p">,</span> <span class="n">ae_sol</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span>
+        <span class="n">n_iter</span><span class="p">,</span> <span class="n">trim_variables</span><span class="p">,</span> <span class="n">ae_sol</span><span class="p">,</span> <span class="n">f_clamp_final</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">args_</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
                 <span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">args_</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">trim_f_abs_tolerance</span><span class="p">),</span>
                 <span class="n">args_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_iter</span><span class="p">,</span>
@@ -11687,7 +11692,7 @@ this limit.</p>
             <span class="k">return</span> <span class="n">i_iter</span><span class="p">,</span> <span class="n">tv</span><span class="p">,</span> <span class="n">sol</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">b</span>
 
         <span class="n">trim_variables_init</span><span class="o">.</span><span class="n">print_header</span><span class="p">(</span><span class="n">f_clamp</span><span class="o">=</span><span class="n">f_clamp_init</span><span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">trim_variables</span><span class="p">,</span> <span class="n">ae_sol</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span>
+        <span class="n">n_iter</span><span class="p">,</span> <span class="n">trim_variables</span><span class="p">,</span> <span class="n">ae_sol</span><span class="p">,</span> <span class="n">f_clamp_final</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">args_</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
                 <span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">args_</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">trim_f_abs_tolerance</span><span class="p">),</span>
                 <span class="n">args_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_iter</span><span class="p">,</span>
@@ -11704,6 +11709,11 @@ this limit.</p>
         <span class="n">print_table_line</span><span class="p">(</span><span class="n">inner_width</span><span class="o">=</span><span class="mi">104</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown trim method: </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2">."</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">))):</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s2">"Trim residual is NaN - solution diverged"</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">trim_f_abs_tolerance</span><span class="p">)):</span>
+        <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Trim did not converge within max_iter=</span><span class="si">{</span><span class="n">max_iter</span><span class="si">}</span><span class="s2"> iterations "</span><span class="p">)</span>
 
     <span class="n">new_orientation</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">orientation_euler</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">trim_variables</span><span class="o">.</span><span class="n">trim_angles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -11815,18 +11825,18 @@ the trim routine, with values not passed using the fixed values provided in the 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/gradients/coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1701</span>
-<span class="normal">1702</span>
-<span class="normal">1703</span>
-<span class="normal">1704</span>
-<span class="normal">1705</span>
-<span class="normal">1706</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1706</span>
 <span class="normal">1707</span>
 <span class="normal">1708</span>
 <span class="normal">1709</span>
 <span class="normal">1710</span>
 <span class="normal">1711</span>
-<span class="normal">1712</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim_angles_to_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trim_angles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1712</span>
+<span class="normal">1713</span>
+<span class="normal">1714</span>
+<span class="normal">1715</span>
+<span class="normal">1716</span>
+<span class="normal">1717</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim_angles_to_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trim_angles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Find the 3 Euler angles describing the aircraft orientation. This allows for any combination to be set by</span>
 <span class="sd">    the trim routine, with values not passed using the fixed values provided in the reference orientation.</span>
@@ -25139,7 +25149,12 @@ this limit.</p>
 <span class="normal">1696</span>
 <span class="normal">1697</span>
 <span class="normal">1698</span>
-<span class="normal">1699</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim</span><span class="p">(</span>
+<span class="normal">1699</span>
+<span class="normal">1700</span>
+<span class="normal">1701</span>
+<span class="normal">1702</span>
+<span class="normal">1703</span>
+<span class="normal">1704</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">zero_force_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
@@ -25280,7 +25295,7 @@ this limit.</p>
         <span class="n">f_clamp_init</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">zero_force_dofs_</span><span class="p">)),</span> <span class="mf">1e10</span><span class="p">)</span>
         <span class="n">print_table_title</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Trim (Adjoint)"</span><span class="p">,</span> <span class="n">inner_width</span><span class="o">=</span><span class="mi">104</span><span class="p">)</span>
         <span class="n">trim_variables_init</span><span class="o">.</span><span class="n">print_header</span><span class="p">(</span><span class="n">f_clamp</span><span class="o">=</span><span class="n">f_clamp_init</span><span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">trim_variables</span><span class="p">,</span> <span class="n">ae_sol</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span>
+        <span class="n">n_iter</span><span class="p">,</span> <span class="n">trim_variables</span><span class="p">,</span> <span class="n">ae_sol</span><span class="p">,</span> <span class="n">f_clamp_final</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">args_</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
                 <span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">args_</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">trim_f_abs_tolerance</span><span class="p">),</span>
                 <span class="n">args_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_iter</span><span class="p">,</span>
@@ -25344,7 +25359,7 @@ this limit.</p>
             <span class="k">return</span> <span class="n">i_iter</span><span class="p">,</span> <span class="n">tv</span><span class="p">,</span> <span class="n">sol</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">b</span>
 
         <span class="n">trim_variables_init</span><span class="o">.</span><span class="n">print_header</span><span class="p">(</span><span class="n">f_clamp</span><span class="o">=</span><span class="n">f_clamp_init</span><span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">trim_variables</span><span class="p">,</span> <span class="n">ae_sol</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span>
+        <span class="n">n_iter</span><span class="p">,</span> <span class="n">trim_variables</span><span class="p">,</span> <span class="n">ae_sol</span><span class="p">,</span> <span class="n">f_clamp_final</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">args_</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
                 <span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">args_</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">trim_f_abs_tolerance</span><span class="p">),</span>
                 <span class="n">args_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_iter</span><span class="p">,</span>
@@ -25361,6 +25376,11 @@ this limit.</p>
         <span class="n">print_table_line</span><span class="p">(</span><span class="n">inner_width</span><span class="o">=</span><span class="mi">104</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown trim method: </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2">."</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">))):</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s2">"Trim residual is NaN - solution diverged"</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">trim_f_abs_tolerance</span><span class="p">)):</span>
+        <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Trim did not converge within max_iter=</span><span class="si">{</span><span class="n">max_iter</span><span class="si">}</span><span class="s2"> iterations "</span><span class="p">)</span>
 
     <span class="n">new_orientation</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">orientation_euler</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">trim_variables</span><span class="o">.</span><span class="n">trim_angles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -25472,18 +25492,18 @@ the trim routine, with values not passed using the fixed values provided in the 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/gradients/coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1701</span>
-<span class="normal">1702</span>
-<span class="normal">1703</span>
-<span class="normal">1704</span>
-<span class="normal">1705</span>
-<span class="normal">1706</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1706</span>
 <span class="normal">1707</span>
 <span class="normal">1708</span>
 <span class="normal">1709</span>
 <span class="normal">1710</span>
 <span class="normal">1711</span>
-<span class="normal">1712</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim_angles_to_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trim_angles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1712</span>
+<span class="normal">1713</span>
+<span class="normal">1714</span>
+<span class="normal">1715</span>
+<span class="normal">1716</span>
+<span class="normal">1717</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim_angles_to_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trim_angles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Find the 3 Euler angles describing the aircraft orientation. This allows for any combination to be set by</span>
 <span class="sd">    the trim routine, with values not passed using the fixed values provided in the reference orientation.</span>

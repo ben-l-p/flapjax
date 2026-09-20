@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 from jax import Array
 from jax import numpy as jnp
@@ -149,22 +149,74 @@ AERO_LRVFIN = (0.43, 1.1395)
 
 # Main-wing mean camber line for EMX-07 section, given as (x/c, z/c)
 EMX07_CAMBER_X = (
-    0.0, 3.527358e-07, 2.736395e-03, 1.092258e-02, 2.445874e-02, 4.321506e-02,
-    6.697159e-02, 9.546839e-02, 1.284056e-01, 1.654034e-01, 2.060818e-01,
-    2.499709e-01, 2.966008e-01, 3.454613e-01, 3.960123e-01, 4.477137e-01,
-    4.999755e-01, 5.522375e-01, 6.039397e-01, 6.544919e-01, 7.033541e-01,
-    7.499865e-01, 7.938786e-01, 8.345606e-01, 8.715624e-01, 9.045041e-01,
-    9.330056e-01, 9.567668e-01, 9.755279e-01, 9.890686e-01, 9.972590e-01,
-    9.999992e-01, 1.0,
+    0.0,
+    3.527358e-07,
+    2.736395e-03,
+    1.092258e-02,
+    2.445874e-02,
+    4.321506e-02,
+    6.697159e-02,
+    9.546839e-02,
+    1.284056e-01,
+    1.654034e-01,
+    2.060818e-01,
+    2.499709e-01,
+    2.966008e-01,
+    3.454613e-01,
+    3.960123e-01,
+    4.477137e-01,
+    4.999755e-01,
+    5.522375e-01,
+    6.039397e-01,
+    6.544919e-01,
+    7.033541e-01,
+    7.499865e-01,
+    7.938786e-01,
+    8.345606e-01,
+    8.715624e-01,
+    9.045041e-01,
+    9.330056e-01,
+    9.567668e-01,
+    9.755279e-01,
+    9.890686e-01,
+    9.972590e-01,
+    9.999992e-01,
+    1.0,
 )
 EMX07_CAMBER_Z = (
-    0.0, 5.961561e-04, 1.136788e-03, 4.241672e-03, 7.896996e-03, 1.164179e-02,
-    1.542114e-02, 1.902119e-02, 2.208612e-02, 2.422109e-02, 2.527606e-02,
-    2.526599e-02, 2.410581e-02, 2.209060e-02, 1.946039e-02, 1.645021e-02,
-    1.325003e-02, 1.003985e-02, 6.979703e-03, 4.224549e-03, 1.969342e-03,
-    3.292383e-04, -8.407012e-04, -1.650622e-03, -2.095578e-03, -2.160548e-03,
-    -1.880469e-03, -1.405372e-03, -8.752758e-04, -4.201971e-04, -1.101422e-04,
-    5.238689e-09, 0.0,
+    0.0,
+    5.961561e-04,
+    1.136788e-03,
+    4.241672e-03,
+    7.896996e-03,
+    1.164179e-02,
+    1.542114e-02,
+    1.902119e-02,
+    2.208612e-02,
+    2.422109e-02,
+    2.527606e-02,
+    2.526599e-02,
+    2.410581e-02,
+    2.209060e-02,
+    1.946039e-02,
+    1.645021e-02,
+    1.325003e-02,
+    1.003985e-02,
+    6.979703e-03,
+    4.224549e-03,
+    1.969342e-03,
+    3.292383e-04,
+    -8.407012e-04,
+    -1.650622e-03,
+    -2.095578e-03,
+    -2.160548e-03,
+    -1.880469e-03,
+    -1.405372e-03,
+    -8.752758e-04,
+    -4.201971e-04,
+    -1.101422e-04,
+    5.238689e-09,
+    0.0,
 )
 EMX07_CAMBER = (jnp.array(EMX07_CAMBER_X), jnp.array(EMX07_CAMBER_Z))
 
@@ -233,6 +285,7 @@ def generate_xhale(
     sigma: float = 1.0,
     ga_mult: float = 0.1,
     flowfield: FlowField = FLOWFIELD_DEFAULT,
+    half_model: bool = False,
     m_wing: int = 8,
     m_tail: int = 3,
     m_fin: int = 4,
@@ -262,6 +315,7 @@ def generate_xhale(
     :param sigma: Stiffness multiplier applied to all cross-sectional stiffness matrices.
     :param ga_mult: Shear stiffness multiplier.
     :param flowfield: FlowField object.
+    :param half_model: If True, build a right-half-span model only.
     :param m_wing: Number of chordwise aerodynamic panels for the main wing.
     :param m_tail: Number of chordwise aerodynamic panels for the tail surfaces.
     :param m_fin: Number of chordwise aerodynamic panels for the fin surfaces.
@@ -304,6 +358,7 @@ def generate_xhale(
     node_coords: list[Array] = [jnp.zeros(3)]
     node_index: dict[str, int] = {"root": 0}
     branch_nodes: dict[str, list[int]] = {}
+    branch_elements: dict[str, list[int]] = {}
     conn: list[tuple[int, int]] = []
     y_vectors: list[Array] = []
     k_indices: list[int] = []
@@ -321,6 +376,7 @@ def generate_xhale(
     ) -> int:
         start = node_index[parent]
         start_coord = node_coords[start]
+        elem_start = len(conn)
         tangent = offset / jnp.linalg.norm(offset)
         y_vector_ = exp_so3(tangent * twist_angle) @ y_vector_raw
         points = jnp.linspace(start_coord, start_coord + offset, n_elem + 1)[1:]
@@ -336,6 +392,7 @@ def generate_xhale(
             chain.append(idx)
             prev = idx
         branch_nodes[name] = chain
+        branch_elements[name] = list(range(elem_start, len(conn)))
         node_index[name] = prev
         return prev
 
@@ -370,36 +427,37 @@ def generate_xhale(
         "Rdihedral",
         "Rdihedral",
     )
-    add_branch(
-        "L0",
-        "root",
-        -span_section * Y_AXIS,
-        n_wing_section,
-        X_AXIS,
-        -twist,
-        "Linboard",
-        "Linboard",
-    )
-    add_branch(
-        "L1",
-        "L0",
-        -span_section * Y_AXIS,
-        n_wing_section,
-        X_AXIS,
-        -twist,
-        "Loutboard",
-        "Loutboard",
-    )
-    add_branch(
-        "L2",
-        "L1",
-        span_section * (-jnp.cos(dihedral) * Y_AXIS + jnp.sin(dihedral) * Z_AXIS),
-        n_wing_dihedral,
-        X_AXIS,
-        -twist,
-        "Ldihedral",
-        "Ldihedral",
-    )
+    if not half_model:
+        add_branch(
+            "L0",
+            "root",
+            -span_section * Y_AXIS,
+            n_wing_section,
+            X_AXIS,
+            -twist,
+            "Linboard",
+            "Linboard",
+        )
+        add_branch(
+            "L1",
+            "L0",
+            -span_section * Y_AXIS,
+            n_wing_section,
+            X_AXIS,
+            -twist,
+            "Loutboard",
+            "Loutboard",
+        )
+        add_branch(
+            "L2",
+            "L1",
+            span_section * (-jnp.cos(dihedral) * Y_AXIS + jnp.sin(dihedral) * Z_AXIS),
+            n_wing_dihedral,
+            X_AXIS,
+            -twist,
+            "Ldihedral",
+            "Ldihedral",
+        )
 
     # centreline: tail boom, ctail, ventral fin, tail vertical fin
     add_branch(
@@ -444,13 +502,15 @@ def generate_xhale(
     )
     add_branch("cfin", "root", -span_fin * Z_AXIS, n_fin, -X_AXIS, 0.0, "Cfin", "Cfin")
 
-    # 4 outer tail booms
+    # 4 outer tail booms (2 for a half model)
     outer_specs = (
         ("R0", "Rfin", "Rfin"),
         ("R1", "Rfin", "RRfin"),
         ("L0", "Lfin", "Lfin"),
         ("L1", "Lfin", "LLfin"),
     )
+    if half_model:
+        outer_specs = outer_specs[:2]
     for wing_node, fin_k, fin_m in outer_specs:
         boom_name = f"{wing_node}_boom"
         add_branch(
@@ -511,7 +571,6 @@ def generate_xhale(
     connectivity = jnp.array(conn, dtype=int)
     y_vector = jnp.stack(y_vectors, axis=0)
     k_cs_index = jnp.array(k_indices, dtype=int)
-    m_cs_index = jnp.array(m_indices, dtype=int)
 
     k_cs = jnp.stack(
         [_cross_section_stiffness(name, ga_mult, sigma) for name in STIFFNESS_NAMES],
@@ -519,25 +578,68 @@ def generate_xhale(
     )
     m_cs = jnp.stack([_cross_section_mass(name) for name in MASS_NAMES], axis=0)
 
+    if half_model:
+        # centreline members are not mirrored, but their mass is halved to be consistent
+        centreline_mass_branches = {
+            "ctail_root": "boom",
+            "ctail_up": "tailR",
+            "ctail_down": "tailL",
+            "cfin": "Cfin",
+            "cvfin": "Cvfin",
+        }
+
+        exclusive_names = ("Cfin", "Cvfin")
+        m_cs = m_cs.at[jnp.array([M_INDEX[name] for name in exclusive_names])].multiply(
+            0.5
+        )
+
+        shared_names = tuple(
+            name
+            for name in dict.fromkeys(centreline_mass_branches.values())
+            if name not in exclusive_names
+        )
+        half_start = m_cs.shape[0]
+        m_cs = jnp.concatenate(
+            [m_cs, 0.5 * m_cs[jnp.array([M_INDEX[name] for name in shared_names])]],
+            axis=0,
+        )
+        half_index = {name: half_start + i for i, name in enumerate(shared_names)}
+        for branch, name in centreline_mass_branches.items():
+            if name in exclusive_names:
+                continue
+            for elem in branch_elements[branch]:
+                m_indices[elem] = half_index[name]
+
+    m_cs_index = jnp.array(m_indices, dtype=int)
+
     # lumped pod masses
     triad = _wing_root_triad(twist)
-    m_lumped = jnp.concatenate(
-        [
-            _pod_lumped_masses(CENTRE_POD, triad, mirror=False),
-            _pod_lumped_masses(INBOARD_POD, triad, mirror=False),
-            _pod_lumped_masses(OUTBOARD_POD, triad, mirror=False),
+    centre_pod_masses = _pod_lumped_masses(CENTRE_POD, triad, mirror=False)
+    if half_model:
+        centre_pod_masses = 0.5 * centre_pod_masses
+
+    pod_mass_blocks = [
+        centre_pod_masses,
+        _pod_lumped_masses(INBOARD_POD, triad, mirror=False),
+        _pod_lumped_masses(OUTBOARD_POD, triad, mirror=False),
+    ]
+    pod_index_blocks = [
+        [node_index["root"]] * len(CENTRE_POD),
+        [node_index["R0"]] * len(INBOARD_POD),
+        [node_index["R1"]] * len(OUTBOARD_POD),
+    ]
+    if not half_model:
+        pod_mass_blocks += [
             _pod_lumped_masses(INBOARD_POD, triad, mirror=True),
             _pod_lumped_masses(OUTBOARD_POD, triad, mirror=True),
-        ],
-        axis=0,
-    )
+        ]
+        pod_index_blocks += [
+            [node_index["L0"]] * len(INBOARD_POD),
+            [node_index["L1"]] * len(OUTBOARD_POD),
+        ]
+    m_lumped = jnp.concatenate(pod_mass_blocks, axis=0)
     m_lumped_index = jnp.array(
-        [node_index["root"]] * len(CENTRE_POD)
-        + [node_index["R0"]] * len(INBOARD_POD)
-        + [node_index["R1"]] * len(OUTBOARD_POD)
-        + [node_index["L0"]] * len(INBOARD_POD)
-        + [node_index["L1"]] * len(OUTBOARD_POD),
-        dtype=int,
+        [idx for block in pod_index_blocks for idx in block], dtype=int
     )
 
     # thrust on each pod
@@ -545,9 +647,10 @@ def generate_xhale(
         "thrust_centre": node_index["root"],
         "thrust_right_inboard": node_index["R0"],
         "thrust_right_outboard": node_index["R1"],
-        "thrust_left_inboard": node_index["L0"],
-        "thrust_left_outboard": node_index["L1"],
     }
+    if not half_model:
+        thrust_nodes["thrust_left_inboard"] = node_index["L0"]
+        thrust_nodes["thrust_left_outboard"] = node_index["L1"]
     thrust_direction = {k: -X_AXIS for k in thrust_nodes}
 
     structure = BeamStructure(
@@ -570,15 +673,21 @@ def generate_xhale(
             branch_nodes[down_name][::-1] + branch_nodes[up_name][1:], dtype=int
         )
 
-    wing_mapping = jnp.array(
-        branch_nodes["L2"][1:][::-1]
-        + branch_nodes["L1"][1:][::-1]
-        + branch_nodes["L0"][::-1]
-        + branch_nodes["R0"][1:]
-        + branch_nodes["R1"][1:]
-        + branch_nodes["R2"][1:],
-        dtype=int,
-    )
+    if half_model:
+        wing_mapping = jnp.array(
+            branch_nodes["R0"] + branch_nodes["R1"][1:] + branch_nodes["R2"][1:],
+            dtype=int,
+        )
+    else:
+        wing_mapping = jnp.array(
+            branch_nodes["L2"][1:][::-1]
+            + branch_nodes["L1"][1:][::-1]
+            + branch_nodes["L0"][::-1]
+            + branch_nodes["R0"][1:]
+            + branch_nodes["R1"][1:]
+            + branch_nodes["R2"][1:],
+            dtype=int,
+        )
 
     surfaces: list[dict] = [
         {
@@ -595,21 +704,23 @@ def generate_xhale(
             ),
         },
     ]
-    ctail_mapping = pair_mapping("ctail_down", "ctail_up")
-    surfaces.append(
-        {
-            "name": "ctail",
-            "mapping": ctail_mapping,
-            "m": m_tail,
-            "x0": make_rectangular_grid(
-                m=m_tail,
-                n=ctail_mapping.shape[0] - 1,
-                chord=AERO_TAIL[0],
-                ea=AERO_TAIL[1],
-            ),
-        }
-    )
-    for wing_node in ("R0", "R1", "L0", "L1"):
+    if not half_model:
+        ctail_mapping = pair_mapping("ctail_down", "ctail_up")
+        surfaces.append(
+            {
+                "name": "ctail",
+                "mapping": ctail_mapping,
+                "m": m_tail,
+                "x0": make_rectangular_grid(
+                    m=m_tail,
+                    n=ctail_mapping.shape[0] - 1,
+                    chord=AERO_TAIL[0],
+                    ea=AERO_TAIL[1],
+                ),
+            }
+        )
+    tail_wing_nodes = ("R0", "R1") if half_model else ("R0", "R1", "L0", "L1")
+    for wing_node in tail_wing_nodes:
         tail_mapping = pair_mapping(f"{wing_node}_tail_down", f"{wing_node}_tail_up")
         surfaces.append(
             {
@@ -625,7 +736,8 @@ def generate_xhale(
             }
         )
 
-    for name in ("cfin", "R0_fin", "L0_fin"):
+    fin_group_1 = ("R0_fin",) if half_model else ("cfin", "R0_fin", "L0_fin")
+    for name in fin_group_1:
         fin_mapping = jnp.array(branch_nodes[name], dtype=int)
         surfaces.append(
             {
@@ -641,7 +753,8 @@ def generate_xhale(
                 ),
             }
         )
-    for name in ("R1_fin", "L1_fin"):
+    fin_group_2 = ("R1_fin",) if half_model else ("R1_fin", "L1_fin")
+    for name in fin_group_2:
         fin_mapping = jnp.array(branch_nodes[name], dtype=int)
         surfaces.append(
             {
@@ -656,21 +769,23 @@ def generate_xhale(
                 ),
             }
         )
-    cvfin_mapping = jnp.array(branch_nodes["cvfin"], dtype=int)
-    surfaces.append(
-        {
-            "name": "cvfin",
-            "mapping": cvfin_mapping,
-            "m": m_fin,
-            "x0": make_rectangular_grid(
-                m=m_fin,
-                n=cvfin_mapping.shape[0] - 1,
-                chord=AERO_CVFIN[0],
-                ea=AERO_CVFIN[1],
-            ),
-        }
-    )
-    for wing_node in ("R0", "L0"):
+    if not half_model:
+        cvfin_mapping = jnp.array(branch_nodes["cvfin"], dtype=int)
+        surfaces.append(
+            {
+                "name": "cvfin",
+                "mapping": cvfin_mapping,
+                "m": m_fin,
+                "x0": make_rectangular_grid(
+                    m=m_fin,
+                    n=cvfin_mapping.shape[0] - 1,
+                    chord=AERO_CVFIN[0],
+                    ea=AERO_CVFIN[1],
+                ),
+            }
+        )
+    vfin_wing_nodes = ("R0",) if half_model else ("R0", "L0")
+    for wing_node in vfin_wing_nodes:
         vfin_mapping = jnp.array(branch_nodes[f"{wing_node}_vfin"], dtype=int)
         surfaces.append(
             {
@@ -688,10 +803,11 @@ def generate_xhale(
 
     surface_names = [s["name"] for s in surfaces]
     idx_wing = surface_names.index("wing")
-    idx_rudder = surface_names.index("ctail")
+    idx_rudder = surface_names.index("ctail") if "ctail" in surface_names else None
     idx_elevator_tails = [
         surface_names.index(name)
         for name in ("tail_R0", "tail_R1", "tail_L0", "tail_L1")
+        if name in surface_names
     ]
 
     aileron_m_slice = slice(int(0.75 * m_wing), None)
@@ -707,12 +823,15 @@ def generate_xhale(
         rudder: Array,
     ) -> ArrayList:
         grids = x0.to_list()
-        wing_grid = add_control_surface(
-            grids[idx_wing],
-            left_aileron,
-            aileron_m_slice,
-            slice(0, n_wing_dihedral + 1),
-        )
+        wing_grid = grids[idx_wing]
+        if not half_model:
+            # no left wingtip in a half model, so no left aileron surface to deflect
+            wing_grid = add_control_surface(
+                wing_grid,
+                left_aileron,
+                aileron_m_slice,
+                slice(0, n_wing_dihedral + 1),
+            )
         wing_grid = add_control_surface(
             wing_grid,
             right_aileron,
@@ -724,13 +843,15 @@ def generate_xhale(
             grids[i] = add_control_surface(
                 grids[i], elevator, elevator_m_slice, slice(None)
             )
-        grids[idx_rudder] = add_control_surface(
-            grids[idx_rudder],
-            rudder,
-            rudder_m_slice,
-            slice(None),
-            hinge_axis=Z_AXIS,
-        )
+        if idx_rudder is not None:
+            # no ctail surface in a half model, so no rudder surface to deflect
+            grids[idx_rudder] = add_control_surface(
+                grids[idx_rudder],
+                rudder,
+                rudder_m_slice,
+                slice(None),
+                hinge_axis=Z_AXIS,
+            )
         return ArrayList(grids)
 
     aero = UVLM(
@@ -743,6 +864,8 @@ def generate_xhale(
         dof_mapping=ArrayList([s["mapping"] for s in surfaces]),
         grid_func=aero_grid_func,  # type: ignore
         gamma_dot_relaxation=gamma_dot_relaxation,
+        mirror_point=jnp.zeros(3) if half_model else None,
+        mirror_normal=Y_AXIS if half_model else None,
     )
 
     aircraft = CoupledAeroelastic(aero=aero, structure=structure)
@@ -765,19 +888,3 @@ def generate_xhale(
     )
 
     return aircraft
-
-
-if __name__ == "__main__":
-    model = generate_xhale()
-
-    trim_sol, trim_vars = model.trim(
-        prescribed_dofs=tuple(range(6)),
-        zero_force_dofs=(0, 2, 4),
-        trim_orientation="y",
-        thrust_nodes=[list(model.structure.thrust_reference.keys())],
-        trim_cs="elevator",
-        horseshoe=True,
-        trim_relaxation=0.5,
-    )
-
-    trim_sol.plot("trimmed_xhale")

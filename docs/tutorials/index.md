@@ -40,22 +40,29 @@ write ``.vtu`` and ``.pvd`` files to disk, which can be visualised in ParaView.
         - [Patil wing optimal roll manoeuvre](patil_wing_optimal_roll.ipynb) — Follow-on to the open-loop control
           tutorial that instead optimises the control-surface velocity profiles with an SLSQP outer loop, using
           gradients of a target roll angle objective from the coupled dynamic adjoint.
-        - Pazy wing (both straight and swept configurations)
-            - Static
-              deflection [straight](straight_pazy_static_deflection.ipynb), [swept](swept_pazy_static_deflection.ipynb) —
-              Grid of cases with varying root angles of attack and velocity, running the ``static_solve()`` routine in
-              parallel. Evolution of the tip deflection is plotted.
-            - Deformed mode
-              frequencies [straight](straight_pazy_deformed_modes.ipynb), [swept](swept_pazy_deformed_modes.ipynb) —
-              Evolution of the first five natural frequencies with tip displacement, controlled via freestream velocity
-              and
-              making use of the ``static_solve()``
-              and structural ``modal()`` routines.
-            - Flutter analysis [straight](straight_pazy_flutter.ipynb), [swept](swept_pazy_flutter.ipynb) — Compute the
-              stability of the wing across a grid of angles of attack and freestream velocities using the coupled
-              ``linearise()`` routine.
-            - Time-domain LCO [straight](straight_pazy_lco.ipynb), [swept](swept_pazy_lco.ipynb) — Time-domain
-              limit-cycle
-              oscillation computation for the wing, plotting the deflection of the beam tip over time, obtained using
-              the
-              ``static_solve()`` and ``dynamic_solve()`` routines.
+        - [X-HALE free-flying gust response](xhale_gust.ipynb) — Half-model of the X-HALE aircraft, trimmed
+          with the aeroelastic ``trim()`` routine, then released as a free-flying body through a one-minus-cosine
+          gust using the ``dynamic_solve()`` routine.
+            - Pazy wing (both straight and swept configurations)
+                - Static
+                  deflection [straight](straight_pazy_static_deflection.ipynb), [swept](swept_pazy_static_deflection.ipynb) —
+                  Grid of cases with varying root angles of attack and velocity, running the ``static_solve()`` routine
+                  in
+                  parallel. Evolution of the tip deflection is plotted.
+                - Deformed mode
+                  frequencies [straight](straight_pazy_deformed_modes.ipynb), [swept](swept_pazy_deformed_modes.ipynb) —
+                  Evolution of the first five natural frequencies with tip displacement, controlled via freestream
+                  velocity
+                  and
+                  making use of the ``static_solve()``
+                  and structural ``modal()`` routines.
+                - Flutter analysis [straight](straight_pazy_flutter.ipynb), [swept](swept_pazy_flutter.ipynb) — Compute
+                  the
+                  stability of the wing across a grid of angles of attack and freestream velocities using the coupled
+                  ``linearise()`` routine.
+                - Time-domain LCO [straight](straight_pazy_lco.ipynb), [swept](swept_pazy_lco.ipynb) — Time-domain
+                  limit-cycle
+                  oscillation computation for the wing, plotting the deflection of the beam tip over time, obtained
+                  using
+                  the
+                  ``static_solve()`` and ``dynamic_solve()`` routines.

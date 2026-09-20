@@ -711,10 +711,10 @@ def project_forcing_to_beam(
             "ijk,lik->lij", this_rmat, x0_aero[i_surf]
         )  # relative distance (zeta_n, zeta_m, 3)
 
-        result = result.at[dof_mapping[i_surf], :3].set(
+        result = result.at[dof_mapping[i_surf], :3].add(
             f_total[i_surf].sum(axis=0)
         )  # forcing is sum along strip (zeta_n, 3)
-        result = result.at[dof_mapping[i_surf], 3:].set(
+        result = result.at[dof_mapping[i_surf], 3:].add(
             jnp.cross(r_x0, f_total[i_surf]).sum(axis=0)
         )  # moment is cross(r, f) summed along strip (zeta_n, 3)
     return result

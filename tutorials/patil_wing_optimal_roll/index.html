@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../geradin_beam_static/">
+        <link rel="prev" href="../patil_wing_control/">
       
       
-        <link rel="next" href="../flying_spaghetti/">
+        <link rel="next" href="../straight_pazy_static_deflection/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Static Beam Adjoint Gradients - FLAPJAX</title>
+        <title>Patil Wing Optimal Roll Manoeuvre - FLAPJAX</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#static-beam-adjoint-gradients" class="md-skip">
+        <a href="#patil-wing-optimal-roll-manoeuvre" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Static Beam Adjoint Gradients
+              Patil Wing Optimal Roll Manoeuvre
             
           </span>
         </div>
@@ -493,10 +493,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -516,11 +514,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
         
           
           <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
@@ -541,7 +539,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -584,37 +582,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Static Beam Adjoint Gradients
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../geradin_beam_adjoint/" class="md-nav__link">
         
   
   
@@ -630,103 +601,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#imports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Imports
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#case-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Case parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tightening-convergence-for-adjoint-accuracy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tightening convergence for adjoint accuracy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#primal-solve-and-objective" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Primal solve and objective
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#solving-the-adjoint-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Solving the adjoint system
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verification-against-finite-differences-tip-load" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verification against finite differences: tip load
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verification-against-finite-differences-bending-stiffness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verification against finite differences: bending stiffness
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -828,8 +702,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -853,11 +729,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
@@ -878,7 +754,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1005,10 +881,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../patil_wing_optimal_roll/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patil Wing Optimal Roll Manoeuvre
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1024,6 +927,169 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Imports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#case-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistent-compilation-cache-and-output-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistent compilation cache and output directory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-wing-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create the wing model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convergence-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convergence settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-solve-and-trim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static solve and trim
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-problem-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic problem setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#control-surface-parameterisation-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control surface parameterisation helpers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#objective-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objective function
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#control-to-full-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control-to-full mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#primal-and-adjoint-computation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primal and adjoint computation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimisation-iteration-callback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optimisation iteration callback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constraints-and-optimisation-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constraints and optimisation run
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1899,10 +1965,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tightening-convergence-for-adjoint-accuracy" class="md-nav__link">
+  <a href="#persistent-compilation-cache-and-output-directory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tightening convergence for adjoint accuracy
+        Persistent compilation cache and output directory
       
     </span>
   </a>
@@ -1910,10 +1976,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#primal-solve-and-objective" class="md-nav__link">
+  <a href="#create-the-wing-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Primal solve and objective
+        Create the wing model
       
     </span>
   </a>
@@ -1921,10 +1987,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#solving-the-adjoint-system" class="md-nav__link">
+  <a href="#convergence-settings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Solving the adjoint system
+        Convergence settings
       
     </span>
   </a>
@@ -1932,10 +1998,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verification-against-finite-differences-tip-load" class="md-nav__link">
+  <a href="#static-solve-and-trim" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verification against finite differences: tip load
+        Static solve and trim
       
     </span>
   </a>
@@ -1943,10 +2009,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verification-against-finite-differences-bending-stiffness" class="md-nav__link">
+  <a href="#dynamic-problem-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verification against finite differences: bending stiffness
+        Dynamic problem setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#control-surface-parameterisation-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control surface parameterisation helpers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#objective-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objective function
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#control-to-full-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control-to-full mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#primal-and-adjoint-computation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primal and adjoint computation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimisation-iteration-callback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optimisation iteration callback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constraints-and-optimisation-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constraints and optimisation run
       
     </span>
   </a>
@@ -1970,7 +2102,7 @@
 
 
   
-    <a href="https://github.com/ben-l-p/flapjax/edit/main/docs/tutorials/geradin_beam_adjoint.ipynb" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/ben-l-p/flapjax/edit/main/docs/tutorials/patil_wing_optimal_roll.ipynb" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2705,7 +2837,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="static-beam-adjoint-gradients">Static Beam Adjoint Gradients<a class="anchor-link" href="#static-beam-adjoint-gradients">¶</a></h1><p>This example computes the gradient of a scalar objective (in this case, chosen as the tip vertical displacement of the Geradin cantilever) with respect to the tip load magnitude and the beam bending stiffness. Gradients are obtained analytically via the adjoint of the nonlinear static solve and verified against central-free finite differences.</p>
+<h1 id="patil-wing-optimal-roll-manoeuvre">Patil Wing Optimal Roll Manoeuvre<a class="anchor-link" href="#patil-wing-optimal-roll-manoeuvre">¶</a></h1><p>Optimise a pair of control-surface velocity profiles so that a highly flexible cantilever wing reaches a target roll angle. The optimisation uses gradients of the roll-angle objective with respect to the control surface velocities, obtained from the coupled dynamic adjoint, and drives an SLSQP solver subject to deflection and rate limits.</p>
 </div>
 </div>
 </div>
@@ -2739,25 +2871,44 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">jnp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearConstraint</span><span class="p">,</span> <span class="n">minimize</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.models.geradin_beam.geradin_beam</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_geradin_beam</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeamStructure</span><span class="p">,</span> <span class="n">StructureCase</span><span class="p">,</span> <span class="n">StructureFullStates</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.aero.gradients.data_structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">AeroGradsToCompute</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.aero.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">cs_vel_to_cs_ang</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.coupled.data_structures</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AeroelasticDesignVariables</span><span class="p">,</span>
+    <span class="n">AeroelasticFullStates</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.coupled.gradients.data_structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">AeroelasticGradsToCompute</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.models.patil_wing.patil_wing</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_patil_wing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.structure.gradients.data_structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructureGradsToCompute</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.utils.data_structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConvergenceSettings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.utils.print_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_verbosity</span>
-
-<span class="n">set_verbosity</span><span class="p">(</span><span class="s2">"silent"</span><span class="p">)</span>  <span class="c1"># silence the solver output for this example</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">from jax import Array
+<div class="clipboard-copy-txt" id="cell-1">from pathlib import Path
+
+import jax
+from jax import Array
 from jax import numpy as jnp
+from matplotlib import pyplot as plt
+from scipy.optimize import LinearConstraint, minimize
 
-from flapjax.models.geradin_beam.geradin_beam import generate_geradin_beam
-from flapjax.structure import BeamStructure, StructureCase, StructureFullStates
+from flapjax.aero.gradients.data_structures import AeroGradsToCompute
+from flapjax.aero.utils import cs_vel_to_cs_ang
+from flapjax.coupled.data_structures import (
+    AeroelasticDesignVariables,
+    AeroelasticFullStates,
+)
+from flapjax.coupled.gradients.data_structures import AeroelasticGradsToCompute
+from flapjax.models.patil_wing.patil_wing import generate_patil_wing
+from flapjax.structure.gradients.data_structures import StructureGradsToCompute
 from flapjax.utils.data_structures import ConvergenceSettings
-from flapjax.utils.print_utils import set_verbosity
-
-set_verbosity("silent")  # silence the solver output for this example</div>
+</div>
 </div>
 </div>
 </div>
@@ -2770,7 +2921,7 @@ set_verbosity("silent")  # silence the solver output for this example</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="case-parameters">Case parameters<a class="anchor-link" href="#case-parameters">¶</a></h2><p>We use the same 20-node Geradin cantilever as the primal example, oriented along the x-axis, with a downward dead load applied at the tip node.</p>
+<h2 id="case-parameters">Case parameters<a class="anchor-link" href="#case-parameters">¶</a></h2><p>A quick evaluation with a coarse discretisation and short time window. The commented block below is the slower full case shown in the presentation.</p>
 </div>
 </div>
 </div>
@@ -2793,17 +2944,49 @@ set_verbosity("silent")  # silence the solver output for this example</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">n_nodes</span> <span class="o">=</span> <span class="mi">20</span>
-<span class="n">struct</span> <span class="o">=</span> <span class="n">generate_geradin_beam</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># define two problems - a short one for quick evaluation, and a full one for a more accurate solution</span>
 
-<span class="n">load</span> <span class="o">=</span> <span class="mf">600000.0</span>
-<span class="n">f_ext</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_nodes</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">-</span><span class="n">load</span><span class="p">)</span>
+<span class="c1"># time period where the control surfaces can be deflected, after which they remain fixed</span>
+<span class="c1"># additionally, after this time, the cost function is scaled up</span>
+<span class="n">control_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span>
+<span class="n">physical_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># total simulation time</span>
+<span class="n">n_nodes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">21</span>  <span class="c1"># number of structural nodes</span>
+<span class="n">m_star</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1">#    wake length</span>
+<span class="n">n_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># number of optimisation iterations</span>
+<span class="n">roll_ang_objective</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">5.0</span><span class="p">))</span>  <span class="c1"># desired roll angle</span>
+
+<span class="c1"># full size case - relatively slow to compute</span>
+<span class="c1"># control_time: float = 4.0</span>
+<span class="c1"># physical_time: float = 10.0</span>
+<span class="c1"># n_nodes: int = 49</span>
+<span class="c1"># m_star = 20</span>
+<span class="c1"># n_iter: int = 75</span>
+<span class="c1"># roll_ang_objective: float = float(jnp.deg2rad(30.0))</span>
+
+<span class="n">max_cs_deflection</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>  <span class="c1"># control angle limit</span>
+<span class="n">max_cs_velocity</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">15.0</span><span class="p">)</span>  <span class="c1"># control velocity limit</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">n_nodes = 20
-struct = generate_geradin_beam(n_nodes, "x")
+<div class="clipboard-copy-txt" id="cell-2"># define two problems - a short one for quick evaluation, and a full one for a more accurate solution
 
-load = 600000.0
-f_ext = jnp.zeros((n_nodes, 6)).at[-1, 2].set(-load)</div>
+# time period where the control surfaces can be deflected, after which they remain fixed
+# additionally, after this time, the cost function is scaled up
+control_time: float = 1.2
+physical_time: float = 2.0  # total simulation time
+n_nodes: int = 21  # number of structural nodes
+m_star = 6  #    wake length
+n_iter: int = 20  # number of optimisation iterations
+roll_ang_objective: float = float(jnp.deg2rad(5.0))  # desired roll angle
+
+# full size case - relatively slow to compute
+# control_time: float = 4.0
+# physical_time: float = 10.0
+# n_nodes: int = 49
+# m_star = 20
+# n_iter: int = 75
+# roll_ang_objective: float = float(jnp.deg2rad(30.0))
+
+max_cs_deflection = jnp.deg2rad(10.0)  # control angle limit
+max_cs_velocity = jnp.deg2rad(15.0)  # control velocity limit</div>
 </div>
 </div>
 </div>
@@ -2816,7 +2999,7 @@ f_ext = jnp.zeros((n_nodes, 6)).at[-1, 2].set(-load)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="tightening-convergence-for-adjoint-accuracy">Tightening convergence for adjoint accuracy<a class="anchor-link" href="#tightening-convergence-for-adjoint-accuracy">¶</a></h2><p>The adjoint solution linearises about the converged primal residual. We here tighten the tolerance to improve the accuracy of the adjoint gradient, but also to improve the finite difference comparison.</p>
+<h2 id="persistent-compilation-cache-and-output-directory">Persistent compilation cache and output directory<a class="anchor-link" href="#persistent-compilation-cache-and-output-directory">¶</a></h2><p>The optimisation retraces and recompiles <code>compute</code> as the traced iteration counter is baked into the objective's scaling; a persistent cache limits the recompilation memory overhead.</p>
 </div>
 </div>
 </div>
@@ -2839,21 +3022,23 @@ f_ext = jnp.zeros((n_nodes, 6)).at[-1, 2].set(-load)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">struct</span><span class="o">.</span><span class="n">struct_convergence_settings</span> <span class="o">=</span> <span class="n">ConvergenceSettings</span><span class="p">(</span>
-    <span class="n">max_n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-    <span class="n">rel_force_tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">rel_disp_tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">abs_force_tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">abs_disp_tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># persistent cache to limit recompilation memory issues</span>
+<span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">"jax_compilation_cache_dir"</span><span class="p">,</span> <span class="s2">"./jax_cache_"</span><span class="p">)</span>
+<span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">"jax_persistent_cache_min_entry_size_bytes"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">"jax_persistent_cache_min_compile_time_secs"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c1"># directory for saving outputs</span>
+<span class="n">dir_</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"./optimal_roll_outputs/"</span><span class="p">)</span>
+<span class="n">dir_</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">struct.struct_convergence_settings = ConvergenceSettings(
-    max_n_iter=50,
-    rel_force_tol=0.0,
-    rel_disp_tol=0.0,
-    abs_force_tol=0.0,
-    abs_disp_tol=0.0,
-)</div>
+<div class="clipboard-copy-txt" id="cell-3"># persistent cache to limit recompilation memory issues
+jax.config.update("jax_compilation_cache_dir", "./jax_cache_")
+jax.config.update("jax_persistent_cache_min_entry_size_bytes", 0)
+jax.config.update("jax_persistent_cache_min_compile_time_secs", 1.0)
+
+# directory for saving outputs
+dir_ = Path("./optimal_roll_outputs/")
+dir_.mkdir(parents=True, exist_ok=True)</div>
 </div>
 </div>
 </div>
@@ -2866,15 +3051,7 @@ f_ext = jnp.zeros((n_nodes, 6)).at[-1, 2].set(-load)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="primal-solve-and-objective">Primal solve and objective<a class="anchor-link" href="#primal-solve-and-objective">¶</a></h2><p>We wrap <code>static_solve</code> in a function so that the same call signature is used for the reference solve and the two perturbed solves.</p>
-<p>The objective returns the vertical position of the tip node, read as the last entry of the <code>x</code> array in the <code>StructureFullStates</code> container.</p>
-<p>Note that the objective function must match the type signature of <code>StructureObjectiveFunction</code>, being a function that takes arguments of:</p>
-<ul>
-<li>StructureFullStates: Data structure which holds the solution of the static problem, such as strains and displacements.</li>
-<li>StructureDesignVariables: Data structure which holds the design variables of the structure, such as the cross-sectional properties.</li>
-<li>int, Array or None: The current time step index, which is unused in static problems.</li>
-</ul>
-<p>and this function should return an <code>Array</code>, which is the value of the objective function for which we want to compute the gradient. Whilst this objective is generally chosen to be a scalar, it can also be a vector-valued function.</p>
+<h2 id="create-the-wing-model">Create the wing model<a class="anchor-link" href="#create-the-wing-model">¶</a></h2>
 </div>
 </div>
 </div>
@@ -2897,45 +3074,48 @@ f_ext = jnp.zeros((n_nodes, 6)).at[-1, 2].set(-load)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">struct_</span><span class="p">:</span> <span class="n">BeamStructure</span><span class="p">,</span> <span class="n">f_ext_</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StructureCase</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">struct_</span><span class="o">.</span><span class="n">static_solve</span><span class="p">(</span>
-        <span class="n">f_ext_follower</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">f_ext_dead</span><span class="o">=</span><span class="n">f_ext_</span><span class="p">,</span>
-        <span class="n">f_ext_aero</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">prescribed_dofs</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
-        <span class="n">load_steps</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># create wing model</span>
+<span class="n">wing</span> <span class="o">=</span> <span class="n">generate_patil_wing</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">m_star</span><span class="o">=</span><span class="n">m_star</span><span class="p">,</span> <span class="n">n_nodes</span><span class="o">=</span><span class="n">n_nodes</span><span class="p">)</span>
+<span class="n">wing</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="mi">256</span>  <span class="c1"># larger values should compute faster but require more RAM</span>
+<span class="p">)</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wing</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">wing</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">u_inf_mag</span>
+<span class="n">delta_w</span> <span class="o">=</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="n">m_star</span><span class="p">)</span>
 
-
-<span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">StructureFullStates</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
-    <span class="c1"># note that we here omit the unused arguments as the objective is only a function of the states</span>
-    <span class="c1"># however, the states themselves are a function of the design variables, which means the gradient exists</span>
-    <span class="k">return</span> <span class="n">states</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># tip vertical displacement</span>
-
-
-<span class="n">base_result</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">struct</span><span class="p">,</span> <span class="n">f_ext</span><span class="p">)</span>  <span class="c1"># solve for the deflected state</span>
-
-<span class="n">obj_base</span> <span class="o">=</span> <span class="n">objective</span><span class="p">(</span><span class="n">base_result</span><span class="o">.</span><span class="n">get_full_states</span><span class="p">())</span>  <span class="c1"># compute the scalar objective</span>
+<span class="n">wing</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">set_design_variables</span><span class="p">(</span>
+    <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span>
+    <span class="n">flowfield</span><span class="o">=</span><span class="n">wing</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="o">=</span><span class="n">wing</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+    <span class="n">hg0</span><span class="o">=</span><span class="n">wing</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">hg_ref</span><span class="p">,</span>
+    <span class="n">delta_w</span><span class="o">=</span><span class="n">delta_w</span><span class="p">,</span>
+    <span class="n">reference_cs_angles</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"left_aileron"</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="s2">"right_aileron"</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">},</span>
+<span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">def solve(struct_: BeamStructure, f_ext_: Array) -&gt; StructureCase:
-    return struct_.static_solve(
-        f_ext_follower=None,
-        f_ext_dead=f_ext_,
-        f_ext_aero=None,
-        prescribed_dofs=jnp.arange(6),
-        load_steps=3,
-    )
+<div class="clipboard-copy-txt" id="cell-4"># create wing model
+wing = generate_patil_wing(sigma=1.1, m_star=m_star, n_nodes=n_nodes)
+wing.aero.batch_size = (
+    256  # larger values should compute faster but require more RAM
+)
+dt = float(wing.aero.dt)
+delta = dt * wing.aero.flowfield.u_inf_mag
+delta_w = delta * jnp.logspace(0.0, 1.2, m_star)
 
-
-def objective(states: StructureFullStates, *_) -&gt; Array:
-    # note that we here omit the unused arguments as the objective is only a function of the states
-    # however, the states themselves are a function of the design variables, which means the gradient exists
-    return states.x[-1, 2]  # tip vertical displacement
-
-
-base_result = solve(struct, f_ext)  # solve for the deflected state
-
-obj_base = objective(base_result.get_full_states())  # compute the scalar objective</div>
+wing.aero.set_design_variables(
+    dt=dt,
+    flowfield=wing.aero.flowfield,
+    zeta_b0=wing.aero.zeta_b0,
+    hg0=wing.aero.hg_ref,
+    delta_w=delta_w,
+    reference_cs_angles={
+        "left_aileron": jnp.zeros(1),
+        "right_aileron": jnp.zeros(1),
+    },
+)
+</div>
 </div>
 </div>
 </div>
@@ -2948,12 +3128,7 @@ obj_base = objective(base_result.get_full_states())  # compute the scalar object
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="solving-the-adjoint-system">Solving the adjoint system<a class="anchor-link" href="#solving-the-adjoint-system">¶</a></h2><p><code>BeamStructure.static_adjoint</code> linearises the primal residual and objective about the converged state and returns:</p>
-<ol>
-<li>A <code>StructureDesignVariables</code> container <code>grads_adj</code> populated with the gradient of the objective with respect to every recognised design variable (nodal reference coordinates <code>x0</code>, orientation Euler angles, cross-sectional stiffness <code>k_cs</code>, cross-sectional inertia <code>m_cs</code>, lumped mass <code>m_lumped</code>, follower forces <code>f_ext_follower</code>, dead forces <code>f_ext_dead</code>, and any thrust histories). Fields that are not exposed on the case are left as <code>None</code>.</li>
-<li>The adjoint state vector, which we do not use here but is returned for downstream chained-adjoint use-cases.</li>
-</ol>
-<p>One call therefore gives us the full gradient with respect to all design variables simultaneously — the cost is independent of the number of design variables and dominated by a single linear solve at the converged state.</p>
+<h2 id="convergence-settings">Convergence settings<a class="anchor-link" href="#convergence-settings">¶</a></h2><p>Made stricter than default to improve adjoint accuracy.</p>
 </div>
 </div>
 </div>
@@ -2976,9 +3151,36 @@ obj_base = objective(base_result.get_full_states())  # compute the scalar object
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">grads_adj</span><span class="p">,</span> <span class="n">adj</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">static_adjoint</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">base_result</span><span class="p">,</span> <span class="n">objective</span><span class="o">=</span><span class="n">objective</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">wing</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">struct_convergence_settings</span> <span class="o">=</span> <span class="n">ConvergenceSettings</span><span class="p">(</span>
+    <span class="n">max_n_iter</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+    <span class="n">rel_disp_tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span>
+    <span class="n">abs_disp_tol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
+    <span class="n">rel_force_tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span>
+    <span class="n">abs_force_tol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">wing</span><span class="o">.</span><span class="n">fsi_convergence_settings</span> <span class="o">=</span> <span class="n">ConvergenceSettings</span><span class="p">(</span>
+    <span class="n">max_n_iter</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+    <span class="n">rel_disp_tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>
+    <span class="n">abs_disp_tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span>
+    <span class="n">rel_force_tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>
+    <span class="n">abs_force_tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">grads_adj, adj = struct.static_adjoint(structure=base_result, objective=objective)</div>
+<div class="clipboard-copy-txt" id="cell-5">wing.structure.struct_convergence_settings = ConvergenceSettings(
+    max_n_iter=25,
+    rel_disp_tol=1e-8,
+    abs_disp_tol=1e-10,
+    rel_force_tol=1e-8,
+    abs_force_tol=1e-10,
+)
+wing.fsi_convergence_settings = ConvergenceSettings(
+    max_n_iter=25,
+    rel_disp_tol=1e-5,
+    abs_disp_tol=1e-7,
+    rel_force_tol=1e-5,
+    abs_force_tol=1e-7,
+)
+</div>
 </div>
 </div>
 </div>
@@ -2991,7 +3193,7 @@ obj_base = objective(base_result.get_full_states())  # compute the scalar object
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="verification-against-finite-differences-tip-load">Verification against finite differences: tip load<a class="anchor-link" href="#verification-against-finite-differences-tip-load">¶</a></h2><p>We compare the adjoint gradient against a forward finite-difference approximation obtained by perturbing the tip z-force and re-solving.</p>
+<h2 id="static-solve-and-trim">Static solve and trim<a class="anchor-link" href="#static-solve-and-trim">¶</a></h2><p>Fix the middle node's degrees of freedom for trim to create a well-posed problem. The pitch angle at which the wing is fixed is adjusted by the trim routine until the lift equals the weight.</p>
 </div>
 </div>
 </div>
@@ -3014,25 +3216,36 @@ obj_base = objective(base_result.get_full_states())  # compute the scalar object
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">f_eps</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">f_pert</span> <span class="o">=</span> <span class="n">f_ext</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f_eps</span><span class="p">)</span>
-<span class="n">f_pert_obj</span> <span class="o">=</span> <span class="n">objective</span><span class="p">(</span><span class="n">solve</span><span class="p">(</span><span class="n">struct</span><span class="p">,</span> <span class="n">f_pert</span><span class="p">)</span><span class="o">.</span><span class="n">get_full_states</span><span class="p">())</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">prescribed_dofs_static</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">wing</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">n_nodes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span>
 
-<span class="k">assert</span> <span class="n">grads_adj</span><span class="o">.</span><span class="n">f_ext_dead</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<span class="n">f_fd_grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">f_pert_obj</span> <span class="o">-</span> <span class="n">obj_base</span><span class="p">)</span> <span class="o">/</span> <span class="n">f_eps</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Tip forcing gradient"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Adjoint: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">grads_adj</span><span class="o">.</span><span class="n">f_ext_dead</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">])</span><span class="si">:</span><span class="s2">.04e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Finite difference: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">f_fd_grad</span><span class="p">)</span><span class="si">:</span><span class="s2">.04e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">wing</span><span class="o">.</span><span class="n">static_solve</span><span class="p">(</span><span class="n">prescribed_dofs</span><span class="o">=</span><span class="n">prescribed_dofs_static</span><span class="p">,</span> <span class="n">horseshoe</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">trimmed_sol</span><span class="p">,</span> <span class="n">_trim_vars</span> <span class="o">=</span> <span class="n">wing</span><span class="o">.</span><span class="n">trim</span><span class="p">(</span>
+    <span class="n">prescribed_dofs</span><span class="o">=</span><span class="n">prescribed_dofs_static</span><span class="p">,</span>
+    <span class="n">zero_force_dofs</span><span class="o">=</span><span class="n">prescribed_dofs_static</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+    <span class="n">trim_cs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">thrust_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">trim_orientation</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+    <span class="n">horseshoe</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">trim_relaxation</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">trim_f_abs_tolerance</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">f_eps = 1.0
-f_pert = f_ext.at[-1, 2].add(f_eps)
-f_pert_obj = objective(solve(struct, f_pert).get_full_states())
+<div class="clipboard-copy-txt" id="cell-6">prescribed_dofs_static = jnp.arange(6) + (wing.structure.n_nodes - 1) * 3
 
-assert grads_adj.f_ext_dead is not None
-f_fd_grad = (f_pert_obj - obj_base) / f_eps
-print("Tip forcing gradient")
-print(f"Adjoint: {float(grads_adj.f_ext_dead[-1, 2]):.04e}")
-print(f"Finite difference: {float(f_fd_grad):.04e}")</div>
+wing.static_solve(prescribed_dofs=prescribed_dofs_static, horseshoe=False)
+
+trimmed_sol, _trim_vars = wing.trim(
+    prescribed_dofs=prescribed_dofs_static,
+    zero_force_dofs=prescribed_dofs_static[2],
+    trim_cs=None,
+    thrust_nodes=None,
+    trim_orientation="y",
+    horseshoe=False,
+    trim_relaxation=0.5,
+    trim_f_abs_tolerance=1e-5,
+)
+</div>
 </div>
 </div>
 </div>
@@ -3045,7 +3258,7 @@ print(f"Finite difference: {float(f_fd_grad):.04e}")</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="verification-against-finite-differences-bending-stiffness">Verification against finite differences: bending stiffness<a class="anchor-link" href="#verification-against-finite-differences-bending-stiffness">¶</a></h2><p>The cross-sectional stiffness tensor <code>struct.k_cs</code> has shape <code>(n_elem_types, 6, 6)</code>; the <code>(4, 4)</code> entry corresponds to the bending stiffness about the local y-axis. We perturb it by a small increment and re-solve.</p>
+<h2 id="dynamic-problem-setup">Dynamic problem setup<a class="anchor-link" href="#dynamic-problem-setup">¶</a></h2><p>For the dynamic problem, fix 5 degrees of freedom on the middle node, leaving the model free in the roll direction.</p>
 </div>
 </div>
 </div>
@@ -3068,27 +3281,721 @@ print(f"Finite difference: {float(f_fd_grad):.04e}")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">k_eps</span> <span class="o">=</span> <span class="mf">10.0</span>
-<span class="n">struct</span><span class="o">.</span><span class="n">k_cs</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">k_cs</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">k_eps</span><span class="p">)</span>
-<span class="n">k_pert_obj</span> <span class="o">=</span> <span class="n">objective</span><span class="p">(</span><span class="n">solve</span><span class="p">(</span><span class="n">struct</span><span class="p">,</span> <span class="n">f_ext</span><span class="p">)</span><span class="o">.</span><span class="n">get_full_states</span><span class="p">())</span>
-<span class="n">k_fd_grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">k_pert_obj</span> <span class="o">-</span> <span class="n">obj_base</span><span class="p">)</span> <span class="o">/</span> <span class="n">k_eps</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">n_tstep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">physical_time</span> <span class="o">//</span> <span class="n">dt</span><span class="p">)</span>
+<span class="n">n_ctrl_tstep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">control_time</span> <span class="o">//</span> <span class="n">dt</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_tstep</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span>
 
-<span class="k">if</span> <span class="n">grads_adj</span><span class="o">.</span><span class="n">k_cs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"k_cs is None"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Beam bending stiffness gradient"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Adjoint: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">grads_adj</span><span class="o">.</span><span class="n">k_cs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">])</span><span class="si">:</span><span class="s2">.04e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Finite difference: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">k_fd_grad</span><span class="p">)</span><span class="si">:</span><span class="s2">.04e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">prescribed_dofs_dynamic</span> <span class="o">=</span> <span class="n">prescribed_dofs_static</span><span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">))]</span>
+
+<span class="n">prescribed_dofs_dynamic_list</span> <span class="o">=</span> <span class="n">prescribed_dofs_dynamic</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">mid_node</span> <span class="o">=</span> <span class="p">(</span><span class="n">wing</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">n_nodes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>  <span class="c1"># central node index</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7">k_eps = 10.0
-struct.k_cs = struct.k_cs.at[0, 4, 4].add(k_eps)
-k_pert_obj = objective(solve(struct, f_ext).get_full_states())
-k_fd_grad = (k_pert_obj - obj_base) / k_eps
+<div class="clipboard-copy-txt" id="cell-7">n_tstep = int(physical_time // dt)
+n_ctrl_tstep = int(control_time // dt)
+t = jnp.arange(n_tstep) * dt
 
-if grads_adj.k_cs is None:
-    raise ValueError("k_cs is None")
-print("Beam bending stiffness gradient")
-print(f"Adjoint: {float(grads_adj.k_cs[0, 4, 4]):.04e}")
-print(f"Finite difference: {float(k_fd_grad):.04e}")</div>
+prescribed_dofs_dynamic = prescribed_dofs_static[jnp.array((0, 1, 2, 4, 5))]
+
+prescribed_dofs_dynamic_list = prescribed_dofs_dynamic.tolist()
+mid_node = (wing.structure.n_nodes - 1) // 2  # central node index</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=15">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="control-surface-parameterisation-helpers">Control surface parameterisation helpers<a class="anchor-link" href="#control-surface-parameterisation-helpers">¶</a></h2>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=16">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">reconstruct_dict</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="c1"># Split vector of degrees of freedom into two dictionaries for the control surfaces.</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"left_aileron"</span><span class="p">:</span> <span class="n">states</span><span class="p">[:</span> <span class="n">n_ctrl_tstep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">"right_aileron"</span><span class="p">:</span> <span class="n">states</span><span class="p">[</span><span class="n">n_ctrl_tstep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:],</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">extend_control</span><span class="p">(</span><span class="n">cs_vel_ctrl</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+    <span class="c1"># fix velocity at zero after the control window so the angle stays constant in the no-control period.</span>
+    <span class="k">if</span> <span class="n">n_tstep</span> <span class="o">&gt;</span> <span class="n">n_ctrl_tstep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">cs_vel_ctrl</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_tstep</span> <span class="o">-</span> <span class="n">n_ctrl_tstep</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cs_vel_ctrl</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-8">def reconstruct_dict(states: Array) -&gt; dict[str, Array]:
+    # Split vector of degrees of freedom into two dictionaries for the control surfaces.
+    return {
+        "left_aileron": states[: n_ctrl_tstep - 1],
+        "right_aileron": states[n_ctrl_tstep - 1:],
+    }
+
+
+def extend_control(cs_vel_ctrl: Array) -&gt; Array:
+    # fix velocity at zero after the control window so the angle stays constant in the no-control period.
+    if n_tstep &gt; n_ctrl_tstep:
+        return jnp.concatenate((cs_vel_ctrl, jnp.zeros(n_tstep - n_ctrl_tstep)))
+    else:
+        return cs_vel_ctrl
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=17">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="objective-function">Objective function<a class="anchor-link" href="#objective-function">¶</a></h2><p>Squared error between the roll angle at the wing's centre node and the target roll angle, scaled up once the control window has closed.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=18">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span>
+        <span class="n">states</span><span class="p">:</span> <span class="n">AeroelasticFullStates</span><span class="p">,</span>
+        <span class="n">dv</span><span class="p">:</span> <span class="n">AeroelasticDesignVariables</span><span class="p">,</span>
+        <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+    <span class="n">roll_angle</span> <span class="o">=</span> <span class="n">states</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">varphi</span><span class="p">[</span>
+        <span class="n">mid_node</span><span class="p">,</span> <span class="mi">3</span>
+    <span class="p">]</span>  <span class="c1"># extract the centre node roll angle</span>
+
+    <span class="n">angle_error</span> <span class="o">=</span> <span class="n">roll_angle</span> <span class="o">-</span> <span class="n">roll_ang_objective</span>
+    <span class="n">ang_squared_obj</span> <span class="o">=</span> <span class="p">(</span><span class="n">angle_error</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">roll_ang_objective</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">dv</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">cs_vel_t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="n">angle_squared_weight_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">i_ts</span> <span class="o">&lt;</span> <span class="n">n_ctrl_tstep</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ang_squared_obj</span> <span class="o">*</span> <span class="n">angle_squared_weight_</span> <span class="o">/</span> <span class="n">n_tstep</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-9">def objective(
+        states: AeroelasticFullStates,
+        dv: AeroelasticDesignVariables,
+        i_ts: int,
+) -&gt; Array:
+    roll_angle = states.structure.varphi[
+        mid_node, 3
+    ]  # extract the centre node roll angle
+
+    angle_error = roll_angle - roll_ang_objective
+    ang_squared_obj = (angle_error ** 2) / (roll_ang_objective ** 2)
+    assert dv.aero.cs_vel_t is not None
+
+    angle_squared_weight_ = jax.lax.select(i_ts &lt; n_ctrl_tstep, 1.0, 10.0)
+
+    return ang_squared_obj * angle_squared_weight_ / n_tstep
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=19">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="control-to-full-mapping">Control-to-full mapping<a class="anchor-link" href="#control-to-full-mapping">¶</a></h2>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=20">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">control_to_full</span><span class="p">(</span><span class="n">cs_vel_ctrl_no_zero</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="c1"># at timestep zero, we add that the velocity here must be zero</span>
+    <span class="n">cs_vel_ctrl_</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">cs_vel_ctrl_no_zero</span><span class="p">))</span>
+    <span class="n">cs_vel_full_</span> <span class="o">=</span> <span class="n">extend_control</span><span class="p">(</span><span class="n">cs_vel_ctrl_</span><span class="p">)</span>
+
+    <span class="c1"># compute angles from velocities</span>
+    <span class="n">cs_ang_full_</span> <span class="o">=</span> <span class="n">cs_vel_to_cs_ang</span><span class="p">(</span><span class="n">cs_vel_t</span><span class="o">=</span><span class="p">{</span><span class="s2">"_"</span><span class="p">:</span> <span class="n">cs_vel_full_</span><span class="p">},</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)[</span><span class="s2">"_"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">cs_ang_full_</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">cs_vel_full_</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-10">def control_to_full(cs_vel_ctrl_no_zero: Array) -&gt; tuple[Array, Array]:
+    # at timestep zero, we add that the velocity here must be zero
+    cs_vel_ctrl_ = jnp.concatenate((jnp.zeros(1), cs_vel_ctrl_no_zero))
+    cs_vel_full_ = extend_control(cs_vel_ctrl_)
+
+    # compute angles from velocities
+    cs_ang_full_ = cs_vel_to_cs_ang(cs_vel_t={"_": cs_vel_full_}, dt=dt)["_"]
+    return cs_ang_full_[1:], cs_vel_full_[1:]
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=21">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="primal-and-adjoint-computation">Primal and adjoint computation<a class="anchor-link" href="#primal-and-adjoint-computation">¶</a></h2><p>Given a normalised control-surface velocity vector, solve the primal dynamic problem, then the dynamic adjoint, and chain the partial gradients through the zero-padded control extension to get the total gradient of the objective with respect to the optimisation variables.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=22">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute</span><span class="p">(</span><span class="n">cs_vel_t_vec_norm</span><span class="p">:</span> <span class="n">Array</span><span class="p">):</span>
+    <span class="c1"># compute the primal solution and the derivative of the cost function</span>
+    <span class="n">cs_vel_ctrl</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k_</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">v_</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">k_</span><span class="p">,</span> <span class="n">v_</span> <span class="ow">in</span> <span class="n">reconstruct_dict</span><span class="p">(</span>
+            <span class="n">states</span><span class="o">=</span><span class="n">cs_vel_t_vec_norm</span> <span class="o">*</span> <span class="n">max_cs_velocity</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="n">cs_vel_t</span> <span class="o">=</span> <span class="p">{</span><span class="n">k_</span><span class="p">:</span> <span class="n">extend_control</span><span class="p">(</span><span class="n">v_</span><span class="p">)</span> <span class="k">for</span> <span class="n">k_</span><span class="p">,</span> <span class="n">v_</span> <span class="ow">in</span> <span class="n">cs_vel_ctrl</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="c1"># integrate velocity to angle; pass both so the solver doesn't recompute via finite diff</span>
+    <span class="n">cs_ang_t</span> <span class="o">=</span> <span class="n">cs_vel_to_cs_ang</span><span class="p">(</span><span class="n">cs_vel_t</span><span class="o">=</span><span class="n">cs_vel_t</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+
+    <span class="c1"># solve primal</span>
+    <span class="n">dynamic_sol_</span> <span class="o">=</span> <span class="n">wing</span><span class="o">.</span><span class="n">dynamic_solve</span><span class="p">(</span>
+        <span class="n">init_case</span><span class="o">=</span><span class="n">trimmed_sol</span><span class="p">,</span>
+        <span class="n">prescribed_dofs</span><span class="o">=</span><span class="n">prescribed_dofs_dynamic_list</span><span class="p">,</span>
+        <span class="n">n_tstep</span><span class="o">=</span><span class="n">n_tstep</span><span class="p">,</span>
+        <span class="n">cs_ang_t</span><span class="o">=</span><span class="n">cs_ang_t</span><span class="p">,</span>
+        <span class="n">cs_vel_t</span><span class="o">=</span><span class="n">cs_vel_t</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># solve tangent</span>
+    <span class="n">grads</span><span class="p">,</span> <span class="n">objective_val_</span><span class="p">,</span> <span class="n">_adjoint</span> <span class="o">=</span> <span class="n">wing</span><span class="o">.</span><span class="n">dynamic_adjoint</span><span class="p">(</span>
+        <span class="n">case</span><span class="o">=</span><span class="n">dynamic_sol_</span><span class="p">,</span>
+        <span class="n">objective</span><span class="o">=</span><span class="n">objective</span><span class="p">,</span>
+        <span class="n">save_adjoint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">grads_to_compute</span><span class="o">=</span><span class="n">AeroelasticGradsToCompute</span><span class="p">(</span>
+            <span class="n">structure</span><span class="o">=</span><span class="n">StructureGradsToCompute</span><span class="p">(</span><span class="n">k_cs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">m_cs</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">aero</span><span class="o">=</span><span class="n">AeroGradsToCompute</span><span class="p">(</span><span class="n">x0_aero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cs_ang_t</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cs_vel_t</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">total_obj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">objective_val_</span><span class="p">)</span>
+
+    <span class="c1"># extract partial gradients w.r.t. the solver's independent inputs</span>
+    <span class="k">assert</span> <span class="n">grads</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">cs_ang_t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">grads</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">cs_vel_t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="n">p_obj_p_cs_ang_t</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k_</span><span class="p">:</span> <span class="n">v_</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">k_</span><span class="p">,</span> <span class="n">v_</span> <span class="ow">in</span> <span class="n">grads</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">cs_ang_t</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="n">p_obj_p_cs_vel_t</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k_</span><span class="p">:</span> <span class="n">v_</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">k_</span><span class="p">,</span> <span class="n">v_</span> <span class="ow">in</span> <span class="n">grads</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">cs_vel_t</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="c1"># chain partial gradients through the zero-padded extension</span>
+    <span class="n">d_obj_d_cs_vel</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">p_obj_p_cs_vel_t</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">vjp_fn</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vjp</span><span class="p">(</span><span class="n">control_to_full</span><span class="p">,</span> <span class="n">cs_vel_ctrl</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="p">(</span><span class="n">chain_term</span><span class="p">,)</span> <span class="o">=</span> <span class="n">vjp_fn</span><span class="p">((</span><span class="n">p_obj_p_cs_ang_t</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">value</span><span class="p">))</span>
+        <span class="n">d_obj_d_cs_vel</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">chain_term</span>
+
+    <span class="c1"># flatten gradient in the same order as x0 and normalise</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">d_obj_d_cs_vel</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">p_obj_p_cs_vel_t</span><span class="p">])</span>
+            <span class="o">*</span> <span class="n">max_cs_velocity</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">total_obj</span><span class="p">,</span>
+        <span class="n">grad</span><span class="p">,</span>
+        <span class="n">objective_val_</span><span class="p">,</span>
+        <span class="n">cs_ang_t</span><span class="p">,</span>
+        <span class="n">cs_vel_t</span><span class="p">,</span>
+        <span class="n">dynamic_sol_</span><span class="p">,</span>
+        <span class="n">p_obj_p_cs_ang_t</span><span class="p">,</span>
+        <span class="n">p_obj_p_cs_vel_t</span><span class="p">,</span>
+        <span class="n">d_obj_d_cs_vel</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-11">@jax.jit
+def compute(cs_vel_t_vec_norm: Array):
+    # compute the primal solution and the derivative of the cost function
+    cs_vel_ctrl = {
+        k_: jnp.concatenate((jnp.zeros(1), v_))
+        for k_, v_ in reconstruct_dict(
+            states=cs_vel_t_vec_norm * max_cs_velocity
+        ).items()
+    }
+    cs_vel_t = {k_: extend_control(v_) for k_, v_ in cs_vel_ctrl.items()}
+
+    # integrate velocity to angle; pass both so the solver doesn't recompute via finite diff
+    cs_ang_t = cs_vel_to_cs_ang(cs_vel_t=cs_vel_t, dt=dt)
+
+    # solve primal
+    dynamic_sol_ = wing.dynamic_solve(
+        init_case=trimmed_sol,
+        prescribed_dofs=prescribed_dofs_dynamic_list,
+        n_tstep=n_tstep,
+        cs_ang_t=cs_ang_t,
+        cs_vel_t=cs_vel_t,
+    )
+
+    # solve tangent
+    grads, objective_val_, _adjoint = wing.dynamic_adjoint(
+        case=dynamic_sol_,
+        objective=objective,
+        save_adjoint=False,
+        grads_to_compute=AeroelasticGradsToCompute(
+            structure=StructureGradsToCompute(k_cs=False, m_cs=False),
+            aero=AeroGradsToCompute(x0_aero=False, cs_ang_t=True, cs_vel_t=True),
+        ),
+    )
+
+    total_obj = jnp.sum(objective_val_)
+
+    # extract partial gradients w.r.t. the solver's independent inputs
+    assert grads.aero.cs_ang_t is not None and grads.aero.cs_vel_t is not None
+    p_obj_p_cs_ang_t: dict[str, Array] = {
+        k_: v_.ravel()[1:] for k_, v_ in grads.aero.cs_ang_t.items()
+    }
+    p_obj_p_cs_vel_t: dict[str, Array] = {
+        k_: v_.ravel()[1:] for k_, v_ in grads.aero.cs_vel_t.items()
+    }
+
+    # chain partial gradients through the zero-padded extension
+    d_obj_d_cs_vel: dict[str, Array] = {}
+    for k, value in p_obj_p_cs_vel_t.items():
+        _, vjp_fn = jax.vjp(control_to_full, cs_vel_ctrl[k][1:])
+        (chain_term,) = vjp_fn((p_obj_p_cs_ang_t[k], value))
+        d_obj_d_cs_vel[k] = chain_term
+
+    # flatten gradient in the same order as x0 and normalise
+    grad = (
+            jnp.concatenate([d_obj_d_cs_vel[k] for k in p_obj_p_cs_vel_t])
+            * max_cs_velocity
+    )
+
+    return (
+        total_obj,
+        grad,
+        objective_val_,
+        cs_ang_t,
+        cs_vel_t,
+        dynamic_sol_,
+        p_obj_p_cs_ang_t,
+        p_obj_p_cs_vel_t,
+        d_obj_d_cs_vel,
+    )
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=23">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="optimisation-iteration-callback">Optimisation iteration callback<a class="anchor-link" href="#optimisation-iteration-callback">¶</a></h2><p>Wraps <code>compute</code> with per-iteration bookkeeping: saving VTK snapshots every 10 iterations and diagnostic plots (control angle/velocity, objective integrand, roll history, and gradients) every iteration.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=24">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># initialise the control surfaces to be at zero</span>
+<span class="n">cs_vel_init</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"left_aileron"</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_ctrl_tstep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s2">"right_aileron"</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_ctrl_tstep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">iter_counter</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"i"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cs_grad</span><span class="p">(</span><span class="n">cs_vel_t_vec_norm</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="n">i_iter</span> <span class="o">=</span> <span class="n">iter_counter</span><span class="p">[</span><span class="s2">"i"</span><span class="p">]</span>
+    <span class="n">iter_counter</span><span class="p">[</span><span class="s2">"i"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="p">(</span>
+        <span class="n">total_obj</span><span class="p">,</span>
+        <span class="n">grad</span><span class="p">,</span>
+        <span class="n">objective_val_</span><span class="p">,</span>
+        <span class="n">cs_ang_t</span><span class="p">,</span>
+        <span class="n">cs_vel_t</span><span class="p">,</span>
+        <span class="n">dynamic_sol_</span><span class="p">,</span>
+        <span class="n">p_obj_p_cs_ang_t</span><span class="p">,</span>
+        <span class="n">p_obj_p_cs_vel_t</span><span class="p">,</span>
+        <span class="n">d_obj_d_cs_vel</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="n">compute</span><span class="p">(</span><span class="n">cs_vel_t_vec_norm</span><span class="p">)</span>
+
+    <span class="n">iter_path</span> <span class="o">=</span> <span class="n">dir_</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="sa">f</span><span class="s2">"iteration_</span><span class="si">{</span><span class="n">i_iter</span><span class="si">}</span><span class="s2">/"</span><span class="p">)</span>
+    <span class="n">iter_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">i_iter</span> <span class="o">%</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="c1"># plot solution to VTK files</span>
+        <span class="n">dynamic_sol_</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iter_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">"vtk"</span><span class="p">))</span>
+
+    <span class="c1"># control surface angle plot</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Control surface angles at iteration </span><span class="si">{</span><span class="n">i_iter</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time (s)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Control angle (deg)"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cs_ang_t</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">iter_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">"cs_ang.png"</span><span class="p">))</span>
+
+    <span class="c1"># control surface velocity plot</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Control surface velocity at iteration </span><span class="si">{</span><span class="n">i_iter</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time (s)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Control velocity (deg/s)"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cs_vel_t</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">iter_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">"cs_vel.png"</span><span class="p">))</span>
+
+    <span class="c1"># cost function integrand</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">objective_val_</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xmax</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"Objective integrands at iteration </span><span class="si">{</span><span class="n">i_iter</span><span class="si">}</span><span class="s2">, objective = </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">total_obj</span><span class="p">)</span><span class="si">:</span><span class="s2">02f</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time (s)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Objective integrand"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">iter_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">"objective.png"</span><span class="p">))</span>
+
+    <span class="c1"># roll angle over time plot</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
+        <span class="n">jnp</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span>
+            <span class="n">dynamic_sol_</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">varphi</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="p">(</span><span class="n">wing</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">n_nodes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">roll_ang_objective</span><span class="p">),</span> <span class="n">xmin</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xmax</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"Roll history at iteration </span><span class="si">{</span><span class="n">i_iter</span><span class="si">}</span><span class="s2">, objective = </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">total_obj</span><span class="p">)</span><span class="si">:</span><span class="s2">02f</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time (s)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Roll angle (deg)"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">iter_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">"roll.png"</span><span class="p">))</span>
+
+    <span class="c1"># plot partial and total derivatives</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">p_obj_p_cs_ang_t</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Partial gradient of objective w.r.t. control surface angles"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time (s)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Gradient"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">iter_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">"p_obj_p_cs_ang_t.png"</span><span class="p">))</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">p_obj_p_cs_vel_t</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Partial gradient of objective w.r.t. control surface velocities"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time (s)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Gradient"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">iter_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">"p_obj_p_cs_vel_t.png"</span><span class="p">))</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d_obj_d_cs_vel</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">n_ctrl_tstep</span><span class="p">],</span> <span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Total gradient of objective w.r.t. control surface velocities"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time (s)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Gradient"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">iter_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">"d_obj_d_cs_vel_t.png"</span><span class="p">))</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">"all"</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"iteration </span><span class="si">{</span><span class="n">i_iter</span><span class="si">}</span><span class="s2">: objective = </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">total_obj</span><span class="p">)</span><span class="si">:</span><span class="s2">.6e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">total_obj</span><span class="p">,</span> <span class="n">grad</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-12"># initialise the control surfaces to be at zero
+cs_vel_init = {
+    "left_aileron": jnp.zeros(n_ctrl_tstep - 1),
+    "right_aileron": jnp.zeros(n_ctrl_tstep - 1),
+}
+
+iter_counter = {"i": 0}
+
+
+def get_cs_grad(cs_vel_t_vec_norm: Array) -&gt; tuple[Array, Array]:
+    i_iter = iter_counter["i"]
+    iter_counter["i"] += 1
+
+    (
+        total_obj,
+        grad,
+        objective_val_,
+        cs_ang_t,
+        cs_vel_t,
+        dynamic_sol_,
+        p_obj_p_cs_ang_t,
+        p_obj_p_cs_vel_t,
+        d_obj_d_cs_vel,
+    ) = compute(cs_vel_t_vec_norm)
+
+    iter_path = dir_.joinpath(f"iteration_{i_iter}/")
+    iter_path.mkdir(parents=True, exist_ok=True)
+
+    if not i_iter % 10:
+        # plot solution to VTK files
+        dynamic_sol_.plot(iter_path.joinpath("vtk"))
+
+    # control surface angle plot
+    _, ax = plt.subplots()
+    ax.set_title(f"Control surface angles at iteration {i_iter}")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Control angle (deg)")
+    for k, v in cs_ang_t.items():
+        ax.plot(t, jnp.rad2deg(v), label=k)
+    ax.legend()
+    plt.savefig(iter_path.joinpath("cs_ang.png"))
+
+    # control surface velocity plot
+    _, ax = plt.subplots()
+    ax.set_title(f"Control surface velocity at iteration {i_iter}")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Control velocity (deg/s)")
+    for k, v in cs_vel_t.items():
+        ax.plot(t, jnp.rad2deg(v), label=k)
+    ax.legend()
+    plt.savefig(iter_path.joinpath("cs_vel.png"))
+
+    # cost function integrand
+    _, ax = plt.subplots()
+    ax.plot(t[1:], objective_val_[1:])
+    ax.hlines(0.0, xmin=t[1], xmax=t[-1])
+    ax.set_title(
+        f"Objective integrands at iteration {i_iter}, objective = {float(total_obj):02f}"
+    )
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Objective integrand")
+    plt.savefig(iter_path.joinpath("objective.png"))
+
+    # roll angle over time plot
+    _, ax = plt.subplots()
+    ax.plot(
+        t[1:],
+        jnp.rad2deg(
+            dynamic_sol_.structure.varphi[1:, (wing.structure.n_nodes - 1) // 2, 3]
+        ),
+    )
+    ax.hlines(jnp.rad2deg(roll_ang_objective), xmin=t[1], xmax=t[-1])
+    ax.set_title(
+        f"Roll history at iteration {i_iter}, objective = {float(total_obj):02f}"
+    )
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Roll angle (deg)")
+    plt.savefig(iter_path.joinpath("roll.png"))
+
+    # plot partial and total derivatives
+    _, ax = plt.subplots()
+    for k, v in p_obj_p_cs_ang_t.items():
+        ax.plot(t[1:], v, label=k)
+    ax.set_title("Partial gradient of objective w.r.t. control surface angles")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Gradient")
+    ax.legend()
+    plt.savefig(iter_path.joinpath("p_obj_p_cs_ang_t.png"))
+
+    _, ax = plt.subplots()
+    for k, v in p_obj_p_cs_vel_t.items():
+        ax.plot(t[1:], v, label=k)
+    ax.set_title("Partial gradient of objective w.r.t. control surface velocities")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Gradient")
+    ax.legend()
+    plt.savefig(iter_path.joinpath("p_obj_p_cs_vel_t.png"))
+
+    _, ax = plt.subplots()
+    for k, v in d_obj_d_cs_vel.items():
+        ax.plot(t[1:n_ctrl_tstep], v, label=k)
+    ax.set_title("Total gradient of objective w.r.t. control surface velocities")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Gradient")
+    ax.legend()
+    plt.savefig(iter_path.joinpath("d_obj_d_cs_vel_t.png"))
+
+    plt.close("all")
+
+    print(f"iteration {i_iter}: objective = {float(total_obj):.6e}")
+
+    return total_obj, grad
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=25">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="constraints-and-optimisation-run">Constraints and optimisation run<a class="anchor-link" href="#constraints-and-optimisation-run">¶</a></h2><p>Impose hard constraints that limit the control deflections and velocities, then run the SLSQP optimisation.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=26">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">cum_sum_dt</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_ctrl_tstep</span><span class="p">,</span> <span class="n">n_ctrl_tstep</span><span class="p">)))</span>
+<span class="n">ang_block</span> <span class="o">=</span> <span class="p">(</span><span class="n">cum_sum_dt</span> <span class="o">@</span> <span class="n">jnp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_ctrl_tstep</span><span class="p">,</span> <span class="n">n_ctrl_tstep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="n">max_cs_velocity</span> <span class="o">/</span> <span class="n">max_cs_deflection</span>
+<span class="p">)</span>
+<span class="n">zero_block</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ang_block</span><span class="p">)</span>
+<span class="n">angle_constraint_jac</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">block</span><span class="p">([[</span><span class="n">ang_block</span><span class="p">,</span> <span class="n">zero_block</span><span class="p">],</span> <span class="p">[</span><span class="n">zero_block</span><span class="p">,</span> <span class="n">ang_block</span><span class="p">]])</span>
+<span class="n">angle_constraint</span> <span class="o">=</span> <span class="n">LinearConstraint</span><span class="p">(</span><span class="n">A</span><span class="o">=</span><span class="n">angle_constraint_jac</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c1"># run optimisation</span>
+<span class="c1"># noinspection SpellCheckingInspection</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+    <span class="n">fun</span><span class="o">=</span><span class="n">get_cs_grad</span><span class="p">,</span>
+    <span class="n">x0</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cs_vel_init</span><span class="o">.</span><span class="n">values</span><span class="p">()]),</span>
+    <span class="n">jac</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_ctrl_tstep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span>  <span class="c1"># velocity limits</span>
+    <span class="n">constraints</span><span class="o">=</span><span class="p">(</span><span class="n">angle_constraint</span><span class="p">,),</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">"SLSQP"</span><span class="p">,</span>
+    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">"maxiter"</span><span class="p">:</span> <span class="n">n_iter</span><span class="p">,</span> <span class="s2">"ftol"</span><span class="p">:</span> <span class="mf">1e-15</span><span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-13">cum_sum_dt = dt * jnp.tril(jnp.ones((n_ctrl_tstep, n_ctrl_tstep)))
+ang_block = (cum_sum_dt @ jnp.eye(n_ctrl_tstep, n_ctrl_tstep - 1, k=-1)) * (
+        max_cs_velocity / max_cs_deflection
+)
+zero_block = jnp.zeros_like(ang_block)
+angle_constraint_jac = jnp.block([[ang_block, zero_block], [zero_block, ang_block]])
+angle_constraint = LinearConstraint(A=angle_constraint_jac, lb=-1.0, ub=1.0)
+
+# run optimisation
+# noinspection SpellCheckingInspection
+result = minimize(  # type: ignore
+    fun=get_cs_grad,
+    x0=jnp.concatenate([v for v in cs_vel_init.values()]),
+    jac=True,
+    bounds=[(-1.0, 1.0)] * (2 * (n_ctrl_tstep - 1)),  # velocity limits
+    constraints=(angle_constraint,),
+    method="SLSQP",
+    options={"maxiter": n_iter, "ftol": 1e-15},
+)
+</div>
 </div>
 </div>
 </div>

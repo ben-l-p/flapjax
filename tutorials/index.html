@@ -721,6 +721,8 @@
       
         
       
+        
+      
     
     
     
@@ -909,6 +911,34 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="xhale_gust/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trimmed X-HALE - Free-Flying Gust Response
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
       
@@ -930,10 +960,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_7" >
         
           
-          <label class="md-nav__link" for="__nav_3_3_6" id="__nav_3_3_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_3_7" id="__nav_3_3_7_label" tabindex="0">
             
   
   
@@ -951,8 +981,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_3_6">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1109,10 +1139,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_8" >
         
           
-          <label class="md-nav__link" for="__nav_3_3_7" id="__nav_3_3_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_3_8" id="__nav_3_3_8_label" tabindex="0">
             
   
   
@@ -1130,8 +1160,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_3_7">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1812,25 +1842,34 @@ write <code>.vtu</code> and <code>.pvd</code> files to disk, which can be visual
 <li><a href="patil_wing_optimal_roll/">Patil wing optimal roll manoeuvre</a> — Follow-on to the open-loop control
   tutorial that instead optimises the control-surface velocity profiles with an SLSQP outer loop, using
   gradients of a target roll angle objective from the coupled dynamic adjoint.</li>
+<li><a href="xhale_gust/">X-HALE free-flying gust response</a> — Half-model of the X-HALE aircraft, trimmed
+  with the aeroelastic <code>trim()</code> routine, then released as a free-flying body through a one-minus-cosine
+  gust using the <code>dynamic_solve()</code> routine.<ul>
 <li>Pazy wing (both straight and swept configurations)<ul>
 <li>Static
   deflection <a href="straight_pazy_static_deflection/">straight</a>, <a href="swept_pazy_static_deflection/">swept</a> —
-  Grid of cases with varying root angles of attack and velocity, running the <code>static_solve()</code> routine in
+  Grid of cases with varying root angles of attack and velocity, running the <code>static_solve()</code> routine
+  in
   parallel. Evolution of the tip deflection is plotted.</li>
 <li>Deformed mode
   frequencies <a href="straight_pazy_deformed_modes/">straight</a>, <a href="swept_pazy_deformed_modes/">swept</a> —
-  Evolution of the first five natural frequencies with tip displacement, controlled via freestream velocity
+  Evolution of the first five natural frequencies with tip displacement, controlled via freestream
+  velocity
   and
   making use of the <code>static_solve()</code>
   and structural <code>modal()</code> routines.</li>
-<li>Flutter analysis <a href="straight_pazy_flutter/">straight</a>, <a href="swept_pazy_flutter/">swept</a> — Compute the
+<li>Flutter analysis <a href="straight_pazy_flutter/">straight</a>, <a href="swept_pazy_flutter/">swept</a> — Compute
+  the
   stability of the wing across a grid of angles of attack and freestream velocities using the coupled
   <code>linearise()</code> routine.</li>
 <li>Time-domain LCO <a href="straight_pazy_lco/">straight</a>, <a href="swept_pazy_lco/">swept</a> — Time-domain
   limit-cycle
-  oscillation computation for the wing, plotting the deflection of the beam tip over time, obtained using
+  oscillation computation for the wing, plotting the deflection of the beam tip over time, obtained
+  using
   the
   <code>static_solve()</code> and <code>dynamic_solve()</code> routines.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

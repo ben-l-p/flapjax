@@ -75,10 +75,6 @@ quirks. It is advised that users have an understanding of key JAX principles, in
 and automatic differentiation [JAX documentation](https://docs.jax.dev/en/latest/notebooks/thinking_in_jax.html). Some
 of the key points to note are:
 
-- Flow control logic. JAX does not allow for python flow control logic (e.g. ``if`` statements,) to be used in
-  JIT-compiled functions. It instead provides its own set of functional control flow operators, such as ``jax.lax.cond``
-  and ``jax.lax.while_loop``. However, there are more restrictive. For example, code cannot exit early; in a time domain
-  solve, if a solution diverges, the code will continue to run until the end of the time domain, giving NaN results.
 - We cannot run python routines or use python debugging within JIT-compiled functions. Therefore, we cannot plot during
   analysis, and so all plotting routines for Paraview can only be used once the full solution is complete.
 - Solvers may take a while to start iterating, and look as if they are stuck. JAX traces code to create a computational

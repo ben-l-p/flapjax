@@ -1586,7 +1586,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             f_clamp_init = jnp.full((len(zero_force_dofs_)), 1e10)
             print_table_title(title="Trim (Adjoint)", inner_width=104)
             trim_variables_init.print_header(f_clamp=f_clamp_init)
-            _, trim_variables, ae_sol, _ = jax.lax.while_loop(
+            n_iter, trim_variables, ae_sol, f_clamp_final = jax.lax.while_loop(
                 lambda args_: jnp.logical_and(
                     jnp.any(jnp.abs(args_[3]) >= trim_f_abs_tolerance),
                     args_[0] < max_iter,
@@ -1650,7 +1650,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 return i_iter, tv, sol, fc, b
 
             trim_variables_init.print_header(f_clamp=f_clamp_init)
-            _, trim_variables, ae_sol, _, _ = jax.lax.while_loop(
+            n_iter, trim_variables, ae_sol, f_clamp_final, _ = jax.lax.while_loop(
                 lambda args_: jnp.logical_and(
                     jnp.any(jnp.abs(args_[3]) >= trim_f_abs_tolerance),
                     args_[0] < max_iter,
@@ -1667,6 +1667,11 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             print_table_line(inner_width=104)
         else:
             raise ValueError(f"Unknown trim method: {method!r}.")
+
+        if bool(jnp.any(jnp.isnan(f_clamp_final))):
+            warn("Trim residual is NaN - solution diverged")
+        elif bool(jnp.any(jnp.abs(f_clamp_final) >= trim_f_abs_tolerance)):
+            warn(f"Trim did not converge within max_iter={max_iter} iterations ")
 
         new_orientation: Array = self.structure.orientation_euler
         for k, v in trim_variables.trim_angles.items():

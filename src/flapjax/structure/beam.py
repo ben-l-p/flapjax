@@ -3391,10 +3391,94 @@ class BaseBeamStructure:
                 ),
             )
 
+        def time_step_loop_checked(
+            i_ts: int,
+            struct_sol: StructureCase,
+            struct_convergence_status_: ConvergenceStatus,
+            aero_sol: AeroCase | None,
+            fsi_convergence_status_: ConvergenceStatus | None,
+            thrust_t_: dict[str, Array],
+            cs_ang_t_: dict[str, Array] | None,
+            cs_vel_t_: dict[str, Array] | None,
+            diverged: Array,
+        ) -> tuple[
+            StructureCase,
+            ConvergenceStatus,
+            AeroCase | None,
+            ConvergenceStatus | None,
+            dict[str, Array],
+            dict[str, Array] | None,
+            dict[str, Array] | None,
+            Array,
+        ]:
+            r"""
+            Wraps ``time_step_loop`` with a check for solution divergence. Once a NaN is detected, this becomes a no-op
+            for all remaining time steps. The corresponding time history entries are left at their initialised value
+            (zero).
+            """
+
+            (
+                struct_sol,
+                struct_convergence_status_,
+                aero_sol,
+                fsi_convergence_status_,
+                thrust_t_,
+                cs_ang_t_,
+                cs_vel_t_,
+            ) = jax.lax.cond(
+                diverged,
+                lambda: (
+                    struct_sol,
+                    struct_convergence_status_,
+                    aero_sol,
+                    fsi_convergence_status_,
+                    thrust_t_,
+                    cs_ang_t_,
+                    cs_vel_t_,
+                ),
+                lambda: time_step_loop(
+                    i_ts,
+                    struct_sol,
+                    struct_convergence_status_,
+                    aero_sol,
+                    fsi_convergence_status_,
+                    thrust_t_,
+                    cs_ang_t_,
+                    cs_vel_t_,
+                ),
+            )
+
+            has_nan = struct_convergence_status_.has_nan
+            if include_aero:
+                assert fsi_convergence_status_ is not None
+                has_nan = has_nan | fsi_convergence_status_.has_nan
+            new_diverged = diverged | has_nan
+
+            jax.lax.cond(
+                new_diverged & ~diverged,
+                lambda: warn(
+                    "NaN detected in dynamic solve at time step {i_ts} - skipping remaining time steps.",
+                    i_ts=i_ts,
+                    t_val=t[i_ts],
+                ),
+                lambda: None,
+            )
+
+            return (
+                struct_sol,
+                struct_convergence_status_,
+                aero_sol,
+                fsi_convergence_status_,
+                thrust_t_,
+                cs_ang_t_,
+                cs_vel_t_,
+                new_diverged,
+            )
+
         struct_case, _, aero_case, *_ = jax.lax.fori_loop(
             1,
             n_tstep,
-            lambda i_ts, args: time_step_loop(i_ts, *args),
+            lambda i_ts, args: time_step_loop_checked(i_ts, *args),
             (
                 struct_case,
                 struct_convergence_status,
@@ -3403,6 +3487,7 @@ class BaseBeamStructure:
                 thrust_t,
                 cs_ang_t,
                 cs_vel_t,
+                jnp.zeros((), dtype=bool),
             ),
         )
 

@@ -389,7 +389,8 @@ class BeamStructure(BaseBeamStructure):
         approx_grads: bool,
     ) -> Array:
         varphi_nm1, varphi_n, v_nm1, v_n, v_dot_nm1, v_dot_n = (
-            a.reshape(-1, 6) for a in (varphi_nm1, varphi_n, v_nm1, v_n, v_dot_nm1, v_dot_n)
+            a.reshape(-1, 6)
+            for a in (varphi_nm1, varphi_n, v_nm1, v_n, v_dot_nm1, v_dot_n)
         )
         f_aero_nm1 = f_aero_nm1.reshape(-1, 6) if f_aero_nm1 is not None else None
         f_aero_n = f_aero_n.reshape(-1, 6) if f_aero_n is not None else None
@@ -508,7 +509,23 @@ class BeamStructure(BaseBeamStructure):
         )
 
         # scale by beta_prime to scale order of magnitude for a better conditioned problem
-        return v_dot_res / self.time_integrator.beta_prime
+        v_dot_res /= self.time_integrator.beta_prime
+
+        if self.n_holonomic_constraints:
+            # add constraint contribution
+            jac_h = inner_case._compute_holonomic_jacobian(
+                hg_alpha, solve_dofs, phi=None
+            )
+            g_val = inner_case._compute_holonomic_violation(hg_alpha)
+            gram = jac_h @ jac_h.T
+            range_component = jac_h.T @ jnp.linalg.solve(gram, jac_h @ v_dot_res)
+            v_dot_res = (
+                v_dot_res
+                - range_component
+                + jac_h.T @ g_val / self.time_integrator.beta_prime
+            )
+
+        return v_dot_res
 
     def timestep_residual(
         self,

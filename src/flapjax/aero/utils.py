@@ -303,9 +303,10 @@ def apply_polar_correction(
     rho: Array,
     polars: Sequence[Sequence[PolarFunction] | None],
     alpha: ArrayList | None = None,
-) -> tuple[ArrayList, ArrayList]:
+) -> tuple[ArrayList, ArrayList, ArrayList, ArrayList, ArrayList]:
     r"""
-    Replace UVLM strip forcing with a sectional force built from tabulated airfoil polars.
+    Replace UVLM strip forcing with a sectional force built from tabulated airfoil polars. This method uses the UVLM to
+    compute the strip-wise angles of attack, before obtaining the new forces from the passed polar functions.
 
     For each surface where polars are provided, and for each spanwise strip, we firstly compute the strip forcing in the
     global frame. This forcing can then be converted into the local strip coordinate frame. We compute the velocity at
@@ -321,8 +322,9 @@ def apply_polar_correction(
         ``alpha -> (cl, cd, cm)`` about the quarter-chord.
     :param alpha: Optional precomputed per-strip angle of attack, ``(n_surf, )(n_strip,)``. If
         ``None``, computed internally via :func:`strip_alpha` with the same ``v_func``.
-    :return: Corrected vertex forcing, ``(n_surf, )(zeta_m, zeta_n, 3)`` and per-strip lift scale factors,
-        ``(n_surf, )(n, )`` which can be used to scale the circulation strengths if requested.
+    :return: Corrected vertex forcing, ``(n_surf, )(zeta_m, zeta_n, 3)``; per-strip lift scale factors,
+        ``(n_surf, )(n, )``, which can be used to scale the circulation strengths if requested; and the
+        per-strip lift, drag and moment coefficients sampled from the polars, ``(n_surf, )(n, )`` each.
     """
     if alpha is None:
         # compute the angles of attack for each strip if not passed
@@ -330,6 +332,9 @@ def apply_polar_correction(
 
     f_out = ArrayList([])
     lift_scale_out = ArrayList([])
+    cl_out = ArrayList([])
+    cd_out = ArrayList([])
+    cm_out = ArrayList([])
     for i_surf, (zeta_surf, f_surf, polar_surf, alpha_surf) in enumerate(
         zip(zeta_b, f_steady, polars, alpha)
     ):
@@ -339,6 +344,9 @@ def apply_polar_correction(
             # no correction to apply
             f_out.append(f_surf)
             lift_scale_out.append(jnp.ones(n))
+            cl_out.append(2.0 * jnp.pi * alpha_surf)
+            cd_out.append(jnp.zeros(n))
+            cm_out.append(jnp.zeros(n))
             continue
 
         zeta_m = zeta_surf.shape[0]
@@ -392,6 +400,9 @@ def apply_polar_correction(
         cl_uvlm = 2.0 * jnp.pi * alpha_surf
         lift_scale = jnp.where(jnp.abs(cl_uvlm) > EPSILON, cl_p / cl_uvlm, 1.0)
         lift_scale_out.append(lift_scale)
+        cl_out.append(cl_p)
+        cd_out.append(cd_p)
+        cm_out.append(cm_p)
 
         qcb = q * c_len * b_len
         f_lump = qcb[:, None] * (cl_p[:, None] * e_l + cd_p[:, None] * e_d)
@@ -417,7 +428,7 @@ def apply_polar_correction(
 
         f_out.append(f_corrected)
 
-    return f_out, lift_scale_out
+    return f_out, lift_scale_out, cl_out, cd_out, cm_out
 
 
 def propagate_surf_wake(

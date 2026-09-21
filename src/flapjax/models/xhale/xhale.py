@@ -286,6 +286,7 @@ def generate_xhale(
     ga_mult: float = 0.1,
     flowfield: FlowField = FLOWFIELD_DEFAULT,
     half_model: bool = False,
+    variable_disc_wake: bool = True,
     m_wing: int = 8,
     m_tail: int = 3,
     m_fin: int = 4,
@@ -296,7 +297,7 @@ def generate_xhale(
     n_tail: int = 2,
     n_fin: int = 2,
     n_vfin: int = 2,
-    m_star: int = 160,
+    m_star: int = 50,
     alpha: Array | float = 0.0,
     roll: Array | float = 0.0,
     beta: Array | float = 0.0,
@@ -316,6 +317,8 @@ def generate_xhale(
     :param ga_mult: Shear stiffness multiplier.
     :param flowfield: FlowField object.
     :param half_model: If True, build a right-half-span model only.
+    :param variable_disc_wake: If True, use a variable discretisation for the wake panels, to reduce comutational cost
+    when combined with a lower m_star value.
     :param m_wing: Number of chordwise aerodynamic panels for the main wing.
     :param m_tail: Number of chordwise aerodynamic panels for the tail surfaces.
     :param m_fin: Number of chordwise aerodynamic panels for the fin surfaces.
@@ -866,7 +869,21 @@ def generate_xhale(
         gamma_dot_relaxation=gamma_dot_relaxation,
         mirror_point=jnp.zeros(3) if half_model else None,
         mirror_normal=Y_AXIS if half_model else None,
+        variable_wake_disc=variable_disc_wake,
     )
+
+    if variable_disc_wake:
+        n_base_size = 16  # number of nearfield wake panels to keep at base size
+        # logarithmically increase panel length beyond this
+        delta_w = (
+            jnp.linalg.norm(flowfield.u_inf)
+            * dt
+            * jnp.concatenate(
+                (jnp.ones(n_base_size), jnp.logspace(0.0, 0.8, m_star - n_base_size))
+            )
+        )
+    else:
+        delta_w = None
 
     aircraft = CoupledAeroelastic(aero=aero, structure=structure)
     aircraft.set_design_variables(
@@ -874,6 +891,7 @@ def generate_xhale(
         k_cs=k_cs,
         m_cs=m_cs,
         m_lumped=m_lumped,
+        delta_w=delta_w,
         dt=dt,
         flowfield=flowfield,
         x0_aero=[s["x0"] for s in surfaces],

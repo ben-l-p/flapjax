@@ -405,7 +405,9 @@ class UVLM:
         """
 
         if isinstance(delta_w, Array):
-            delta_w_seq: Sequence[Array | None] = self.n_surf * [delta_w]
+            delta_w_seq: Sequence[Array | None] = [
+                delta_w if gd.m_star > 0 else None for gd in self.grid_disc
+            ]
         elif delta_w is None:
             delta_w_seq = self.n_surf * [None]
         elif isinstance(delta_w, Sequence):
@@ -649,7 +651,9 @@ class UVLM:
         """
         return ArrayList(
             [
-                vec[self.gamma_b_slice[i]].reshape(self.grid_disc[i].m, self.grid_disc[i].n)
+                vec[self.gamma_b_slice[i]].reshape(
+                    self.grid_disc[i].m, self.grid_disc[i].n
+                )
                 for i in range(self.n_surf)
             ]
         )
@@ -781,6 +785,9 @@ class UVLM:
         ArrayList,
         ArrayList | None,
         ArrayList,
+        ArrayList,
+        ArrayList,
+        ArrayList,
     ]:
         r"""
         Solve the UVLM equations for a single time step from beam coordinate inputs.
@@ -797,8 +804,8 @@ class UVLM:
         :param cs_ang_nm1: Control surface angle at timestep n - 1, {name, ()}.
         :param cs_vel_n: Control surface velocity at timestep n, {name, ()}.
         :return: Collocation points, bound normals, bound circulation, wake circulation, bound circulation time
-        derivative, bound grid, wake grid, bound grid time derivative, steady forcing, unsteady forcing, and per-strip
-        effective angle of attack.
+        derivative, bound grid, wake grid, bound grid time derivative, steady forcing, unsteady forcing, per-strip
+        effective angle of attack, and per-strip lift, drag and moment coefficients.
         """
 
         zeta_b_n = self.hg_to_zeta_b(
@@ -855,6 +862,9 @@ class UVLM:
         ArrayList,
         ArrayList | None,
         ArrayList,
+        ArrayList,
+        ArrayList,
+        ArrayList,
     ]:
         r"""
         Solve the UVLM equations for a single time step from aerodynamic grid inputs.
@@ -874,7 +884,7 @@ class UVLM:
         Used by the linear system; ignored if not supplied.
         :return: Collocation points, bound normals, bound circulation, wake circulation, bound circulation time
         derivative, bound grid, wake grid, bound grid velocity, steady forcing, unsteady forcing, per-strip effective
-        angle of attack.
+        angle of attack, and per-strip lift, drag and moment coefficients sampled from the polars.
         """
         if isinstance(
             self.gamma_dot_relaxation,
@@ -1056,7 +1066,7 @@ class UVLM:
 
         if any(p is not None for p in self.polars):
             # update forcing with polar corrections
-            f_steady, lift_scale = apply_polar_correction(
+            f_steady, lift_scale, cl_n, cd_n, cm_n = apply_polar_correction(
                 zeta_b=zeta_b_n,
                 f_steady=f_steady,
                 v_func=v_freestream_func,
@@ -1077,6 +1087,12 @@ class UVLM:
                 )
                 if static:
                     gamma_w_n = _static_wake_from_gamma_b(gamma_b_n)
+        else:
+            # no polars assigned to any surface: report the flat-plate (2 pi alpha) values implied by the
+            # UVLM itself
+            cl_n = ArrayList([2.0 * jnp.pi * a for a in alpha_n])
+            cd_n = ArrayList([jnp.zeros_like(a) for a in alpha_n])
+            cm_n = ArrayList([jnp.zeros_like(a) for a in alpha_n])
 
         if static:
             gamma_b_dot_n: ArrayList | None = None
@@ -1116,6 +1132,9 @@ class UVLM:
             f_steady,
             f_unsteady,
             alpha_n,
+            cl_n,
+            cd_n,
+            cm_n,
         )
 
     def case_solve(
@@ -1174,6 +1193,9 @@ class UVLM:
             f_steady,
             f_unsteady,
             alpha_n,
+            cl_n,
+            cd_n,
+            cm_n,
         ) = self.base_solve(
             q_nm1=q_nm1,
             t_n=case.t[i_ts, ...],
@@ -1194,6 +1216,9 @@ class UVLM:
         case.set_arraylist_at_ts("zeta_b", values=zeta_b_n, i_ts=i_ts)
         case.set_arraylist_at_ts("f_steady", values=f_steady, i_ts=i_ts)
         case.set_arraylist_at_ts("alpha", values=alpha_n, i_ts=i_ts)
+        case.set_arraylist_at_ts("cl", values=cl_n, i_ts=i_ts)
+        case.set_arraylist_at_ts("cd", values=cd_n, i_ts=i_ts)
+        case.set_arraylist_at_ts("cm", values=cm_n, i_ts=i_ts)
 
         if not static:
             if gamma_b_dot_n is None:
@@ -1266,6 +1291,9 @@ class UVLM:
                 [jnp.zeros((n_tstep, gd.m + 1, gd.n + 1, 3)) for gd in self.grid_disc]
             ),
             alpha=ArrayList([jnp.zeros((n_tstep, gd.n)) for gd in self.grid_disc]),
+            cl=ArrayList([jnp.zeros((n_tstep, gd.n)) for gd in self.grid_disc]),
+            cd=ArrayList([jnp.zeros((n_tstep, gd.n)) for gd in self.grid_disc]),
+            cm=ArrayList([jnp.zeros((n_tstep, gd.n)) for gd in self.grid_disc]),
             c=ArrayList([jnp.zeros((n_tstep, gd.m, gd.n, 3)) for gd in self.grid_disc]),
             n=ArrayList([jnp.zeros((n_tstep, gd.m, gd.n, 3)) for gd in self.grid_disc]),
             kernels=[*self.kernels_b, *self.kernels_w],
@@ -1430,6 +1458,9 @@ class UVLM:
                 [jnp.zeros((gd.m + 1, gd.n + 1, 3)) for gd in self.grid_disc]
             ),
             alpha=ArrayList([jnp.zeros((gd.n,)) for gd in self.grid_disc]),
+            cl=ArrayList([jnp.zeros((gd.n,)) for gd in self.grid_disc]),
+            cd=ArrayList([jnp.zeros((gd.n,)) for gd in self.grid_disc]),
+            cm=ArrayList([jnp.zeros((gd.n,)) for gd in self.grid_disc]),
             surf_b_names=self.surf_b_names,
             surf_w_names=self.surf_w_names,
             i_ts=-1,
@@ -1498,6 +1529,9 @@ class UVLM:
             _,
             f_steady,
             f_unsteady,
+            _,
+            _,
+            _,
             _,
         ) = inner_case.base_solve(
             q_nm1=q_nm1,

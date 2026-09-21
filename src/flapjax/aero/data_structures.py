@@ -77,6 +77,9 @@ class AeroCase:
         f_steady: ArrayList,
         f_unsteady: ArrayList | None,
         alpha: ArrayList | None,
+        cl: ArrayList | None,
+        cd: ArrayList | None,
+        cm: ArrayList | None,
         cs_ang: dict[str, Array],
         cs_vel: dict[str, Array],
         kernels: Sequence[KernelFunction],
@@ -108,6 +111,9 @@ class AeroCase:
         :param f_unsteady: Unsteady force contributions or ``None``.
         :param alpha: Per-strip effective angle of attack extracted from the UVLM sectional lift; batched:
             ``(n_surf, )(n_tstep, n)``, snapshot: ``(n_surf, )(n, )``, or ``None``.
+        :param cl: Per-strip lift coefficient sampled from the airfoil polars, or ``None`` for no polars.
+        :param cd: Per-strip drag coefficient sampled from the airfoil polars, or ``None`` for no polars.
+        :param cm: Per-strip moment coefficient sampled from the airfoil polars, or ``None`` for no polars.
         :param cs_ang: Control surface angle time history, ``{name: (n_tstep,)}`` (batched) or ``{name: ()}`` (snapshot).
         :param cs_vel: Control surface velocity time history.
         :param kernels: Kernel functions for both bound and wake source grids.
@@ -135,6 +141,9 @@ class AeroCase:
         self.f_steady: ArrayList = f_steady
         self.f_unsteady: ArrayList | None = f_unsteady
         self.alpha: ArrayList | None = alpha
+        self.cl: ArrayList | None = cl
+        self.cd: ArrayList | None = cd
+        self.cm: ArrayList | None = cm
         self.cs_ang: dict[str, Array] = cs_ang
         self.cs_vel: dict[str, Array] = cs_vel
         self.t: Array = t
@@ -210,6 +219,37 @@ class AeroCase:
     @alpha.setter
     def alpha(self, value: ArrayList | None) -> None:
         self._alpha = value
+
+    @property
+    def cl(self) -> ArrayList:
+        if self._cl is None:
+            # default to the flat-plate value
+            self._cl = 2.0 * jnp.pi * self.alpha
+        return self._cl
+
+    @cl.setter
+    def cl(self, value: ArrayList | None) -> None:
+        self._cl = value
+
+    @property
+    def cd(self) -> ArrayList:
+        if self._cd is None:
+            self._cd = ArrayList.zeros_like(self.gamma_b)
+        return self._cd
+
+    @cd.setter
+    def cd(self, value: ArrayList | None) -> None:
+        self._cd = value
+
+    @property
+    def cm(self) -> ArrayList:
+        if self._cm is None:
+            self._cm = ArrayList.zeros_like(self.gamma_b)
+        return self._cm
+
+    @cm.setter
+    def cm(self, value: ArrayList | None) -> None:
+        self._cm = value
 
     @property
     def gamma_b_dot(self) -> ArrayList:
@@ -326,6 +366,9 @@ class AeroCase:
             f_steady=self.f_steady[i_surf][i_ts, ...],
             f_unsteady=self.f_unsteady[i_surf][i_ts, ...],
             alpha=self.alpha[i_surf][i_ts, ...],
+            cl=self.cl[i_surf][i_ts, ...],
+            cd=self.cd[i_surf][i_ts, ...],
+            cm=self.cm[i_surf][i_ts, ...],
             surf_b_name=self.surf_b_names[i_surf],
             surf_w_name=self.surf_w_names[i_surf],
             i_ts=i_ts,
@@ -349,6 +392,9 @@ class AeroCase:
             f_steady=self.f_steady[idx],
             f_unsteady=self.f_unsteady[idx],
             alpha=self.alpha[idx],
+            cl=self.cl[idx],
+            cd=self.cd[idx],
+            cm=self.cm[idx],
             surf_b_name=self.surf_b_names[idx],
             surf_w_name=self.surf_w_names[idx],
             i_ts=int(self.i_ts),
@@ -397,6 +443,9 @@ class AeroCase:
             self.alpha[i_surf] = (
                 self.alpha[i_surf].at[i_ts, ...].set(snapshot.alpha[i_surf])
             )
+            self.cl[i_surf] = self.cl[i_surf].at[i_ts, ...].set(snapshot.cl[i_surf])
+            self.cd[i_surf] = self.cd[i_surf].at[i_ts, ...].set(snapshot.cd[i_surf])
+            self.cm[i_surf] = self.cm[i_surf].at[i_ts, ...].set(snapshot.cm[i_surf])
 
     def plot(
         self,
@@ -550,6 +599,9 @@ class AeroCase:
             if self.f_unsteady is not None
             else None,
             alpha=self.alpha.index_all(idx, ...),
+            cl=self.cl.index_all(idx, ...),
+            cd=self.cd.index_all(idx, ...),
+            cm=self.cm.index_all(idx, ...),
             cs_ang={k: jnp.atleast_1d(v)[idx, ...] for k, v in self.cs_ang.items()},
             cs_vel={k: jnp.atleast_1d(v)[idx, ...] for k, v in self.cs_vel.items()},
             surf_b_names=self.surf_b_names,
@@ -592,6 +644,9 @@ class AeroCase:
             f_steady=_expand(self.f_steady),
             f_unsteady=_expand(self.f_unsteady),
             alpha=_expand(self.alpha),
+            cl=_expand(self.cl),
+            cd=_expand(self.cd),
+            cm=_expand(self.cm),
             cs_ang={k: jnp.full(n_tstep, v) for k, v in self.cs_ang.items()},
             cs_vel={k: jnp.full(n_tstep, v) for k, v in self.cs_vel.items()},
             kernels=self.kernels,
@@ -629,6 +684,9 @@ class _AeroSurfacePlot:
         f_steady: Array,
         f_unsteady: Array,
         alpha: Array,
+        cl: Array,
+        cd: Array,
+        cm: Array,
         surf_b_name: str,
         surf_w_name: str,
         i_ts: int,
@@ -642,6 +700,9 @@ class _AeroSurfacePlot:
         self.f_steady = f_steady
         self.f_unsteady = f_unsteady
         self.alpha = alpha
+        self.cl = cl
+        self.cd = cd
+        self.cm = cm
         self.surf_b_name = surf_b_name
         self.surf_w_name = surf_w_name
         self.i_ts = i_ts
@@ -670,6 +731,9 @@ class _AeroSurfacePlot:
                         "gamma": self.gamma_b,
                         "gamma_dot": self.gamma_b_dot,
                         "alpha": jnp.broadcast_to(self.alpha, self.gamma_b.shape),
+                        "cl": jnp.broadcast_to(self.cl, self.gamma_b.shape),
+                        "cd": jnp.broadcast_to(self.cd, self.gamma_b.shape),
+                        "cm": jnp.broadcast_to(self.cm, self.gamma_b.shape),
                     },
                 )
             )

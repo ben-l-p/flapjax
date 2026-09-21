@@ -2858,7 +2858,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="trimmed-x-hale-free-flying-gust-response">Trimmed X-HALE - Free-Flying Gust Response<a class="anchor-link" href="#trimmed-x-hale-free-flying-gust-response">¶</a></h1><p>This notebook trims the X-HALE aircraft, then releases it as a free-flying body through a 1-minus-cosine gust. We here use a half-model of the aircraft, with symmetry about the fuselage centreline.</p>
-<p>This case takes approximately 4 minutes to trim 25 minutes to sove 2800 timesteps on an M2 Macbook Air. Note that we disable timestep console prints as this causes issues with Jupyter notebook output buffering - to see progress, convert this to a regular Python script and run without setting the verbosity to silent.</p>
+<p>This case takes approximately 4 minutes to trim, and 3 minutes to sovle 2800 timesteps, on an M2 Macbook Air. Note that we disable timestep console prints as this causes issues with Jupyter notebook output buffering - to see progress, convert this to a regular Python script and run without setting the verbosity to silent.</p>
 </div>
 </div>
 </div>
@@ -3360,7 +3360,7 @@ plt.show()</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="vtk-output">VTK output<a class="anchor-link" href="#vtk-output">¶</a></h3><p>Optionally write Paraview-compatible VTK files for 3D visualisation.</p>
+<h3 id="vtk-output">VTK output<a class="anchor-link" href="#vtk-output">¶</a></h3><p>Write Paraview-compatible VTK files for 3D visualisation. Write every 20th timestep to reduce file size.</p>
 </div>
 </div>
 </div>
@@ -3383,9 +3383,9 @@ plt.show()</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># out_paths = dynamic_sol.plot("./xhale_output/")</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">out_paths</span> <span class="o">=</span> <span class="n">dynamic_sol</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">"./xhale_output/"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-11"># out_paths = dynamic_sol.plot("./xhale_output/")</div>
+<div class="clipboard-copy-txt" id="cell-11">out_paths = dynamic_sol.plot("./xhale_output/", index=slice(0, None, 20))</div>
 </div>
 </div>
 </div>

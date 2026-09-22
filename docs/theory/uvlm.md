@@ -119,3 +119,23 @@ which also includes induced velocity from the vortex and results in a characteri
 considerable computational cost for only a small change in the results and is often omitted. These can be toggled by
 setting the ``free_wake`` parameter when creating a
 ``UVLM`` instance.
+
+## Compressibility correction (Prandtl-Glauert)
+
+The UVLM is otherwise incompressible. A subsonic compressibility correction can be applied by setting ``mach`` on a
+``FlowField`` instance (default 0, i.e. incompressible), which defines the Prandtl-Glauert factor
+$\beta = \sqrt{1 - M^2}$. The correction uses the rigorous 3D Prandtl-Glauert-Göthert transform: components of the
+aerodynamic grid parallel to the freestream direction are left unchanged, while components perpendicular to the
+freestream are scaled by $\beta$,
+
+$$
+\pmb{\bar{\zeta}} = \pmb{\zeta}_\parallel + \beta \pmb{\zeta}_\perp
+$$
+
+The AIC matrix, boundary condition, and bound/wake circulation solve are all performed on this transformed geometry,
+exactly as for the incompressible problem, giving a transformed circulation $\bar{\mathbf{\Gamma}}$. The physical
+circulation is then recovered via Göthert's rule
+
+$$
+\mathbf{\Gamma} = \bar{\mathbf{\Gamma}} / \beta^2
+$$

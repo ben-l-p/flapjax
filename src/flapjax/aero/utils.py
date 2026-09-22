@@ -434,16 +434,19 @@ def strip_alpha(
     f_steady: ArrayList,
     v_func: Callable[[Array], Array],
     rho: Array,
+    beta: Array,
 ) -> ArrayList:
     r"""
     Compute the per-strip effective angle of attack from the UVLM sectional forcing. For each spanwise strip, the strip
     total force is projected onto the local lift direction to obtain the strip lift coefficient. The angle of attack is
-    found by using a lift slope of 2 pi.
+    found by using a Prandtl-Glauert-corrected lift slope of ``2 * pi / beta``, since
+    ``f_steady`` already reflects any compressibility correction applied to the circulation.
 
     :param zeta_b: Bound grid coordinates, ``(n_surf, )(zeta_m, zeta_n, 3)``.
     :param f_steady: Steady forcing, ``(n_surf, )(zeta_m, zeta_n, 3)``.
     :param v_func: Reference velocity as a function of position, ``(..., 3) -> (..., 3)``.
     :param rho: Flow density.
+    :param beta: Prandtl-Glauert compressibility factor, ``()``.
     :return: Per-surface strip angle of attack, ``(n_surf, )(n_strip,)``.
     """
     alphas = ArrayList([])
@@ -473,9 +476,9 @@ def strip_alpha(
         f_strip = neighbour_average(f_surf, axes=1).sum(axis=0)
         q = 0.5 * rho * v_mag2
 
-        # correct from 2 pi lift slope to custom input
+        # correct from 2 pi / beta lift slope to custom input
         cl_uvlm = jnp.sum(f_strip * e_l, axis=-1) / (q * c_len * b_len)
-        alphas.append(cl_uvlm / (2.0 * jnp.pi))
+        alphas.append(cl_uvlm * beta / (2.0 * jnp.pi))
     return alphas
 
 
@@ -484,6 +487,7 @@ def apply_polar_correction(
     f_steady: ArrayList,
     v_func: Callable[[Array], Array],
     rho: Array,
+    beta: Array,
     polar_data: Sequence[Any | None],
     polar_function: Sequence[PolarFunction | None],
     alpha: ArrayList | None = None,
@@ -495,13 +499,14 @@ def apply_polar_correction(
     For each surface where a polar database is provided, and for each spanwise strip, we firstly compute the strip
     forcing in the global frame. This forcing can then be converted into the local strip coordinate frame. We
     compute the velocity at the mid-strip point, from which we can calculate the lift coefficient. By assuming a
-    ``2*pi`` potential flow lift slope, we can correct the forcing from ``polar_function``'s output for lift, drag
-    and moment. To correct the output, we distribute the forcing back onto the grid in a way which satisfies the
-    moment and force balance.
+    Prandtl-Glauert-corrected ``2*pi/beta`` potential flow lift slope, we can correct the forcing from
+    ``polar_function``'s output for lift, drag and moment. To correct the output, we distribute the forcing back onto
+    the grid in a way which satisfies the moment and force balance.
     :param zeta_b: Bound grid coordinates, ``(n_surf, )(zeta_m, zeta_n, 3)``.
     :param f_steady: Steady vertex forcing, ``(n_surf, )(zeta_m, zeta_n, 3)``.
     :param v_func: Reference velocity as a function of position, ``(..., 3) -> (..., 3)``.
     :param rho: Flow density.
+    :param beta: Prandtl-Glauert compressibility factor, ``()``.
     :param polar_data: Per-surface polar database, length ``n_surf``. Each entry is either ``None`` (no
         correction for that surface) or an arbitrary data structure.
     :param polar_function: Per-surface function mapping ``(alpha, polar_data) -> (cl, cd, cm)`` about the
@@ -515,7 +520,9 @@ def apply_polar_correction(
     """
     if alpha is None:
         # compute the angles of attack for each strip if not passed
-        alpha = strip_alpha(zeta_b=zeta_b, f_steady=f_steady, v_func=v_func, rho=rho)
+        alpha = strip_alpha(
+            zeta_b=zeta_b, f_steady=f_steady, v_func=v_func, rho=rho, beta=beta
+        )
 
     f_out = ArrayList([])
     lift_scale_out = ArrayList([])
@@ -531,7 +538,7 @@ def apply_polar_correction(
             # no correction to apply
             f_out.append(f_surf)
             lift_scale_out.append(jnp.ones(n))
-            cl_out.append(2.0 * jnp.pi * alpha_surf)
+            cl_out.append(2.0 * jnp.pi * alpha_surf / beta)
             cd_out.append(jnp.zeros(n))
             cm_out.append(jnp.zeros(n))
             continue
@@ -577,8 +584,8 @@ def apply_polar_correction(
         assert func is not None
         cl_p, cd_p, cm_p = func(alpha_surf, database)
 
-        # lift scale factor cl_polar / cl_uvlm with cl_uvlm = 2 pi alpha
-        cl_uvlm = 2.0 * jnp.pi * alpha_surf
+        # lift scale factor cl_polar / cl_uvlm with cl_uvlm = 2 pi alpha / beta
+        cl_uvlm = 2.0 * jnp.pi * alpha_surf / beta
         lift_scale = jnp.where(jnp.abs(cl_uvlm) > EPSILON, cl_p / cl_uvlm, 1.0)
         lift_scale_out.append(lift_scale)
         cl_out.append(cl_p)
@@ -876,6 +883,21 @@ def mirror_grid(zeta: Array, mirror_point: Array, mirror_normal: Array) -> Array
     return (
         zeta - 2.0 * diff_n[:, :, None] * mirror_normal[None, None, :]
     )  # (zeta_m, zeta_n, 3)
+
+
+def prandtl_glauert_transform(zeta: Array, u_inf_dir: Array, beta: Array) -> Array:
+    r"""
+    Apply the Prandtl-Glauert transform, used to map compressible-flow geometry onto its
+    incompressible-equivalent for solving the ordinary (incompressible) UVLM equations. Components parallel to
+    the freestream direction are unchanged; components perpendicular to the freestream are scaled by
+    ``beta = sqrt(1 - M^2)``.
+    :param zeta: Points or velocities to transform, ``(..., 3)``.
+    :param u_inf_dir: Unit freestream direction, ``(3, )``.
+    :param beta: Prandtl-Glauert compressibility factor, ``()``.
+    :return: Transformed points or velocities, ``(..., 3)``.
+    """
+    r_par = jnp.einsum("...k,k->...", zeta, u_inf_dir)[..., None] * u_inf_dir
+    return zeta + (beta - 1.0) * (zeta - r_par)
 
 
 def project_forcing_to_beam(

@@ -7,6 +7,7 @@ from jax import Array
 from jax import numpy as jnp
 
 from flapjax.algebra.array_utils import ArrayList, check_arr_shape
+from flapjax.utils.print_utils import warn
 from flapjax.utils.utils import make_pytree
 
 
@@ -23,11 +24,14 @@ class FlowField:
         u_inf: Array,
         rho: float | Array,
         relative_motion: bool,
+        mach: float | Array = 0.0,
     ):
         r"""
         :param u_inf: Base flow velocity, ``(3, )``.
         :param rho: Flow density.
         :param relative_motion: If True, the air moves, if False, the plane moves.
+        :param mach: Freestream Mach number, used to apply a Prandtl-Glauert compressibility correction.
+        Defaults to 0 (incompressible).
         """
         check_arr_shape(u_inf, (3,), name="u_inf")
         self.u_inf: Array = u_inf
@@ -36,6 +40,15 @@ class FlowField:
         self.u_inf_dir: Array = u_inf / self.u_inf_mag
         self.q_inf: Array = 0.5 * rho * self.u_inf_mag**2  # dynamic pressure
         self.relative_motion: bool = relative_motion
+
+        if isinstance(mach, (int, float)) and mach >= 1.0:
+            warn(
+                "Prandtl-Glauert compressibility correction requires subsonic flow (Mach < 1)."
+            )
+        self.mach: Array = jnp.array(mach)
+        self.beta: Array = jnp.sqrt(
+            1.0 - self.mach**2
+        )  # Prandtl-Glauert compressibility factor
 
     def __call__(self, x: Array, t: Array) -> Array:
         """
@@ -74,7 +87,7 @@ class FlowField:
         Extract the design variables associated with this flow field.
         :return: Dictionary of design variables.
         """
-        return {"u_inf": self.u_inf, "rho": self.rho}
+        return {"u_inf": self.u_inf, "rho": self.rho, "mach": self.mach}
 
     def from_design_variables(self, design_variables: dict[str, Array]) -> FlowField:
         r"""
@@ -114,6 +127,7 @@ class OneMinusCosineFlowField(FlowField):
         gust_travel_direction: Array | None = None,
         gust_amplitude_direction: Array | None = None,
         gust_x0: Array | None = None,
+        mach: float | Array = 0.0,
     ):
         r"""
         :param u_inf: Base flow velocity, ``(3, )``.
@@ -126,8 +140,10 @@ class OneMinusCosineFlowField(FlowField):
         :param gust_amplitude_direction: Vector which defines the direction that the gust amplitude acts, ``(3, )``. Defaults
         to the z-direction if None.
         :param gust_x0: Coordinate on the initial leading edge of the gust, ``(3, )``. Defaults to 0 if None.
+        :param mach: Freestream Mach number, used to apply a Prandtl-Glauert compressibility correction.
+        Defaults to 0 (incompressible).
         """
-        super().__init__(u_inf, rho, relative_motion)
+        super().__init__(u_inf, rho, relative_motion, mach=mach)
 
         # base gust parameters
         self.gust_amplitude: Array = jnp.array(gust_amplitude)
@@ -187,6 +203,7 @@ class OneMinusCosineFlowField(FlowField):
             "rho": self.rho,
             "gust_amplitude": self.gust_amplitude,
             "gust_length": self.gust_length,
+            "mach": self.mach,
         }
 
     def from_design_variables(

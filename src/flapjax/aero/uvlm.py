@@ -38,6 +38,7 @@ from flapjax.aero.utils import (
     compute_mirror_edges,
     compute_nc,
     compute_steady_forcing,
+    prandtl_glauert_transform,
     project_forcing_to_beam,
     propagate_wake,
     strip_alpha,
@@ -931,12 +932,29 @@ class UVLM:
         c_n = compute_c(zetas=zeta_b_n)
         nc_n = compute_nc(zetas=zeta_b_n)
 
+        # Prandtl-Glauert compressibility transform: components parallel to the freestream are unchanged, components
+        # perpendicular to the freestream are scaled into new coordinates denoted with bar
+        # physical circulation is recovered afterwardss as gamma = gamma_bar / beta**2
+        x_hat = self.flowfield.u_inf_dir
+        beta = self.flowfield.beta
+
+        def _pg(z: Array) -> Array:
+            return prandtl_glauert_transform(z, x_hat, beta)
+
+        zeta_b_bar_n = ArrayList([_pg(z) for z in zeta_b_n])
+        c_n_bar = compute_c(zetas=zeta_b_bar_n)
+        nc_n_bar = compute_nc(zetas=zeta_b_bar_n)
+        mirror_point_bar = (
+            _pg(self.mirror_point) if self.mirror_point is not None else None
+        )
+
         if zeta_b_dot_n is None:
-            c_dot_n: ArrayList | None = None
+            c_dot_n_bar: ArrayList | None = None
         else:
             c_dot_n = ArrayList(
                 [neighbour_average(zeta_dot, axes=(0, 1)) for zeta_dot in zeta_b_dot_n]
             )
+            c_dot_n_bar = ArrayList([_pg(cd) for cd in c_dot_n])
 
         if static:
             if horseshoe:
@@ -954,6 +972,8 @@ class UVLM:
                 zeta_w_n = self.initialise_wake(zeta_b_n)
 
             gamma_w_n = None  # allocate later from gamma_b
+            gamma_w_bar_n: ArrayList | None = None
+            zeta_w_bar_n: ArrayList | None = ArrayList([_pg(z) for z in zeta_w_n])
         else:
             assert q_nm1 is not None and zeta_b_nm1 is not None
 
@@ -992,44 +1012,51 @@ class UVLM:
                     [zw + nub * self.dt for zw, nub in zip(zeta_w_n, nu_w)]
                 )
 
+            zeta_w_bar_n = ArrayList([_pg(z) for z in zeta_w_n])
+            gamma_w_bar_n = ArrayList([beta**2 * gw for gw in gamma_w_n])
+
         aic_solve = compute_aic_solve(
-            cs=c_n,
-            ns=nc_n,
-            zetas_b=zeta_b_n,
-            zetas_w=zeta_w_n if static else None,
+            cs=c_n_bar,
+            ns=nc_n_bar,
+            zetas_b=zeta_b_bar_n,
+            zetas_w=zeta_w_bar_n if static else None,
             kernels_b=self.kernels_b,
             kernels_w=self.kernels_w if static else None,
             batch_size=self.batch_size,
             mirror_normal=self.mirror_normal,
-            mirror_point=self.mirror_point,
+            mirror_point=mirror_point_bar,
         )
 
+        # sampled at the physical collocation points, not transformed coordinates
         v_bc_n = self.flowfield.surf_vmap_call(xs=c_n, t=t_n)  # (n_surf, )(m, n, 3)
 
         if not static:
-            v_bc_n -= c_dot_n
+            assert c_dot_n_bar is not None
+            v_bc_n -= c_dot_n_bar
 
-            if zeta_w_n is None or gamma_w_n is None:
+            if zeta_w_bar_n is None or gamma_w_bar_n is None:
                 raise ValueError("zeta_w_nm1 and gamma_w_nm1 are None")
 
             v_bc_n += compute_v_ind(
-                cs=c_n,
-                zetas=zeta_w_n,
-                gammas=gamma_w_n,
+                cs=c_n_bar,
+                zetas=zeta_w_bar_n,
+                gammas=gamma_w_bar_n,
                 kernels=self.kernels_w,
                 batch_size=self.batch_size,
                 mirror_normal=self.mirror_normal,
-                mirror_point=self.mirror_point,
+                mirror_point=mirror_point_bar,
             )
 
         # for linearised case, add bound grid upwash
         if nu_b is not None:
-            v_bc_n += compute_c(nu_b)
+            v_bc_n += compute_c(ArrayList([_pg(nb) for nb in nu_b]))
 
-        v_bc_n = ArrayList.einsum("ijk,ijk->ij", v_bc_n, nc_n)  # (c_tot, )
+        v_bc_n = ArrayList.einsum("ijk,ijk->ij", v_bc_n, nc_n_bar)  # (c_tot, )
 
-        gamma_b_vec_n = jnp.linalg.solve(aic_solve, -v_bc_n.ravel())
-        gamma_b_n = self._vec_to_gamma_b_list(gamma_b_vec_n)
+        gamma_b_bar_vec_n = jnp.linalg.solve(aic_solve, -v_bc_n.ravel())
+        gamma_b_n = ArrayList(
+            [g / beta**2 for g in self._vec_to_gamma_b_list(gamma_b_bar_vec_n)]
+        )
 
         def _static_wake_from_gamma_b(gamma_b: ArrayList) -> ArrayList:
             return ArrayList(
@@ -1093,15 +1120,17 @@ class UVLM:
             f_steady=f_steady,
             v_func=v_freestream_func,
             rho=self.flowfield.rho,
+            beta=beta,
         )
 
-        # update forcing with any polar corrections; surfaces with a ``None`` database report the flat-plate
-        # (2 pi alpha) values implied by the UVLM itself
+        # update forcing with any polar corrections; surfaces with a ``None`` database report the Prandtl-Glauert
+        # corrected flat-plate (2 pi alpha / beta) values implied by the UVLM itself
         f_steady, lift_scale, cl_n, cd_n, cm_n = apply_polar_correction(
             zeta_b=zeta_b_n,
             f_steady=f_steady,
             v_func=v_freestream_func,
             rho=self.flowfield.rho,
+            beta=beta,
             polar_data=self.polar_data,
             polar_function=self.polar_function,
             alpha=alpha_n,
@@ -1655,9 +1684,25 @@ class UVLM:
         cs_ang_n, cs_vel_n = dv.aero.get_cs_n(i_ts=i_ts, dv_full=dv_full.aero)
 
         zeta_b_n = inner_case.hg_to_zeta_b(hg_n=hg_n, cs_ang_n=cs_ang_n)
+        c_n = compute_c(
+            zetas=zeta_b_n
+        )  # physical collocation points, used for freestream sampling only
 
-        c_n = compute_c(zetas=zeta_b_n)
-        nc_n = compute_nc(zetas=zeta_b_n)
+        # Prandtl-Glauert compressibility transformforward solve.
+        x_hat = inner_case.flowfield.u_inf_dir
+        beta = inner_case.flowfield.beta
+
+        def _pg(z: Array) -> Array:
+            return prandtl_glauert_transform(z, x_hat, beta)
+
+        zeta_b_bar_n = ArrayList([_pg(z) for z in zeta_b_n])
+        c_n_bar = compute_c(zetas=zeta_b_bar_n)
+        nc_n_bar = compute_nc(zetas=zeta_b_bar_n)
+        mirror_point_bar = (
+            _pg(inner_case.mirror_point)
+            if inner_case.mirror_point is not None
+            else None
+        )
 
         zeta_b_dot_n = inner_case.hg_dot_to_zeta_b_dot(
             hg_n=hg_n, hg_dot_n=hg_dot_n, cs_ang_n=cs_ang_n, cs_vel_n=cs_vel_n
@@ -1666,17 +1711,21 @@ class UVLM:
         c_dot_n = ArrayList(
             [neighbour_average(zeta_dot, axes=(0, 1)) for zeta_dot in zeta_b_dot_n]
         )
+        c_dot_n_bar = ArrayList([_pg(cd) for cd in c_dot_n])
+
+        zeta_w_bar_n = ArrayList([_pg(z) for z in zeta_w_n])
+        gamma_w_bar_n = ArrayList([beta**2 * gw for gw in gamma_w_n])
 
         aic_solve = compute_aic_solve(
-            cs=c_n,
-            ns=nc_n,
-            zetas_b=zeta_b_n,
+            cs=c_n_bar,
+            ns=nc_n_bar,
+            zetas_b=zeta_b_bar_n,
             zetas_w=None,
             kernels_b=inner_case.kernels_b,
             kernels_w=None,
             batch_size=self.batch_size,
             mirror_normal=inner_case.mirror_normal,
-            mirror_point=inner_case.mirror_point,
+            mirror_point=mirror_point_bar,
         )
 
         v_bc_n = inner_case.flowfield.surf_vmap_call(
@@ -1684,23 +1733,25 @@ class UVLM:
         )  # (n_surf, )(m, n, 3)
 
         # structural component
-        v_bc_n -= c_dot_n
+        v_bc_n -= c_dot_n_bar
 
         # find wake component
         v_bc_n += compute_v_ind(
-            cs=c_n,
-            zetas=zeta_w_n,
-            gammas=gamma_w_n,
+            cs=c_n_bar,
+            zetas=zeta_w_bar_n,
+            gammas=gamma_w_bar_n,
             kernels=inner_case.kernels_w,
             batch_size=self.batch_size,
             mirror_normal=inner_case.mirror_normal,
-            mirror_point=inner_case.mirror_point,
+            mirror_point=mirror_point_bar,
         )
 
-        v_bc_n = ArrayList.einsum("ijk,ijk->ij", v_bc_n, nc_n)  # (c_tot, )
+        v_bc_n = ArrayList.einsum("ijk,ijk->ij", v_bc_n, nc_n_bar)  # (c_tot, )
 
-        gamma_b_vec_n = jnp.linalg.solve(aic_solve, -v_bc_n.ravel())
-        gamma_b_nm1_update = self._vec_to_gamma_b_list(gamma_b_vec_n)
+        gamma_b_bar_vec_n = jnp.linalg.solve(aic_solve, -v_bc_n.ravel())
+        gamma_b_nm1_update = ArrayList(
+            [g / beta**2 for g in self._vec_to_gamma_b_list(gamma_b_bar_vec_n)]
+        )
 
         return (gamma_b_nm1_update - gamma_b_n).ravel()
 

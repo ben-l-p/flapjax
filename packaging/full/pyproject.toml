@@ -1,6 +1,6 @@
 [project]
 name = "flapjax-full"
-version = "1.3.6"
+version = "1.3.7"
 description = "FLAPJAX with tests and tutorial notebooks bundled. Install this OR flapjax, not both."
 authors = [{ name = "Ben Preston", email = "b.preston23@imperial.ac.uk" }]
 keywords = ["aeroelasticity", "unsteady vortex lattice method", "nonlinear beam", "adjoint methods"]

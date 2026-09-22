@@ -1681,6 +1681,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UVLM
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1697,6 +1715,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#compressibility-correction-prandtl-glauert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compressibility correction (Prandtl-Glauert)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1813,6 +1861,25 @@
   
     
   
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#compressibility-correction-prandtl-glauert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compressibility correction (Prandtl-Glauert)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1932,6 +1999,21 @@ which also includes induced velocity from the vortex and results in a characteri
 considerable computational cost for only a small change in the results and is often omitted. These can be toggled by
 setting the <code>free_wake</code> parameter when creating a
 <code>UVLM</code> instance.</p>
+<h2 id="compressibility-correction-prandtl-glauert">Compressibility correction (Prandtl-Glauert)<a class="headerlink" href="#compressibility-correction-prandtl-glauert" title="Permanent link">&para;</a></h2>
+<p>The UVLM is otherwise incompressible. A subsonic compressibility correction can be applied by setting <code>mach</code> on a
+<code>FlowField</code> instance (default 0, i.e. incompressible), which defines the Prandtl-Glauert factor
+<span class="arithmatex">\(\beta = \sqrt{1 - M^2}\)</span>. The correction uses the rigorous 3D Prandtl-Glauert-Göthert transform: components of the
+aerodynamic grid parallel to the freestream direction are left unchanged, while components perpendicular to the
+freestream are scaled by <span class="arithmatex">\(\beta\)</span>,</p>
+<div class="arithmatex">\[
+\pmb{\bar{\zeta}} = \pmb{\zeta}_\parallel + \beta \pmb{\zeta}_\perp
+\]</div>
+<p>The AIC matrix, boundary condition, and bound/wake circulation solve are all performed on this transformed geometry,
+exactly as for the incompressible problem, giving a transformed circulation <span class="arithmatex">\(\bar{\mathbf{\Gamma}}\)</span>. The physical
+circulation is then recovered via Göthert's rule</p>
+<div class="arithmatex">\[
+\mathbf{\Gamma} = \bar{\mathbf{\Gamma}} / \beta^2
+\]</div>
 
 
 

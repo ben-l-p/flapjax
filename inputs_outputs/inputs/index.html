@@ -953,6 +953,8 @@
       
         
       
+        
+      
     
     
     
@@ -1086,6 +1088,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tutorials/cantilever_wing_polar_correction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cantilever Wing with Polar Corrections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../tutorials/patil_wing_control/" class="md-nav__link">
         
   
@@ -1190,10 +1220,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_8" >
         
           
-          <label class="md-nav__link" for="__nav_3_3_7" id="__nav_3_3_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_3_8" id="__nav_3_3_8_label" tabindex="0">
             
   
   
@@ -1211,8 +1241,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_3_7">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1369,10 +1399,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_9" >
         
           
-          <label class="md-nav__link" for="__nav_3_3_8" id="__nav_3_3_8_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_3_9" id="__nav_3_3_9_label" tabindex="0">
             
   
   
@@ -1390,8 +1420,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_3_8">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2466,7 +2496,8 @@ middle node (index 10) being the middle hinge, where both hinges are free to rot
     <span class="n">gamma_dot_relaxation</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
     <span class="n">include_unsteady_force</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
-    <span class="n">polars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">polar_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">polar_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">polar_circulation_scale</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -2564,10 +2595,16 @@ wake panel counts respectively, and <code>n_surf</code> to refer to the number o
 <td>Batch size for vectorised AIC computations. Larger values may be faster, but use more memory. <code>None</code> is equivalent to a full <code>vmap</code>.</td>
 </tr>
 <tr>
-<td><code>polars</code></td>
+<td><code>polar_function</code></td>
 <td>Sequence or <code>None</code></td>
 <td><code>None</code></td>
-<td>Per-surface, per-strip tabulated airfoil polars for sectional force correction. <code>None</code> disables polar correction for all surfaces; otherwise each entry is either <code>None</code> or a sequence of <code>n</code> callables mapping <code>alpha -&gt; (cl, cd, cm)</code>.</td>
+<td>Sequence of polar functions, one per aerodynamic surface. These map f(alpha, database) -&gt; cl, cd, cm at the quarter chord. Individual entries can be set to <code>None</code> to have no polar correction for a single surface, or the full input can be <code>None</code> for no polar corections on the model.</td>
+</tr>
+<tr>
+<td><code>polar_data</code></td>
+<td>Sequence or <code>None</code></td>
+<td><code>None</code></td>
+<td>Database of polar data per aerodynamic surface with arbitrary type. <code>None</code> disables polar correction for all surfaces; set entry int he sequence to <code>None</code>to disable polar corrections for a single surface.</td>
 </tr>
 <tr>
 <td><code>polar_circulation_scale</code></td>

@@ -161,6 +161,8 @@ class AeroLinearResult:
             kernels=self.reference.kernels,
             mirror_point=None,
             mirror_normal=None,
+            mirror_edge_low=None,
+            mirror_edge_high=None,
             flowfield=self.reference.flowfield,
             dof_mapping=self.reference.dof_mapping,
             free_wake=self.reference.free_wake,

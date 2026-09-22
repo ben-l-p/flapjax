@@ -125,21 +125,24 @@ Every field below is per-surface — an `ArrayList` of length `n_surf`, ordered 
 to access the bound circulation of the first aerodynamic surface we use `AeroCase.gamma_b[0]`, The following property
 shapes are given per surface:
 
-| Field         | Shape (per surface) | Meaning                                                                                         |
-|---------------|---------------------|-------------------------------------------------------------------------------------------------|
-| `zeta_b`      | `(m+1, n+1, 3)`     | Bound-grid coordinates in the global frame..                                                    |
-| `zeta_b_dot`  | `(m+1, n+1_n, 3)`   | Bound grid vertex velocities.                                                                   |
-| `zeta_w`      | `(m_star, n+1, 3)`  | Wake grid vertex coordinates.                                                                   |
-| `gamma_b`     | `(m, n)`            | Bound panel circulation strength.                                                               |
-| `gamma_w`     | `(m_star, n)`       | Wake panel circulation strength.                                                                |
-| `gamma_b_dot` | `(m, n)`            | Time derivative of bound circulation, driving the unsteady/added-mass force.                    |
-| `f_steady`    | `(m+1, n+1, 3)`     | Steady (Kutta–Joukowski) force contribution per aerodynamic grid node.                          |
-| `f_unsteady`  | `(m+1, n+1, 3)`     | Unsteady/apparent-mass force contribution per aerodynamic grid node.                            |
-| `alpha`       | `(n,)`              | Per-spanwise-strip effective angle of attack.                                                   |
-| `cs_ang`      | `dict[str, Array]`  | Control-surface deflection time history, `{name: ()}` snapshot or `{name: (n_tstep,)}` batched. |
-| `cs_vel`      | `dict[str, Array]`  | Control-surface angular velocity time history.                                                  |
-| `c`, `nc`     | `(m, n, 3)`         | Bound panel collocation points and normals.                                                     |
-| `t`, `i_ts`   | As above            | Time / timestep index.                                                                          |
+| Field         | Shape (per surface) | Meaning                                                                                                                                                                   |
+|---------------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `zeta_b`      | `(m+1, n+1, 3)`     | Bound-grid coordinates in the global frame..                                                                                                                              |
+| `zeta_b_dot`  | `(m+1, n+1_n, 3)`   | Bound grid vertex velocities.                                                                                                                                             |
+| `zeta_w`      | `(m_star, n+1, 3)`  | Wake grid vertex coordinates.                                                                                                                                             |
+| `gamma_b`     | `(m, n)`            | Bound panel circulation strength.                                                                                                                                         |
+| `gamma_w`     | `(m_star, n)`       | Wake panel circulation strength.                                                                                                                                          |
+| `gamma_b_dot` | `(m, n)`            | Time derivative of bound circulation, driving the unsteady/added-mass force.                                                                                              |
+| `f_steady`    | `(m+1, n+1, 3)`     | Steady (Kutta–Joukowski) force contribution per aerodynamic grid node.                                                                                                    |
+| `f_unsteady`  | `(m+1, n+1, 3)`     | Unsteady/apparent-mass force contribution per aerodynamic grid node.                                                                                                      |
+| `alpha`       | `(n,)`              | Per-spanwise-strip effective angle of attack.                                                                                                                             |
+| `cl`          | `(n,)`              | Per-strip lift coefficient sampled from the airfoil polars, about the quarter-chord. Defaults to the flat-plate value `2 * pi * alpha` if no polar correction is applied. |
+| `cd`          | `(n,)`              | Per-strip drag coefficient sampled from the airfoil polars. Defaults to zero if no polar correction is applied.                                                           |
+| `cm`          | `(n,)`              | Per-strip pitching-moment coefficient sampled from the airfoil polars, about the quarter-chord. Defaults to zero if no polar correction is applied.                       |
+| `cs_ang`      | `dict[str, Array]`  | Control-surface deflection time history, `{name: ()}` snapshot or `{name: (n_tstep,)}` batched.                                                                           |
+| `cs_vel`      | `dict[str, Array]`  | Control-surface angular velocity time history.                                                                                                                            |
+| `c`, `nc`     | `(m, n, 3)`         | Bound panel collocation points and normals.                                                                                                                               |
+| `t`, `i_ts`   | As above            | Time / timestep index.                                                                                                                                                    |
 
 ---
 

@@ -85,6 +85,8 @@ class AeroCase:
         kernels: Sequence[KernelFunction],
         mirror_point: Array | None,
         mirror_normal: Array | None,
+        mirror_edge_low: ArrayList | None,
+        mirror_edge_high: ArrayList | None,
         flowfield: FlowField,
         surf_b_names: Sequence[str],
         surf_w_names: Sequence[str],
@@ -119,6 +121,9 @@ class AeroCase:
         :param kernels: Kernel functions for both bound and wake source grids.
         :param mirror_point: Point on mirror plane, ``(3, )`` or None.
         :param mirror_normal: Normal on mirror plane, ``(3, )`` or None.
+        :param mirror_edge_low: Per-surface booleans marking whether that surface's ``n=0`` edge lies on the
+            mirror plane, ``(n_surf, )()``, or None.
+        :param mirror_edge_high: As ``mirror_edge_low``, for the ``n=-1`` edge.
         :param flowfield: ``FlowField`` object which includes background velocity and density.
         :param surf_b_names: Names of bound surfaces, ``(n_surf, )``.
         :param surf_w_names: Names of wake surfaces, ``(n_surf, )``.
@@ -152,6 +157,8 @@ class AeroCase:
         self.kernels: Sequence[KernelFunction] = kernels
         self.mirror_point: Array | None = mirror_point
         self.mirror_normal: Array | None = mirror_normal
+        self.mirror_edge_low: ArrayList | None = mirror_edge_low
+        self.mirror_edge_high: ArrayList | None = mirror_edge_high
         self.flowfield: FlowField = flowfield
         self.surf_b_names: Sequence[str] = surf_b_names
         self.surf_w_names: Sequence[str] = surf_w_names
@@ -536,7 +543,12 @@ class AeroCase:
                 f_total = ArrayList([a + b for a, b in zip(f_total, self.f_unsteady)])
 
         return project_forcing_to_beam(
-            f_total=f_total, rmat=rmat, x0_aero=x0_aero, dof_mapping=self.dof_mapping
+            f_total=f_total,
+            rmat=rmat,
+            x0_aero=x0_aero,
+            dof_mapping=self.dof_mapping,
+            mirror_edge_low=self.mirror_edge_low,
+            mirror_edge_high=self.mirror_edge_high,
         )
 
     def _t_at(self, i_ts: int | None) -> Array:
@@ -614,6 +626,8 @@ class AeroCase:
             kernels=self.kernels,
             mirror_point=self.mirror_point,
             mirror_normal=self.mirror_normal,
+            mirror_edge_low=self.mirror_edge_low,
+            mirror_edge_high=self.mirror_edge_high,
             flowfield=self.flowfield,
             dof_mapping=self.dof_mapping,
             batch_size=self.batch_size,
@@ -652,6 +666,8 @@ class AeroCase:
             kernels=self.kernels,
             mirror_point=self.mirror_point,
             mirror_normal=self.mirror_normal,
+            mirror_edge_low=self.mirror_edge_low,
+            mirror_edge_high=self.mirror_edge_high,
             flowfield=self.flowfield,
             surf_b_names=self.surf_b_names,
             surf_w_names=self.surf_w_names,

@@ -327,7 +327,7 @@ class DesignVariables:
                     sub_r = _inner_ravel(sub_var)
                     if sub_r is not None:
                         sub_parts.append(sub_r)
-                return jnp.concatenate(sub_parts)
+                return jnp.concatenate(sub_parts, axis=-1)
             elif isinstance(var, dict):
                 if not var:
                     return None

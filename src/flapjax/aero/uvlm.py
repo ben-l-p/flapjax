@@ -35,6 +35,7 @@ from flapjax.aero.utils import (
     apply_polar_correction,
     biot_savart_epsilon,
     compute_c,
+    compute_mirror_edges,
     compute_nc,
     compute_steady_forcing,
     project_forcing_to_beam,
@@ -99,7 +100,7 @@ class UVLM:
         "include_unsteady_force",
         "grid_func",
         "batch_size",
-        "polars",
+        "polar_function",
         "polar_circulation_scale",
     )
 
@@ -176,7 +177,8 @@ class UVLM:
         gamma_dot_relaxation: float | Array = 0.7,
         include_unsteady_force: bool = True,
         batch_size: int | None = 64,
-        polars: Sequence[Sequence[PolarFunction] | None] | None = None,
+        polar_data: Sequence[Any | None] | None = None,
+        polar_function: Sequence[PolarFunction | None] | None = None,
         polar_circulation_scale: float = 0.0,
     ) -> None:
         r"""
@@ -198,10 +200,11 @@ class UVLM:
         :param include_unsteady_force: If True, include forces due to apparent mass for simulation.
         :param batch_size: Batch size for vectorising AIC computations. Larger values may result in faster computations,
         at the expense of increased memory usage. Setting to None is equivelant to a vmap.
-        :param polars: Optional per-surface tabulated airfoil polars used to correct the UVLM sectional forcing. Each
-        entry is either ``None``, which applies no correction, or a sequence of ``n`` per-strip
-        callables mapping ``alpha -> (cl, cd, cm)`` about the quarter-chord. If ``None``, no correction is applied on
-        any surface.
+        :param polar_data: Optional per-surface polar database used to correct the UVLM sectional forcing, which can
+        be an arbitrary data type.
+        :param polar_function: Per-surface function mapping ``(alpha, database) -> (cl, cd, cm)`` about the
+        quarter-chord. Entries of ``None`` in the sequence indicate no polar correction for that surface, or set the
+        input value to ``None`` to apply no polar correction for any surface.
         :param polar_circulation_scale: Factor in ``[0, 1]`` controlling how much of the per-strip lift
         correction factor ``cl_polar / cl_uvlm`` is applied to the bound circulation before it is stored and convected
         into the wake. A valud of 0 does not correct the circulation, whereas 1 fully rescales it so the shed vortex
@@ -255,6 +258,11 @@ class UVLM:
         self.zeta_b_ref = None
         self.zeta_w_ref = None
 
+        # placeholder for which surfaces have spanwise edges that lie on the mirror plane
+        # needed for force corrections
+        self.mirror_edge_low: ArrayList | None = None
+        self.mirror_edge_high: ArrayList | None = None
+
         self.gamma_b_slice, self.gamma_w_slice = self._make_gamma_slices()
 
         # store DOF mapping
@@ -290,17 +298,31 @@ class UVLM:
         self.include_unsteady_force: bool = include_unsteady_force
         self.batch_size: int | None = batch_size
 
-        # optional per-surface, per-strip polar callables for sectional forcing correction
-        if polars is None:
-            self.polars: tuple[tuple[PolarFunction, ...] | None, ...] = tuple(
-                None for _ in range(self.n_surf)
+        # optional per-surface polar database and evaluation function for sectional forcing correction
+        polar_data_: list[Any | None] = (
+            list(polar_data) if polar_data is not None else [None] * self.n_surf
+        )
+        if len(polar_data_) != self.n_surf:
+            raise ValueError(
+                f"Expected {self.n_surf} polar_data entries, got {len(polar_data_)}"
             )
-        else:
-            if len(polars) != self.n_surf:
+
+        polar_function_: list[PolarFunction | None] = (
+            list(polar_function) if polar_function is not None else [None] * self.n_surf
+        )
+        if len(polar_function_) != self.n_surf:
+            raise ValueError(
+                f"Expected {self.n_surf} polar_function entries, got {len(polar_function_)}"
+            )
+
+        for i_surf, (database, func) in enumerate(zip(polar_data_, polar_function_)):
+            if (database is None) != (func is None):
                 raise ValueError(
-                    f"Expected {self.n_surf} polar entries, got {len(polars)}"
+                    f"Surface {i_surf}: polar_data and polar_function must either both be None or both be set"
                 )
-            self.polars = tuple(tuple(p) if p is not None else None for p in polars)
+
+        self.polar_data: tuple[Any | None, ...] = tuple(polar_data_)
+        self.polar_function: tuple[PolarFunction | None, ...] = tuple(polar_function_)
 
         if not 0.0 <= polar_circulation_scale <= 1.0:
             raise ValueError(
@@ -452,6 +474,11 @@ class UVLM:
         check_arr_shape(hg0, (None, 4, 4), "hg0")
         self.hg_ref = hg0
         self.zeta_b_ref = self.hg_to_zeta_b(hg_n=hg0, cs_ang_n=self.cs_ang0)
+
+        # surface spanwise edges that sit on the mirror plane, derived from reference configuration
+        self.mirror_edge_low, self.mirror_edge_high = compute_mirror_edges(
+            self.zeta_b_ref, self.mirror_point, self.mirror_normal
+        )
 
         # set flowfield
         self.flowfield = flowfield
@@ -1052,6 +1079,10 @@ class UVLM:
             rho=self.flowfield.rho,
             v_func=v_total_func,
             v_inputs=nu_b,
+            mirror_point=self.mirror_point,
+            mirror_normal=self.mirror_normal,
+            mirror_edge_low=self.mirror_edge_low,
+            mirror_edge_high=self.mirror_edge_high,
         )
 
         def v_freestream_func(x: Array) -> Array:
@@ -1064,35 +1095,30 @@ class UVLM:
             rho=self.flowfield.rho,
         )
 
-        if any(p is not None for p in self.polars):
-            # update forcing with polar corrections
-            f_steady, lift_scale, cl_n, cd_n, cm_n = apply_polar_correction(
-                zeta_b=zeta_b_n,
-                f_steady=f_steady,
-                v_func=v_freestream_func,
-                rho=self.flowfield.rho,
-                polars=self.polars,
-                alpha=alpha_n,
-            )
+        # update forcing with any polar corrections; surfaces with a ``None`` database report the flat-plate
+        # (2 pi alpha) values implied by the UVLM itself
+        f_steady, lift_scale, cl_n, cd_n, cm_n = apply_polar_correction(
+            zeta_b=zeta_b_n,
+            f_steady=f_steady,
+            v_func=v_freestream_func,
+            rho=self.flowfield.rho,
+            polar_data=self.polar_data,
+            polar_function=self.polar_function,
+            alpha=alpha_n,
+        )
 
-            if self.polar_circulation_scale != 0.0:
-                # blend bound (and, in the static case, wake) circulation towards the polar-corrected lift
-                # scale=0 leaves gamma unchanged; scale=1 fully rescales it to lift_scale
-                s = self.polar_circulation_scale
-                gamma_b_n = ArrayList(
-                    [
-                        gb * (1.0 + s * (ls[None, :] - 1.0))
-                        for gb, ls in zip(gamma_b_n, lift_scale)
-                    ]
-                )
-                if static:
-                    gamma_w_n = _static_wake_from_gamma_b(gamma_b_n)
-        else:
-            # no polars assigned to any surface: report the flat-plate (2 pi alpha) values implied by the
-            # UVLM itself
-            cl_n = ArrayList([2.0 * jnp.pi * a for a in alpha_n])
-            cd_n = ArrayList([jnp.zeros_like(a) for a in alpha_n])
-            cm_n = ArrayList([jnp.zeros_like(a) for a in alpha_n])
+        if self.polar_circulation_scale != 0.0:
+            # blend bound (and, in the static case, wake) circulation towards the polar-corrected lift
+            # scale=0 leaves gamma unchanged; scale=1 fully rescales it to lift_scale
+            s = self.polar_circulation_scale
+            gamma_b_n = ArrayList(
+                [
+                    gb * (1.0 + s * (ls[None, :] - 1.0))
+                    for gb, ls in zip(gamma_b_n, lift_scale)
+                ]
+            )
+            if static:
+                gamma_w_n = _static_wake_from_gamma_b(gamma_b_n)
 
         if static:
             gamma_b_dot_n: ArrayList | None = None
@@ -1299,6 +1325,8 @@ class UVLM:
             kernels=[*self.kernels_b, *self.kernels_w],
             mirror_point=self.mirror_point,
             mirror_normal=self.mirror_normal,
+            mirror_edge_low=self.mirror_edge_low,
+            mirror_edge_high=self.mirror_edge_high,
             flowfield=self.flowfield,
             surf_b_names=self.surf_b_names,
             surf_w_names=self.surf_w_names,
@@ -1469,6 +1497,8 @@ class UVLM:
             flowfield=self.flowfield,
             mirror_point=self.mirror_point,
             mirror_normal=self.mirror_normal,
+            mirror_edge_low=self.mirror_edge_low,
+            mirror_edge_high=self.mirror_edge_high,
             kernels=[*self.kernels_b, *self.kernels_w],
             static_horseshoe=False,
             gamma_dot_relaxation=0.0,
@@ -1555,6 +1585,8 @@ class UVLM:
             rmat=hg_n[:, :3, :3],
             dof_mapping=self.dof_mapping,
             x0_aero=inner_case.zeta_b0,
+            mirror_edge_low=inner_case.mirror_edge_low,
+            mirror_edge_high=inner_case.mirror_edge_high,
         )
         f_aero_beam_local = transform_nodal_vect(
             vect=f_aero_beam_global, rmat=jnp.swapaxes(hg_n[:, :3, :3], -2, -1)
@@ -1934,6 +1966,10 @@ class UVLM:
             rho=inner_case.flowfield.rho,
             v_func=v_total_func,
             v_inputs=None,
+            mirror_point=inner_case.mirror_point,
+            mirror_normal=inner_case.mirror_normal,
+            mirror_edge_low=inner_case.mirror_edge_low,
+            mirror_edge_high=inner_case.mirror_edge_high,
         )
 
         if self.include_unsteady_force:
@@ -1958,6 +1994,8 @@ class UVLM:
             rmat=hg_n[:, :3, :3],
             dof_mapping=inner_case.dof_mapping,
             x0_aero=inner_case.zeta_b0,
+            mirror_edge_low=inner_case.mirror_edge_low,
+            mirror_edge_high=inner_case.mirror_edge_high,
         )
 
         # transform to local frame to match f_aero_beam_n

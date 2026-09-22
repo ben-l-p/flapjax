@@ -400,6 +400,10 @@ class LinearUVLM(
             rho=rho,
             v_func=v_out_func,
             v_inputs=u_np1.nu_b if self.bound_upwash else None,
+            mirror_point=self.case.mirror_point,
+            mirror_normal=self.case.mirror_normal,
+            mirror_edge_low=self.case.mirror_edge_low,
+            mirror_edge_high=self.case.mirror_edge_high,
         )
 
         normals = compute_nc(zetas=zeta_b_np1)
@@ -509,11 +513,13 @@ class LinearUVLM(
         self,
         input_projection: LinearInputProjection | None = None,
         output_projection: LinearOutputProjection | None = None,
+        residual_names: Sequence[str] | None = None,
     ) -> dict[str, tuple[Callable[..., Any], dict[str, Any], Sequence[str]]]:
         r"""
         Build the Jacobians for the linear system.
         :param input_projection: If set, projects the inputs onto a different space.
         :param output_projection: If set, projects the forcing outputs onto a different space.
+        :param residual_names: If set, restrict the returned residuals to this subset to avoid redundant computation.
         :return: Mapping of residual name to Jacobian(s).
         """
         ref = self.reference
@@ -626,6 +632,9 @@ class LinearUVLM(
             residuals = self._apply_input_projection(residuals, input_projection)
         if output_projection is not None:
             residuals = self._apply_output_projection(residuals, output_projection)
+
+        if residual_names is not None:
+            residuals = {k: v for k, v in residuals.items() if k in residual_names}
 
         return residuals
 
@@ -741,6 +750,7 @@ class LinearUVLM(
         batch_size: int | None = None,
         input_projection: LinearInputProjection | None = None,
         output_projection: LinearOutputProjection | None = None,
+        residual_names: Sequence[str] | None = None,
     ) -> dict[str, dict[str, Array]]:
         r"""
         Compute the per-residual Jacobians using :func:`jacrev_custom`.
@@ -748,6 +758,7 @@ class LinearUVLM(
         residuals = self.compute_jacobians(
             input_projection=input_projection,
             output_projection=output_projection,
+            residual_names=residual_names,
         )
 
         jacobians: dict[str, dict[str, Array]] = {}
@@ -1018,6 +1029,8 @@ class LinearUVLM(
             kernels=self.reference.kernels,
             mirror_normal=self.reference.mirror_normal,
             mirror_point=self.reference.mirror_point,
+            mirror_edge_low=self.reference.mirror_edge_low,
+            mirror_edge_high=self.reference.mirror_edge_high,
             flowfield=self.reference.flowfield,
             dof_mapping=self.reference.dof_mapping,
             free_wake=self.reference.free_wake,

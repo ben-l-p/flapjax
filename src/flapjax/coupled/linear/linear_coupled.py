@@ -406,7 +406,9 @@ class LinearCoupled(
         f_aero_np1 = y_np1_aero.f_steady
         if self.unsteady_force:
             assert y_np1_aero.f_unsteady is not None
-            f_aero_np1 += y_np1_aero.f_unsteady
+            # don't want to mutate in place
+            # noinspection augment-assignment
+            f_aero_np1 = f_aero_np1 + y_np1_aero.f_unsteady
 
         # project total aero forces onto the beam under the current (perturbed) rotation
         rmat = hg[:, :3, :3]
@@ -415,18 +417,23 @@ class LinearCoupled(
             rmat=rmat,
             dof_mapping=self.aero.case.dof_mapping,
             x0_aero=self.aero.case.zeta_b0,
+            mirror_edge_low=self.aero.case.mirror_edge_low,
+            mirror_edge_high=self.aero.case.mirror_edge_high,
         )
 
         # subtract the reference contribution so the aero forcing fed into the beam operator
         # is a pure perturbation (the beam sys.a / sys.b operate on perturbations)
         f_aero_ref_total = ref.aero.f_steady
         if self.aero.unsteady_force:
-            f_aero_ref_total += ref.aero.f_unsteady
+            # noinspection augment-assignment
+            f_aero_ref_total = f_aero_ref_total + ref.aero.f_unsteady
         f_aero_beam_ref = project_forcing_to_beam(
             f_total=f_aero_ref_total,
             rmat=ref.structure.hg[:, :3, :3],
             dof_mapping=self.aero.case.dof_mapping,
             x0_aero=self.aero.case.zeta_b0,
+            mirror_edge_low=self.aero.case.mirror_edge_low,
+            mirror_edge_high=self.aero.case.mirror_edge_high,
         )
         delta_f_aero_beam = f_aero_beam_total - f_aero_beam_ref
 
@@ -859,15 +866,17 @@ class LinearCoupled(
                 aero_mode = {k: mode[k] for k in aero_residual_names if k in mode}
             else:
                 aero_mode = mode
+            needed_aero_residuals = {"gamma_b", "gamma_w"}
+            if self.aero.unsteady_force:
+                needed_aero_residuals.add("gamma_b_nm1")
+            if self.aero.prescribed_wake:
+                needed_aero_residuals.add("zeta_w")
             aero_jacs = self.aero.create_jacobians(
                 mode=aero_mode,
                 batch_size=batch_size,
                 input_projection=beam_proj,
+                residual_names=tuple(needed_aero_residuals),
             )
-            # discard aero-only inputs/outputs
-            aero_jacs.pop("zeta_b", None)
-            aero_jacs.pop("f_steady", None)
-            aero_jacs.pop("f_unsteady", None)
             jacobians.update(aero_jacs)
 
         return (

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
-from typing import TYPE_CHECKING, Literal, Protocol, overload
+from typing import TYPE_CHECKING, Any, Literal, Protocol, overload
 
 import jax
 from jax import Array, vmap
@@ -17,8 +17,9 @@ from flapjax.utils.constants import EPSILON, R_CUTOFF
 from flapjax.utils.utils import index_to_arr
 
 type KernelFunction = Callable[[Array, Array], Array]
-type PolarFunction = Callable[[Array], tuple[Array, Array, Array]]
 
+# function of (alpha, polar_data) -> (cl, cd, cm) for a single surface, where alpha is per-strip
+type PolarFunction = Callable[[Array, Any], tuple[Array, Array, Array]]
 
 # Local "spanwise" axis shared by control-surface hinges (add_control_surface) and built-in geometric twist
 # (make_rectangular_grid): both are rotations of the local chord/camber (x, z) section about this axis.
@@ -146,6 +147,110 @@ def compute_nc(zetas: ArrayList) -> ArrayList:
     return ArrayList([compute_surf_nc(zeta) for zeta in zetas])
 
 
+def _on_mirror_plane(
+    points: Array, mirror_point: Array, mirror_normal: Array, tol: float = EPSILON
+) -> Array:
+    r"""
+    Check whether every point in ``points`` lies on the plane defined by ``mirror_point``/``mirror_normal``.
+    :param points: Points to test, ``(..., 3)``.
+    :param mirror_point: Point on the plane, ``(3, )``.
+    :param mirror_normal: Unit normal of the plane, ``(3, )``.
+    :param tol: Absolute distance tolerance.
+    :return: Scalar boolean.
+    """
+    dist = jnp.einsum("...k,k->...", points - mirror_point, mirror_normal)
+    return jnp.all(jnp.abs(dist) < tol)
+
+
+def compute_mirror_edges(
+    zeta_b_ref: ArrayList, mirror_point: Array | None, mirror_normal: Array | None
+) -> tuple[ArrayList, ArrayList]:
+    r"""
+    Determine which surfaces have an edge coinciding with a mirror plane.
+    :param zeta_b_ref: Reference bound grid coordinates, ``(n_surf, )(zeta_m, zeta_n, 3)``.
+    :param mirror_point: Point on mirror plane, ``(3, )``. If None (together with ``mirror_normal``), no surface
+    is considered to have a mirrored edge.
+    :param mirror_normal: Normal vector to mirror across, ``(3, )``.
+    :return: Per-surface booleans for the low and high spanwise edges, each ``(n_surf, )()``.
+    """
+    if mirror_point is None or mirror_normal is None:
+        not_mirrored = jnp.array(False)
+        return (
+            ArrayList([not_mirrored for _ in zeta_b_ref]),
+            ArrayList([not_mirrored for _ in zeta_b_ref]),
+        )
+    return (
+        ArrayList(
+            [
+                _on_mirror_plane(zeta[:, 0, :], mirror_point, mirror_normal)
+                for zeta in zeta_b_ref
+            ]
+        ),
+        ArrayList(
+            [
+                _on_mirror_plane(zeta[:, -1, :], mirror_point, mirror_normal)
+                for zeta in zeta_b_ref
+            ]
+        ),
+    )
+
+
+def _mirror_vector(v: Array, mirror_normal: Array) -> Array:
+    r"""
+    Reflect a vector field direction about a plane with the given unit normal.
+    :param v: Vector(s) to reflect, ``(..., 3)``.
+    :param mirror_normal: Unit normal of the mirror plane, ``(3, )``.
+    :return: Reflected vector(s), ``(..., 3)``.
+    """
+    dot_n = jnp.einsum("...k,k->...", v, mirror_normal)
+    return v - 2.0 * dot_n[..., None] * mirror_normal
+
+
+def _mirror_ghost_force(
+    zeta_b_surf: Array,
+    mp_dot_spanwise: Array,
+    gamma_spanwise_edge: Array,
+    rho: Array,
+    v_func: Callable[[Array], Array],
+    mirror_point: Array,
+    mirror_normal: Array,
+    low: bool,
+) -> Array:
+    r"""
+    Force contributed to a spanwise-boundary vertex column by its mirror-image neighbour, i.e. the panel that
+    would exist just across a mirror/symmetry plane coincident with that boundary.
+    :param zeta_b_surf: Bound grid coordinates for this surface, ``(zeta_m, zeta_n, 3)``.
+    :param mp_dot_spanwise: Bound grid velocity at spanwise-filament midpoints, ``(zeta_m, gamma_n, 3)``.
+    :param gamma_spanwise_edge: Spanwise bound-vortex strength at the boundary panel, ``(zeta_m, )``.
+    :param rho: Flow density.
+    :param v_func: Total velocity as a function of coordinate (already mirror-aware).
+    :param mirror_point: Point on the mirror plane, ``(3, )``.
+    :param mirror_normal: Unit normal of the mirror plane, ``(3, )``.
+    :param low: If True, treat the ``n=0`` edge as the mirror boundary; otherwise the ``n=-1`` edge.
+    :return: Force to add to the boundary vertex column, ``(zeta_m, 3)``.
+    """
+    if low:
+        boundary_node = zeta_b_surf[:, 0, :]
+        inner_node = zeta_b_surf[:, 1, :]
+        mp_dot_edge = mp_dot_spanwise[:, 0, :]
+    else:
+        boundary_node = zeta_b_surf[:, -1, :]
+        inner_node = zeta_b_surf[:, -2, :]
+        mp_dot_edge = mp_dot_spanwise[:, -1, :]
+
+    ghost_node = mirror_grid(inner_node[:, None, :], mirror_point, mirror_normal)[
+        :, 0, :
+    ]
+    r_ghost = boundary_node - ghost_node if low else ghost_node - boundary_node
+
+    mp_ghost = 0.5 * (boundary_node + ghost_node)
+    v_rel_ghost = v_func(mp_ghost[:, None, :])[:, 0, :] - _mirror_vector(
+        mp_dot_edge, mirror_normal
+    )
+
+    return 0.5 * rho * gamma_spanwise_edge[:, None] * jnp.cross(v_rel_ghost, r_ghost)
+
+
 def compute_steady_forcing(
     zeta_b: ArrayList,
     zeta_dot_b: ArrayList | None,
@@ -154,6 +259,10 @@ def compute_steady_forcing(
     rho: Array,
     v_func: Callable[[Array], Array],
     v_inputs: ArrayList | None,
+    mirror_point: Array | None = None,
+    mirror_normal: Array | None = None,
+    mirror_edge_low: ArrayList | None = None,
+    mirror_edge_high: ArrayList | None = None,
 ) -> ArrayList:
     r"""
     Calculate steady aerodynamic forcing for all surfaces at specified time step.
@@ -165,8 +274,19 @@ def compute_steady_forcing(
     :param v_func: Total velocity as a function of coordinate.
     :param v_inputs: Additive inputs for total velocity on bound grid vertex, used for the linear solver for custom
     perturbations.
+    :param mirror_point: Point on mirror plane, ``(3, )``.
+    :param mirror_normal: Normal vector to mirror across, ``(3, )``.
+    :param mirror_edge_low: Per-surface booleans marking whether that surface's ``n=0`` edge lies on the mirror
+    plane, ``(n_surf, )()``.
+    :param mirror_edge_high: As ``mirror_edge_low``, for the ``n=-1`` edge.
     """
 
+    has_mirror = mirror_point is not None and mirror_normal is not None
+    if has_mirror and (mirror_edge_low is None or mirror_edge_high is None):
+        raise ValueError(
+            "mirror_edge_low/mirror_edge_high must be provided (e.g. via compute_mirror_edges) "
+            "whenever mirror_point/mirror_normal are given."
+        )
     f_steady = ArrayList([])
 
     if zeta_dot_b is None:
@@ -179,8 +299,29 @@ def compute_steady_forcing(
     else:
         v_inputs_ = v_inputs
 
-    for zeta_b_surf, zeta_dot_b_surf, gamma_b_surf, gamma_w_surf, v_input_surf in zip(
-        zeta_b, zeta_dot_bs_, gamma_b, gamma_w, v_inputs_
+    mirror_edge_low_ = (
+        mirror_edge_low if mirror_edge_low is not None else [None] * len(zeta_b)
+    )
+    mirror_edge_high_ = (
+        mirror_edge_high if mirror_edge_high is not None else [None] * len(zeta_b)
+    )
+
+    for (
+        zeta_b_surf,
+        zeta_dot_b_surf,
+        gamma_b_surf,
+        gamma_w_surf,
+        v_input_surf,
+        on_plane_low,
+        on_plane_high,
+    ) in zip(
+        zeta_b,
+        zeta_dot_bs_,
+        gamma_b,
+        gamma_w,
+        v_inputs_,
+        mirror_edge_low_,
+        mirror_edge_high_,
     ):
         # compute midpoints
         mp_chordwise = neighbour_average(zeta_b_surf, axes=0)  # (gamma_m, gamma_n+1, 3)
@@ -222,6 +363,16 @@ def compute_steady_forcing(
         if gamma_w_surf.shape[0] > 0:
             gamma_spanwise = gamma_spanwise.at[-1, :].add(-gamma_w_surf[0, :])
 
+        if has_mirror:
+            assert mirror_point is not None and mirror_normal is not None
+            # a spanwise edge lying exactly on the mirror plane carries no shed trailing vortex
+            gamma_chordwise = gamma_chordwise.at[:, 0].set(
+                jnp.where(on_plane_low, 0.0, gamma_chordwise[:, 0])
+            )
+            gamma_chordwise = gamma_chordwise.at[:, -1].set(
+                jnp.where(on_plane_high, 0.0, gamma_chordwise[:, -1])
+            )
+
         # filament vectors (from zeta_b_fil, which may differ from the midpoint geometry)
         r_chordwise = (
             zeta_b_surf[1:, :, :] - zeta_b_surf[:-1, :, :]
@@ -240,9 +391,41 @@ def compute_steady_forcing(
             "ij,ijk->ijk", gamma_spanwise, jnp.cross(v_rel_spanwise, r_spanwise)
         )  # (gamma_m+1, gamma_n, 3)
 
-        f_steady.append(
-            split_to_vertex(f_chordwise, 0) + split_to_vertex(f_spanwise, 1)
+        f_surf = split_to_vertex(f_chordwise, 0) + split_to_vertex(
+            f_spanwise, 1
         )  # (gamma_m+1, gamma_n+1, 3)
+
+        if has_mirror:
+            assert mirror_point is not None and mirror_normal is not None
+            # a spanwise edge on the mirror plane is shared with the image surface, and should receive the force from
+            # the image's bound vortex
+            f_ghost_low = _mirror_ghost_force(
+                zeta_b_surf=zeta_b_surf,
+                mp_dot_spanwise=mp_dot_spanwise,
+                gamma_spanwise_edge=gamma_spanwise[:, 0],
+                rho=rho,
+                v_func=v_func,
+                mirror_point=mirror_point,
+                mirror_normal=mirror_normal,
+                low=True,
+            )
+            f_surf = f_surf.at[:, 0, :].add(jnp.where(on_plane_low, f_ghost_low, 0.0))
+
+            f_ghost_high = _mirror_ghost_force(
+                zeta_b_surf=zeta_b_surf,
+                mp_dot_spanwise=mp_dot_spanwise,
+                gamma_spanwise_edge=gamma_spanwise[:, -1],
+                rho=rho,
+                v_func=v_func,
+                mirror_point=mirror_point,
+                mirror_normal=mirror_normal,
+                low=False,
+            )
+            f_surf = f_surf.at[:, -1, :].add(
+                jnp.where(on_plane_high, f_ghost_high, 0.0)
+            )
+
+        f_steady.append(f_surf)
     return f_steady
 
 
@@ -301,27 +484,31 @@ def apply_polar_correction(
     f_steady: ArrayList,
     v_func: Callable[[Array], Array],
     rho: Array,
-    polars: Sequence[Sequence[PolarFunction] | None],
+    polar_data: Sequence[Any | None],
+    polar_function: Sequence[PolarFunction | None],
     alpha: ArrayList | None = None,
 ) -> tuple[ArrayList, ArrayList, ArrayList, ArrayList, ArrayList]:
     r"""
     Replace UVLM strip forcing with a sectional force built from tabulated airfoil polars. This method uses the UVLM to
-    compute the strip-wise angles of attack, before obtaining the new forces from the passed polar functions.
+    compute the strip-wise angles of attack, before obtaining the new forces from the passed polar databases.
 
-    For each surface where polars are provided, and for each spanwise strip, we firstly compute the strip forcing in the
-    global frame. This forcing can then be converted into the local strip coordinate frame. We compute the velocity at
-    the mid-strip point, from which we can calculate the lift coefficient. By assuming a ``2*pi`` potential flow lift
-    slope, we can correct the forcing from tabulate data of the airfoil polar for lift, drag and moment. To correct the
-    output, we distribure the forcing back onto the grid in a way which satisfies the moment and force balance.
+    For each surface where a polar database is provided, and for each spanwise strip, we firstly compute the strip
+    forcing in the global frame. This forcing can then be converted into the local strip coordinate frame. We
+    compute the velocity at the mid-strip point, from which we can calculate the lift coefficient. By assuming a
+    ``2*pi`` potential flow lift slope, we can correct the forcing from ``polar_function``'s output for lift, drag
+    and moment. To correct the output, we distribute the forcing back onto the grid in a way which satisfies the
+    moment and force balance.
     :param zeta_b: Bound grid coordinates, ``(n_surf, )(zeta_m, zeta_n, 3)``.
     :param f_steady: Steady vertex forcing, ``(n_surf, )(zeta_m, zeta_n, 3)``.
     :param v_func: Reference velocity as a function of position, ``(..., 3) -> (..., 3)``.
     :param rho: Flow density.
-    :param polars: Per-surface polar tables. Each entry is either ``None`` (no correction for
-        that surface) or a sequence of length ``n`` of callables mapping
-        ``alpha -> (cl, cd, cm)`` about the quarter-chord.
+    :param polar_data: Per-surface polar database, length ``n_surf``. Each entry is either ``None`` (no
+        correction for that surface) or an arbitrary data structure.
+    :param polar_function: Per-surface function mapping ``(alpha, polar_data) -> (cl, cd, cm)`` about the
+        quarter-chord, length ``n_surf``,  where it expects database of the same type as the corresponding entry in
+        ``polar_data``. Set to ``None`` for surfaces with no polar correction.
     :param alpha: Optional precomputed per-strip angle of attack, ``(n_surf, )(n_strip,)``. If
-        ``None``, computed internally via :func:`strip_alpha` with the same ``v_func``.
+        ``None``, computed internally.
     :return: Corrected vertex forcing, ``(n_surf, )(zeta_m, zeta_n, 3)``; per-strip lift scale factors,
         ``(n_surf, )(n, )``, which can be used to scale the circulation strengths if requested; and the
         per-strip lift, drag and moment coefficients sampled from the polars, ``(n_surf, )(n, )`` each.
@@ -335,12 +522,12 @@ def apply_polar_correction(
     cl_out = ArrayList([])
     cd_out = ArrayList([])
     cm_out = ArrayList([])
-    for i_surf, (zeta_surf, f_surf, polar_surf, alpha_surf) in enumerate(
-        zip(zeta_b, f_steady, polars, alpha)
+    for i_surf, (zeta_surf, f_surf, database, func, alpha_surf) in enumerate(
+        zip(zeta_b, f_steady, polar_data, polar_function, alpha)
     ):
         n = zeta_surf.shape[1] - 1
 
-        if polar_surf is None:
+        if database is None:
             # no correction to apply
             f_out.append(f_surf)
             lift_scale_out.append(jnp.ones(n))
@@ -351,11 +538,6 @@ def apply_polar_correction(
 
         zeta_m = zeta_surf.shape[0]
         m = zeta_m - 1
-
-        if len(polar_surf) != n:
-            raise ValueError(
-                f"Expected {n} polar callables for surface {i_surf}, got {len(polar_surf)}"
-            )
 
         # find leading and trailing edges of centre of strip
         zeta_le = zeta_surf[0, :, :]
@@ -391,10 +573,9 @@ def apply_polar_correction(
         )  # unit vector in flow direction, (n, 3)
         e_d = v_ref / v_mag[:, None]
 
-        # extract from polar data
-        cl_p = jnp.stack([polar_surf[j](alpha_surf[j])[0] for j in range(n)])
-        cd_p = jnp.stack([polar_surf[j](alpha_surf[j])[1] for j in range(n)])
-        cm_p = jnp.stack([polar_surf[j](alpha_surf[j])[2] for j in range(n)])
+        # sample the polar database via this surface's evaluation function
+        assert func is not None
+        cl_p, cd_p, cm_p = func(alpha_surf, database)
 
         # lift scale factor cl_polar / cl_uvlm with cl_uvlm = 2 pi alpha
         cl_uvlm = 2.0 * jnp.pi * alpha_surf
@@ -702,6 +883,8 @@ def project_forcing_to_beam(
     rmat: Array,
     dof_mapping: ArrayList,
     x0_aero: ArrayList,
+    mirror_edge_low: ArrayList | None = None,
+    mirror_edge_high: ArrayList | None = None,
 ) -> Array:
     r"""
     Project aerodynamic forcing at specified time step onto the beam grid. Returned forces are in the global frame.
@@ -709,13 +892,30 @@ def project_forcing_to_beam(
     :param rmat: Rotation matrix for each node relative to reference, ``(n_nodes, 3, 3)``.
     :param x0_aero: Reference coordinates for aerodynamic grid, ``(n_surf, )(zeta_m, zeta_n, 3)``.
     :param dof_mapping: Mapping between aero and beam discretisations.
+    :param mirror_edge_low: Per-surface booleans marking whether that surface's ``n=0`` edge lies on a mirror
+    plane, ``(n_surf, )()``. Where True, that vertex column's force is halved before being projected onto the beam.
+    :param mirror_edge_high: As ``mirror_edge_low``, for the ``n=-1`` edge.
     :return: Steady and unsteady forcing projected onto the beam grid, ``(n_nodes, 6)``
     """
 
     n_nodes = rmat.shape[0]
     result = jnp.zeros((n_nodes, 6))
 
-    for i_surf in range(len(f_total)):
+    mirror_edge_low_ = (
+        mirror_edge_low if mirror_edge_low is not None else [None] * len(f_total)
+    )
+    mirror_edge_high_ = (
+        mirror_edge_high if mirror_edge_high is not None else [None] * len(f_total)
+    )
+
+    for i_surf, (f_surf, on_plane_low, on_plane_high) in enumerate(
+        zip(f_total, mirror_edge_low_, mirror_edge_high_)
+    ):
+        if on_plane_low is not None:
+            f_surf = f_surf.at[:, 0, :].multiply(jnp.where(on_plane_low, 0.5, 1.0))
+        if on_plane_high is not None:
+            f_surf = f_surf.at[:, -1, :].multiply(jnp.where(on_plane_high, 0.5, 1.0))
+
         # rotate relative distances to get moment arms
         this_rmat = rmat[dof_mapping[i_surf], ...]  # (zeta_n, 3, 3)
         r_x0 = jnp.einsum(
@@ -723,10 +923,10 @@ def project_forcing_to_beam(
         )  # relative distance (zeta_n, zeta_m, 3)
 
         result = result.at[dof_mapping[i_surf], :3].add(
-            f_total[i_surf].sum(axis=0)
+            f_surf.sum(axis=0)
         )  # forcing is sum along strip (zeta_n, 3)
         result = result.at[dof_mapping[i_surf], 3:].add(
-            jnp.cross(r_x0, f_total[i_surf]).sum(axis=0)
+            jnp.cross(r_x0, f_surf).sum(axis=0)
         )  # moment is cross(r, f) summed along strip (zeta_n, 3)
     return result
 

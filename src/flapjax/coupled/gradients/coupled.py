@@ -292,17 +292,13 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 use_horseshoe=static_horseshoe,
             )[1]
 
-        _, vjp_res_varphi = jax.vjp(lambda v: _residual(v, dv), varphi.ravel())
-
         if ad_mode == "forward":
-            # materialise p_res_p_x using map to save memory
-            p_res_p_varphi = jax.lax.map(
-                lambda cot: vjp_res_varphi(cot)[0],
+            # single joint VJP shared between p_res_p_varphi and p_res_p_x
+            _, vjp_res_both = jax.vjp(_residual, varphi.ravel(), dv)
+            p_res_p_varphi, p_res_p_x = jax.lax.map(
+                vjp_res_both,
                 jnp.eye(n_u_full),
                 batch_size=batch_size,
-            )
-            p_res_p_x = jax.jacrev(_residual, argnums=1, allow_int=True)(
-                varphi.ravel(), dv
             )
             # solve for adjoint
             adj = jnp.linalg.solve(
@@ -316,6 +312,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             )
         else:
             # construct residual Jacobian
+            _, vjp_res_varphi = jax.vjp(lambda v: _residual(v, dv), varphi.ravel())
             p_res_p_varphi = jax.lax.map(
                 lambda cot: vjp_res_varphi(cot)[0],
                 jnp.eye(n_u_full),
@@ -435,6 +432,8 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 rmat=hg[:, :3, :3],
                 dof_mapping=inner_case.aero.dof_mapping,
                 x0_aero=inner_case.aero.zeta_b0,
+                mirror_edge_low=inner_case.aero.mirror_edge_low,
+                mirror_edge_high=inner_case.aero.mirror_edge_high,
             )
 
             f_aero_beam_local = transform_nodal_vect(
@@ -1586,7 +1585,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             f_clamp_init = jnp.full((len(zero_force_dofs_)), 1e10)
             print_table_title(title="Trim (Adjoint)", inner_width=104)
             trim_variables_init.print_header(f_clamp=f_clamp_init)
-            n_iter, trim_variables, ae_sol, f_clamp_final = jax.lax.while_loop(
+            _, trim_variables, ae_sol, f_clamp_final = jax.lax.while_loop(
                 lambda args_: jnp.logical_and(
                     jnp.any(jnp.abs(args_[3]) >= trim_f_abs_tolerance),
                     args_[0] < max_iter,
@@ -1650,7 +1649,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 return i_iter, tv, sol, fc, b
 
             trim_variables_init.print_header(f_clamp=f_clamp_init)
-            n_iter, trim_variables, ae_sol, f_clamp_final, _ = jax.lax.while_loop(
+            _, trim_variables, ae_sol, f_clamp_final, _ = jax.lax.while_loop(
                 lambda args_: jnp.logical_and(
                     jnp.any(jnp.abs(args_[3]) >= trim_f_abs_tolerance),
                     args_[0] < max_iter,
@@ -2122,10 +2121,38 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             hinge_groups=hinge_groups,
         )
 
-        def eval_perturbed(tv_p_: TrimVariables) -> Array:
+        n_trim = (
+            len(cs_groups)
+            + len(thrust_groups)
+            + len(trim_orientation)
+            + len(hinge_groups)
+        )
+        n_residual = len(zero_force_dofs) + len(hinge_groups)
+        if n_trim == 0:
+            return jnp.zeros((n_residual, 0)), f_clamp_0, ae_sol_0
+
+        base_structure = pytree_clone(inner_case.structure)
+        base_aero = pytree_clone(inner_case.aero)
+
+        def reset_inner_case() -> None:
+            inner_case.structure = pytree_clone(base_structure)
+            inner_case.aero = pytree_clone(base_aero)
+
+        def eval_perturbed(i: Array) -> Array:
+            reset_inner_case()
+
+            trim_update = jnp.zeros((n_trim,)).at[i].set(-fd_step)
+            tv_p = CoupledAeroelastic._apply_trim_update(
+                trim_variables=trim_variables,
+                trim_update=trim_update,
+                cs_groups=cs_groups,
+                thrust_groups=thrust_groups,
+                trim_orientation=trim_orientation,
+                hinge_groups=hinge_groups,
+            )
             _, f_p = CoupledAeroelastic._trim_solve_f_clamp(
                 inner_case=inner_case,
-                trim_variables=tv_p_,
+                trim_variables=tv_p,
                 prescribed_dofs=prescribed_dofs,
                 zero_force_dofs=zero_force_dofs,
                 f_ext_follower=f_ext_follower,
@@ -2139,57 +2166,14 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             )
             return (f_p - f_clamp_0) / fd_step
 
-        columns: list[Array] = []
-        for group in cs_groups:
-            group_k = group_key(group)
-            tv_p = TrimVariables(
-                cs_ang={
-                    kk: (v + fd_step if kk == group_k else v)
-                    for kk, v in trim_variables.cs_ang.items()
-                },
-                thrust=trim_variables.thrust,
-                trim_angles=trim_variables.trim_angles,
-                hinge_angle=trim_variables.hinge_angle,
-            )
-            columns.append(eval_perturbed(tv_p))
-        for group in thrust_groups:
-            group_k = group_key(group)
-            tv_p = TrimVariables(
-                cs_ang=trim_variables.cs_ang,
-                thrust={
-                    kk: (v + fd_step if kk == group_k else v)
-                    for kk, v in trim_variables.thrust.items()
-                },
-                trim_angles=trim_variables.trim_angles,
-                hinge_angle=trim_variables.hinge_angle,
-            )
-            columns.append(eval_perturbed(tv_p))
-        for k in trim_orientation:
-            tv_p = TrimVariables(
-                cs_ang=trim_variables.cs_ang,
-                thrust=trim_variables.thrust,
-                trim_angles={
-                    kk: (v + fd_step if kk == k else v)
-                    for kk, v in trim_variables.trim_angles.items()
-                },
-                hinge_angle=trim_variables.hinge_angle,
-            )
-            columns.append(eval_perturbed(tv_p))
-        for group in hinge_groups:
-            group_k = group_key(group)
-            tv_p = TrimVariables(
-                cs_ang=trim_variables.cs_ang,
-                thrust=trim_variables.thrust,
-                trim_angles=trim_variables.trim_angles,
-                hinge_angle={
-                    kk: (v + fd_step if kk == group_k else v)
-                    for kk, v in trim_variables.hinge_angle.items()
-                },
-            )
-            columns.append(eval_perturbed(tv_p))
+        columns = jax.lax.map(
+            eval_perturbed, jnp.arange(n_trim)
+        )  # (n_trim, n_residual)
+        b_approx = columns.T
 
-        n_residual = len(zero_force_dofs) + len(hinge_groups)
-        b_approx = jnp.stack(columns, axis=1) if columns else jnp.zeros((n_residual, 0))
+        # restore concrete state for the Broyden while_loop that follows
+        reset_inner_case()
+
         return b_approx, f_clamp_0, ae_sol_0
 
     @staticmethod

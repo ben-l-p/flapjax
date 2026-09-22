@@ -1,15 +1,18 @@
+from typing import Any
+
 from jax import Array
 from jax import numpy as jnp
 
 from flapjax.aero.data_structures import GridDiscretisation
 from flapjax.aero.flowfields import ConstantFlowField
-from flapjax.aero.utils import PolarFunction, make_rectangular_grid
-from flapjax.aero.uvlm import UVLM
+from flapjax.aero.utils import make_rectangular_grid
+from flapjax.aero.uvlm import UVLM, PolarFunction
 
 
 def _build_pseudo_infinite_wing(
     alpha_deg: float,
-    polars: list[list[PolarFunction] | None] | None = None,
+    polar_function: PolarFunction | None,
+    polar_data: Any,
     m: int = 4,
     n: int = 12,
     chord: float = 1.0,
@@ -41,7 +44,8 @@ def _build_pseudo_infinite_wing(
         dof_mapping=jnp.arange(n + 1),
         mirror_point=jnp.zeros(3),
         mirror_normal=jnp.array((0.0, 1.0, 0.0)),
-        polars=polars,
+        polar_data=[polar_data],
+        polar_function=[polar_function],
         polar_circulation_scale=polar_circulation_scale,
     )
     uvlm.set_design_variables(dt=dt, flowfield=flowfield, zeta_b0=x_grid, hg0=hg)
@@ -55,7 +59,9 @@ class TestPseudoInfiniteWing:
         Ensure that the measured AoA from the output matches the geometric AoA for the inboard strips.
         """
         alpha_deg = 3.0
-        uvlm, alpha_rad, *_ = _build_pseudo_infinite_wing(alpha_deg=alpha_deg)
+        uvlm, alpha_rad, *_ = _build_pseudo_infinite_wing(
+            alpha_deg=alpha_deg, polar_function=None, polar_data=None
+        )
         sol = uvlm.static_solve(horseshoe=True)
 
         alpha_strip = sol.alpha[0]  # (n_strip, )
@@ -76,16 +82,17 @@ class TestPseudoInfiniteWing:
         """
         alpha_deg = 3.0
 
-        def polar_half(a: Array) -> tuple[Array, Array, Array]:
+        def polar_half(a: Array, data: Any) -> tuple[Array, Array, Array]:
             # lift only
-            return jnp.pi * a, jnp.array(0.0), jnp.array(0.0)
+            return data * a, jnp.zeros_like(a), jnp.zeros_like(a)
 
         uvlm, alpha_rad, _, chord, span = _build_pseudo_infinite_wing(
-            alpha_deg=alpha_deg
+            alpha_deg=alpha_deg, polar_function=None, polar_data=None
         )
         n_strip = uvlm.grid_disc[0].n
-        polars: list[list[PolarFunction] | None] = [[polar_half] * n_strip]
-        uvlm, *_ = _build_pseudo_infinite_wing(alpha_deg=alpha_deg, polars=polars)
+        uvlm, *_ = _build_pseudo_infinite_wing(
+            alpha_deg=alpha_deg, polar_function=polar_half, polar_data=jnp.pi
+        )
         sol = uvlm.static_solve(horseshoe=True)
 
         measured_force = jnp.sum(
@@ -110,18 +117,19 @@ class TestPseudoInfiniteWing:
         """
         alpha_deg = 3.0
 
-        def polar_half(a: Array) -> tuple[Array, Array, Array]:
-            return jnp.pi * a, jnp.array(0.0), jnp.array(0.0)
+        def polar_half(a: Array, data: Array) -> tuple[Array, Array, Array]:
+            return data * a, jnp.zeros_like(a), jnp.zeros_like(a)
 
-        uvlm_ref, *_ = _build_pseudo_infinite_wing(alpha_deg=alpha_deg)
-        n_strip = uvlm_ref.grid_disc[0].n
-        polars: list[list[PolarFunction] | None] = [[polar_half] * n_strip]
+        uvlm_ref, *_ = _build_pseudo_infinite_wing(
+            alpha_deg=alpha_deg, polar_function=None, polar_data=None
+        )
 
         sol_ref = uvlm_ref.static_solve(horseshoe=True)
 
         uvlm_corr, *_ = _build_pseudo_infinite_wing(
             alpha_deg=alpha_deg,
-            polars=polars,
+            polar_function=polar_half,
+            polar_data=jnp.pi,
             polar_circulation_scale=1.0,
         )
         sol_corr = uvlm_corr.static_solve(horseshoe=True)
@@ -147,15 +155,19 @@ class TestPseudoInfiniteWing:
         alpha_deg = 3.0
         cd0 = 0.02
 
-        def polar_drag_only(_: Array) -> tuple[Array, Array, Array]:
-            return jnp.array(0.0), jnp.array(cd0), jnp.array(0.0)
+        def polar_drag_only(a: Array, data: Array) -> tuple[Array, Array, Array]:
+            return jnp.zeros_like(a), jnp.full_like(a, data), jnp.zeros_like(a)
 
         uvlm, alpha_rad, _, chord, span = _build_pseudo_infinite_wing(
-            alpha_deg=alpha_deg
+            alpha_deg=alpha_deg,
+            polar_function=None,
+            polar_data=None,
         )
         n_strip = uvlm.grid_disc[0].n
-        polars: list[list[PolarFunction] | None] = [[polar_drag_only] * n_strip]
-        uvlm, *_ = _build_pseudo_infinite_wing(alpha_deg=alpha_deg, polars=polars)
+
+        uvlm, *_ = _build_pseudo_infinite_wing(
+            alpha_deg=alpha_deg, polar_function=polar_drag_only, polar_data=cd0
+        )
         sol = uvlm.static_solve(horseshoe=True)
 
         e_drag = jnp.array((jnp.cos(alpha_rad), 0.0, jnp.sin(alpha_rad)))

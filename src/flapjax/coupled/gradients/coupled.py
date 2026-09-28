@@ -1973,6 +1973,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         thrust_groups: Sequence[Sequence[str]],
         trim_orientation: Sequence[str],
     ) -> tuple[int, CoupledAeroelastic, TrimVariables, AeroelasticCase, Array]:
+        inner_case = pytree_clone(inner_case)
         ae_sol, f_clamp = CoupledAeroelastic._trim_solve_f_clamp(
             inner_case=inner_case,
             trim_variables=trim_variables,
@@ -2131,15 +2132,8 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         if n_trim == 0:
             return jnp.zeros((n_residual, 0)), f_clamp_0, ae_sol_0
 
-        base_structure = pytree_clone(inner_case.structure)
-        base_aero = pytree_clone(inner_case.aero)
-
-        def reset_inner_case() -> None:
-            inner_case.structure = pytree_clone(base_structure)
-            inner_case.aero = pytree_clone(base_aero)
-
         def eval_perturbed(i: Array) -> Array:
-            reset_inner_case()
+            perturbed_case = pytree_clone(inner_case)
 
             trim_update = jnp.zeros((n_trim,)).at[i].set(-fd_step)
             tv_p = CoupledAeroelastic._apply_trim_update(
@@ -2151,7 +2145,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 hinge_groups=hinge_groups,
             )
             _, f_p = CoupledAeroelastic._trim_solve_f_clamp(
-                inner_case=inner_case,
+                inner_case=perturbed_case,
                 trim_variables=tv_p,
                 prescribed_dofs=prescribed_dofs,
                 zero_force_dofs=zero_force_dofs,
@@ -2170,9 +2164,6 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             eval_perturbed, jnp.arange(n_trim)
         )  # (n_trim, n_residual)
         b_approx = columns.T
-
-        # restore concrete state for the Broyden while_loop that follows
-        reset_inner_case()
 
         return b_approx, f_clamp_0, ae_sol_0
 
@@ -2213,7 +2204,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         )
 
         ae_sol_new, f_clamp_new = CoupledAeroelastic._trim_solve_f_clamp(
-            inner_case=inner_case,
+            inner_case=pytree_clone(inner_case),
             trim_variables=trim_variables_new,
             prescribed_dofs=prescribed_dofs,
             zero_force_dofs=zero_force_dofs,

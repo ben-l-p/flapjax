@@ -2286,6 +2286,11 @@ axis on every array.</p>
 <td><code>(n_nodes, 6)</code></td>
 <td>Residual (out-of-balance) nodal force/moment from the Newton solve. At prescribed DOFs, this equals the reaction force.</td>
 </tr>
+<tr>
+<td><code>f_cut</code></td>
+<td><code>(n_nodes, 6)</code></td>
+<td>Structural cut/section load carried at every node — the force/moment resultant transmitted through the cross-section.</td>
+</tr>
 </tbody>
 </table>
 <h3 id="dynamics">Dynamics<a class="headerlink" href="#dynamics" title="Permanent link">&para;</a></h3>
@@ -2373,6 +2378,7 @@ in each node's local frame of reference:</p>
 <li><code>f_grav</code></li>
 <li><code>f_int</code></li>
 <li><code>f_res</code></li>
+<li><code>f_cut</code></li>
 <li><code>f_iner_gyr</code></li>
 <li><code>v</code></li>
 <li><code>v_dot</code></li>

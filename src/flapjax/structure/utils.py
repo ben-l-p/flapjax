@@ -8,6 +8,7 @@ from jax import numpy as jnp
 
 from flapjax.algebra.integration import gauss_legendre, gauss_lobatto
 from flapjax.algebra.se3 import ha_to_ha_check, ha_to_ha_hat, p, q, q_dot
+from flapjax.utils.print_utils import warn
 
 
 def _split_connectivity(
@@ -299,3 +300,91 @@ def apply_frame_transform(obj, rmat: Array, extra_fields: tuple[str, ...] = ()) 
             setattr(obj, name, transform_nodal_vect(getattr(obj, name), rmat))
     for name in ("f_int", "f_res", *extra_fields):
         setattr(obj, name, transform_nodal_vect(getattr(obj, name), rmat))
+
+
+def _descendant_matrix(
+    conn: tuple[tuple[int, int], ...], n_node: int, root_nodes: tuple[int, ...]
+) -> Array:
+    r"""
+    Build the ``(n_node, n_node)`` boolean matrix ``M`` such that ``M[i, j] == 1``
+    if node ``j`` lies in the subtree hanging off node ``i`` (inclusive of
+    ``i`` itself).
+    """
+    adjacency: list[list[int]] = [[] for _ in range(n_node)]
+    for i, j in conn:
+        adjacency[i].append(j)
+        adjacency[j].append(i)
+
+    visited = [False] * n_node
+    children: list[list[int]] = [[] for _ in range(n_node)]
+    order: list[int] = []
+    queue = list(root_nodes)
+    for r in root_nodes:
+        visited[r] = True
+    while queue:
+        node = queue.pop(0)
+        order.append(node)
+        for neighbour in adjacency[node]:
+            if not visited[neighbour]:
+                visited[neighbour] = True
+                children[node].append(neighbour)
+                queue.append(neighbour)
+
+    if not all(visited):
+        unreached = [n for n in range(n_node) if not visited[n]]
+        raise ValueError(
+            f"Nodes {unreached} are not reachable from root_nodes={root_nodes} "
+            "through the beam connectivity -- check `conn`/`prescribed_dofs`."
+        )
+
+    subtree: list[set[int]] = [set() for _ in range(n_node)]
+    for node in reversed(order):
+        subtree[node].add(node)
+        for child in children[node]:
+            subtree[node].update(subtree[child])
+
+    mat = jnp.zeros((n_node, n_node))
+    for node in range(n_node):
+        idx = jnp.array(sorted(subtree[node]), dtype=int)
+        mat = mat.at[node, idx].set(1.0)
+    return mat
+
+
+def nodal_cut_loads(
+    conn: tuple[tuple[int, int], ...],
+    prescribed_dofs: tuple[int, ...],
+    pos: Array,
+    f_ext_global: Array,
+) -> Array:
+    r"""
+    The internal structural load carried at every node, recovered by cutting the beam at each node.
+
+    :param conn: Beam connectivity.
+    :param prescribed_dofs: Prescribed DOF indices. The nodes with prescribed degrees of freedom are treated as the
+    root of the load path. If empty (e.g. a free-flying structure with no clamp), falls back to node 0 -- the
+    cut-load values are unaffected by this choice, it only picks which direction along the tree is "outboard".
+    :param pos: Nodal positions in the global frame, ``(..., n_node, 3)``.
+    :param f_ext_global: Total external-equivalent nodal load (everything except the internal elastic force) in the
+    global frame, ``(..., n_node, 6)``.
+    :return: ``(..., n_node, 6)`` cut loads in the global frame.
+    """
+    n_node = pos.shape[-2]
+    root_nodes = tuple(sorted({dof // 6 for dof in prescribed_dofs}))
+    if not root_nodes:
+        warn(
+            "nodal_cut_loads: `prescribed_dofs` is empty (free-flying structure). Falling back to node 0 as the "
+            "load-path root."
+        )
+        root_nodes = (0,)
+    descendant_matrix = jnp.asarray(_descendant_matrix(conn, n_node, root_nodes))
+
+    f_lin = f_ext_global[..., :3]
+    f_rot = f_ext_global[..., 3:]
+
+    force = jnp.einsum("ij,...jk->...ik", descendant_matrix, f_lin)
+    moment = (
+        jnp.einsum("ij,...jk->...ik", descendant_matrix, f_rot)
+        + jnp.einsum("ij,...jk->...ik", descendant_matrix, jnp.cross(pos, f_lin))
+        - jnp.cross(pos, force)
+    )
+    return jnp.concatenate((force, moment), axis=-1)

@@ -120,6 +120,17 @@ class BaseBeamStructure:
         )
 
     @property
+    def hinge_connectivity(self) -> tuple[tuple[int, int], ...]:
+        r"""
+        Obtains ``(node_i, node_j)`` pairs from multibody hard constraints to give their connectivity contribution.
+        """
+        return tuple(
+            (con.node_i, con.node_j)
+            for con in self.multibody_constraints
+            if con.node_j is not None
+        )
+
+    @property
     def k_cs(self) -> Array:
         if self._k_cs is None:
             raise ValueError("k_cs has not been set")
@@ -618,6 +629,7 @@ class BaseBeamStructure:
         return StructureCase(
             hg=self.hg0,
             conn=self.connectivity,
+            hinge_conn=self.hinge_connectivity,
             o0=self.o0,
             d=self.d0,
             eps=jnp.zeros((self.n_elem, 6)),
@@ -2577,6 +2589,7 @@ class BaseBeamStructure:
         result = StructureCase(
             hg=hg,
             conn=self.connectivity,
+            hinge_conn=self.hinge_connectivity,
             o0=self.o0,
             d=d,
             eps=eps,
@@ -3650,6 +3663,7 @@ class BaseBeamStructure:
             return StructureCase(
                 hg=init_state__.hg,
                 conn=self.connectivity,
+                hinge_conn=self.hinge_connectivity,
                 o0=self.o0,
                 d=d,
                 eps=eps,

@@ -17,6 +17,8 @@ from flapjax.structure.utils import (
     apply_frame_transform,
     get_solve_dofs,
     input_dof_index_to_tuple,
+    nodal_cut_loads,
+    transform_nodal_vect,
 )
 from flapjax.utils.print_utils import warn
 from flapjax.utils.utils import index_to_arr, make_pytree
@@ -53,6 +55,7 @@ class StructureCase:
         "free_dofs",
         "local",
         "conn",
+        "hinge_conn",
         "thrust_nodes",
         "thrust_direction",
         "i_ts",
@@ -85,9 +88,11 @@ class StructureCase:
         i_ts: int | None = None,
         local: bool = True,
         constraint_data: dict[str, dict[str, Array]] | None = None,
+        hinge_conn: tuple[tuple[int, int], ...] = (),
     ):
         self.hg: Array = hg
         self.conn: tuple[tuple[int, int], ...] = conn
+        self.hinge_conn: tuple[tuple[int, int], ...] = hinge_conn
         self.o0: Array = o0
         self.d: Array = d
         self.eps: Array = eps
@@ -117,7 +122,9 @@ class StructureCase:
             n_dof=varphi.shape[-2] * 6, prescribed_dofs=self.prescribed_dofs
         )
         self.local: bool = local
-        self.constraint_data: dict[str, dict[str, Array]] = constraint_data if constraint_data is not None else {}
+        self.constraint_data: dict[str, dict[str, Array]] = (
+            constraint_data if constraint_data is not None else {}
+        )
 
     @property
     def x(self) -> Array:
@@ -126,6 +133,24 @@ class StructureCase:
     @property
     def rmat(self) -> Array:
         return self.hg[..., :3, :3]
+
+    @property
+    def f_cut(self) -> Array:
+        r"""
+        Structural load carried at every node.
+        """
+        f_ext_total = self.f_res - self.f_int
+        if self.local:
+            f_ext_total = transform_nodal_vect(f_ext_total, self.rmat)
+        cut_global = nodal_cut_loads(
+            conn=self.conn + self.hinge_conn,
+            prescribed_dofs=self.prescribed_dofs,
+            pos=self.x,
+            f_ext_global=f_ext_total,
+        )
+        if self.local:
+            return transform_nodal_vect(cut_global, jnp.swapaxes(self.rmat, -1, -2))
+        return cut_global
 
     @property
     def is_dynamic(self) -> bool:
@@ -199,6 +224,7 @@ class StructureCase:
         dyn_snapshot = StructureCase(
             hg=self.hg,
             conn=self.conn,
+            hinge_conn=self.hinge_conn,
             o0=self.o0,
             d=self.d,
             eps=self.eps,
@@ -248,6 +274,7 @@ class StructureCase:
         return StructureCase(
             hg=self.hg,
             conn=self.conn,
+            hinge_conn=self.hinge_conn,
             o0=self.o0,
             d=self.d,
             eps=self.eps,
@@ -276,6 +303,7 @@ class StructureCase:
         return StructureCase(
             hg=self.hg[i_ts, ...],
             conn=self.conn,
+            hinge_conn=self.hinge_conn,
             o0=self.o0,
             d=self.d[i_ts, ...],
             eps=self.eps[i_ts, ...],
@@ -423,6 +451,7 @@ class StructureCase:
         return cls(
             hg=hg,
             conn=initial_snapshot.conn,
+            hinge_conn=initial_snapshot.hinge_conn,
             o0=initial_snapshot.o0,
             d=d,
             eps=eps,
@@ -550,6 +579,8 @@ class StructureCase:
         m_int = data.f_int[:, 3:]
         f_res = data.f_res[:, :3]
         m_res = data.f_res[:, 3:]
+        f_cut = data.f_cut[:, :3]
+        m_cut = data.f_cut[:, 3:]
 
         # velocity and acceleration data
         v_lin = data.v[:, :3] if data.v is not None else None
@@ -588,6 +619,8 @@ class StructureCase:
             "m_int": m_int,
             "f_res": f_res,
             "m_res": m_res,
+            "f_cut": f_cut,
+            "m_cut": m_cut,
             "v_linear": v_lin,
             "v_angular": v_ang,
             "v_dot_linear": v_dot_lin,

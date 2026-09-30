@@ -74,6 +74,7 @@ axis on every array.
 | `f_int`          | `(n_nodes, 6)`           | Nodal force/moment contribution due to element stresses.                                                                |
 | `f_elem`         | `(n_elem, 6)`            | Element-wise internal forces/moments.                                                                                   |
 | `f_res`          | `(n_nodes, 6)`           | Residual (out-of-balance) nodal force/moment from the Newton solve. At prescribed DOFs, this equals the reaction force. |
+| `f_cut`          | `(n_nodes, 6)`           | Structural cut/section load carried at every node — the force/moment resultant transmitted through the cross-section.   |
 
 ### Dynamics
 
@@ -107,6 +108,7 @@ in each node's local frame of reference:
 - `f_grav`
 - `f_int`
 - `f_res`
+- `f_cut`
 - `f_iner_gyr`
 - `v`
 - `v_dot`

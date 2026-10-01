@@ -136,6 +136,7 @@ class BaseCoupledAeroelastic:
         use_f_ext_follower: bool = False,
         use_f_ext_dead: bool = False,
         t_init: float | Array = 0.0,
+        solve: bool = False,
     ) -> AeroelasticCase:
         r"""
         Obtain the static aeroelastic object describing the undeformed wing.
@@ -143,8 +144,9 @@ class BaseCoupledAeroelastic:
         :param horseshoe: Horseshoe flag.
         :param use_f_ext_follower: If true, allocate an array for follower forces.
         :param use_f_ext_dead: If true, allocate an array for dead forces.
-
         :param t_init: Initial time
+        :param solve: If True, solve the UVLM for the reference geometry to obtain circulations/forces. If False,
+        skip the solve and return the zero-circulation aero snapshot.
         :return: Static aeroelastic object for undeformed wing
         """
         prescribed_dofs = self.structure.make_prescribed_dofs_tuple(prescribed_dofs)
@@ -158,7 +160,9 @@ class BaseCoupledAeroelastic:
             ),
             aero=self.aero.static_solve(
                 t=t_init, hg=self.structure.hg0, horseshoe=horseshoe
-            ),
+            )
+            if solve
+            else self.aero.reference_configuration(),
         )
 
     def static_solve(
@@ -391,6 +395,7 @@ class BaseCoupledAeroelastic:
                     prescribed_dofs=prescribed_dofs,
                     use_f_ext_follower=f_ext_follower is not None,
                     use_f_ext_dead=f_ext_dead is not None,
+                    solve=True,
                 ).to_dynamic(t=None),
                 t=t,
                 use_f_ext_follower=f_ext_follower is not None,

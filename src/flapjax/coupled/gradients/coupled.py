@@ -1462,6 +1462,8 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         method: Literal["adjoint", "finite_difference"] = "finite_difference",
         broyden_fd_step: float = 1e-3,
         max_iter: int = 100,
+        *,
+        skip_checks: bool = False,
     ) -> tuple[AeroelasticCase, TrimVariables]:
         r"""
         Trim an aircraft such that the resulting sum of forces on the aircraft is zero without any supports.
@@ -1493,6 +1495,8 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         :param broyden_fd_step: Step size used for the finite-difference bootstrap of the Broyden Jacobian.
         :param max_iter: Maximum number of trim iterations. A warning is emitted if the routine fails to converge within
         this limit.
+        :param skip_checks: If True, skip the post-convergence NaN/tolerance checks, allowing for this function to be
+        jit-wrapped.
         :return: Aeroelastic solution object for the trimmed aircraft.
         """
 
@@ -1667,10 +1671,11 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         else:
             raise ValueError(f"Unknown trim method: {method!r}.")
 
-        if bool(jnp.any(jnp.isnan(f_clamp_final))):
-            warn("Trim residual is NaN - solution diverged")
-        elif bool(jnp.any(jnp.abs(f_clamp_final) >= trim_f_abs_tolerance)):
-            warn(f"Trim did not converge within max_iter={max_iter} iterations ")
+        if not skip_checks:
+            if bool(jnp.any(jnp.isnan(f_clamp_final))):
+                warn("Trim residual is NaN - solution diverged")
+            elif bool(jnp.any(jnp.abs(f_clamp_final) >= trim_f_abs_tolerance)):
+                warn(f"Trim did not converge within max_iter={max_iter} iterations ")
 
         new_orientation: Array = self.structure.orientation_euler
         for k, v in trim_variables.trim_angles.items():

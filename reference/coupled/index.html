@@ -6309,6 +6309,7 @@ variables are obtained.</p>
     <span class="n">use_f_ext_follower</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">use_f_ext_dead</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">t_init</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">solve</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticCase</span>
 </code></pre></div>
 
@@ -6408,6 +6409,23 @@ variables are obtained.</p>
                   <code>0.0</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>solve</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, solve the UVLM for the reference geometry to obtain circulations/forces. If False,
+skip the solve and return the zero-circulation aero snapshot.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -6467,13 +6485,18 @@ variables are obtained.</p>
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
-<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="p">(),</span>
     <span class="n">horseshoe</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">use_f_ext_follower</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">use_f_ext_dead</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">t_init</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">solve</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Obtain the static aeroelastic object describing the undeformed wing.</span>
@@ -6481,8 +6504,9 @@ variables are obtained.</p>
 <span class="sd">    :param horseshoe: Horseshoe flag.</span>
 <span class="sd">    :param use_f_ext_follower: If true, allocate an array for follower forces.</span>
 <span class="sd">    :param use_f_ext_dead: If true, allocate an array for dead forces.</span>
-
 <span class="sd">    :param t_init: Initial time</span>
+<span class="sd">    :param solve: If True, solve the UVLM for the reference geometry to obtain circulations/forces. If False,</span>
+<span class="sd">    skip the solve and return the zero-circulation aero snapshot.</span>
 <span class="sd">    :return: Static aeroelastic object for undeformed wing</span>
 <span class="sd">    """</span>
     <span class="n">prescribed_dofs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">make_prescribed_dofs_tuple</span><span class="p">(</span><span class="n">prescribed_dofs</span><span class="p">)</span>
@@ -6496,7 +6520,9 @@ variables are obtained.</p>
         <span class="p">),</span>
         <span class="n">aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">static_solve</span><span class="p">(</span>
             <span class="n">t</span><span class="o">=</span><span class="n">t_init</span><span class="p">,</span> <span class="n">hg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">hg0</span><span class="p">,</span> <span class="n">horseshoe</span><span class="o">=</span><span class="n">horseshoe</span>
-        <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">solve</span>
+        <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">reference_configuration</span><span class="p">(),</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -6598,12 +6624,7 @@ dynamic case.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">453</span>
-<span class="normal">454</span>
-<span class="normal">455</span>
-<span class="normal">456</span>
-<span class="normal">457</span>
-<span class="normal">458</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">458</span>
 <span class="normal">459</span>
 <span class="normal">460</span>
 <span class="normal">461</span>
@@ -6632,7 +6653,12 @@ dynamic case.</p>
 <span class="normal">484</span>
 <span class="normal">485</span>
 <span class="normal">486</span>
-<span class="normal">487</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_dynamic</span><span class="p">(</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_dynamic</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">static_case</span><span class="p">:</span> <span class="n">AeroelasticCase</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
@@ -11033,6 +11059,8 @@ None, all gradients will be computed.</p>
     <span class="p">]</span> <span class="o">=</span> <span class="s2">"finite_difference"</span><span class="p">,</span>
     <span class="n">broyden_fd_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">skip_checks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">AeroelasticCase</span><span class="p">,</span> <span class="n">TrimVariables</span><span class="p">]</span>
 </code></pre></div>
 
@@ -11320,6 +11348,23 @@ this limit.</p>
                   <code>100</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>skip_checks</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, skip the post-convergence NaN/tolerance checks, allowing for this function to be
+jit-wrapped.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -11605,7 +11650,12 @@ this limit.</p>
 <span class="normal">1700</span>
 <span class="normal">1701</span>
 <span class="normal">1702</span>
-<span class="normal">1703</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim</span><span class="p">(</span>
+<span class="normal">1703</span>
+<span class="normal">1704</span>
+<span class="normal">1705</span>
+<span class="normal">1706</span>
+<span class="normal">1707</span>
+<span class="normal">1708</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">zero_force_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
@@ -11623,6 +11673,8 @@ this limit.</p>
     <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"adjoint"</span><span class="p">,</span> <span class="s2">"finite_difference"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"finite_difference"</span><span class="p">,</span>
     <span class="n">broyden_fd_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">skip_checks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">AeroelasticCase</span><span class="p">,</span> <span class="n">TrimVariables</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Trim an aircraft such that the resulting sum of forces on the aircraft is zero without any supports.</span>
@@ -11654,6 +11706,8 @@ this limit.</p>
 <span class="sd">    :param broyden_fd_step: Step size used for the finite-difference bootstrap of the Broyden Jacobian.</span>
 <span class="sd">    :param max_iter: Maximum number of trim iterations. A warning is emitted if the routine fails to converge within</span>
 <span class="sd">    this limit.</span>
+<span class="sd">    :param skip_checks: If True, skip the post-convergence NaN/tolerance checks, allowing for this function to be</span>
+<span class="sd">    jit-wrapped.</span>
 <span class="sd">    :return: Aeroelastic solution object for the trimmed aircraft.</span>
 <span class="sd">    """</span>
 
@@ -11828,10 +11882,11 @@ this limit.</p>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown trim method: </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2">."</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">))):</span>
-        <span class="n">warn</span><span class="p">(</span><span class="s2">"Trim residual is NaN - solution diverged"</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">trim_f_abs_tolerance</span><span class="p">)):</span>
-        <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Trim did not converge within max_iter=</span><span class="si">{</span><span class="n">max_iter</span><span class="si">}</span><span class="s2"> iterations "</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">skip_checks</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">))):</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s2">"Trim residual is NaN - solution diverged"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">trim_f_abs_tolerance</span><span class="p">)):</span>
+            <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Trim did not converge within max_iter=</span><span class="si">{</span><span class="n">max_iter</span><span class="si">}</span><span class="s2"> iterations "</span><span class="p">)</span>
 
     <span class="n">new_orientation</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">orientation_euler</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">trim_variables</span><span class="o">.</span><span class="n">trim_angles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -11943,18 +11998,18 @@ the trim routine, with values not passed using the fixed values provided in the 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/gradients/coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1705</span>
-<span class="normal">1706</span>
-<span class="normal">1707</span>
-<span class="normal">1708</span>
-<span class="normal">1709</span>
-<span class="normal">1710</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1710</span>
 <span class="normal">1711</span>
 <span class="normal">1712</span>
 <span class="normal">1713</span>
 <span class="normal">1714</span>
 <span class="normal">1715</span>
-<span class="normal">1716</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim_angles_to_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trim_angles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1716</span>
+<span class="normal">1717</span>
+<span class="normal">1718</span>
+<span class="normal">1719</span>
+<span class="normal">1720</span>
+<span class="normal">1721</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim_angles_to_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trim_angles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Find the 3 Euler angles describing the aircraft orientation. This allows for any combination to be set by</span>
 <span class="sd">    the trim routine, with values not passed using the fixed values provided in the reference orientation.</span>
@@ -19170,6 +19225,7 @@ variables are obtained.</p>
     <span class="n">use_f_ext_follower</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">use_f_ext_dead</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">t_init</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">solve</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticCase</span>
 </code></pre></div>
 
@@ -19269,6 +19325,23 @@ variables are obtained.</p>
                   <code>0.0</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>solve</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, solve the UVLM for the reference geometry to obtain circulations/forces. If False,
+skip the solve and return the zero-circulation aero snapshot.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -19328,13 +19401,18 @@ variables are obtained.</p>
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
-<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="p">(),</span>
     <span class="n">horseshoe</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">use_f_ext_follower</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">use_f_ext_dead</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">t_init</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">solve</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Obtain the static aeroelastic object describing the undeformed wing.</span>
@@ -19342,8 +19420,9 @@ variables are obtained.</p>
 <span class="sd">    :param horseshoe: Horseshoe flag.</span>
 <span class="sd">    :param use_f_ext_follower: If true, allocate an array for follower forces.</span>
 <span class="sd">    :param use_f_ext_dead: If true, allocate an array for dead forces.</span>
-
 <span class="sd">    :param t_init: Initial time</span>
+<span class="sd">    :param solve: If True, solve the UVLM for the reference geometry to obtain circulations/forces. If False,</span>
+<span class="sd">    skip the solve and return the zero-circulation aero snapshot.</span>
 <span class="sd">    :return: Static aeroelastic object for undeformed wing</span>
 <span class="sd">    """</span>
     <span class="n">prescribed_dofs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">make_prescribed_dofs_tuple</span><span class="p">(</span><span class="n">prescribed_dofs</span><span class="p">)</span>
@@ -19357,7 +19436,9 @@ variables are obtained.</p>
         <span class="p">),</span>
         <span class="n">aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">static_solve</span><span class="p">(</span>
             <span class="n">t</span><span class="o">=</span><span class="n">t_init</span><span class="p">,</span> <span class="n">hg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">hg0</span><span class="p">,</span> <span class="n">horseshoe</span><span class="o">=</span><span class="n">horseshoe</span>
-        <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">solve</span>
+        <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">reference_configuration</span><span class="p">(),</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -19459,12 +19540,7 @@ dynamic case.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">453</span>
-<span class="normal">454</span>
-<span class="normal">455</span>
-<span class="normal">456</span>
-<span class="normal">457</span>
-<span class="normal">458</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">458</span>
 <span class="normal">459</span>
 <span class="normal">460</span>
 <span class="normal">461</span>
@@ -19493,7 +19569,12 @@ dynamic case.</p>
 <span class="normal">484</span>
 <span class="normal">485</span>
 <span class="normal">486</span>
-<span class="normal">487</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_dynamic</span><span class="p">(</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_dynamic</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">static_case</span><span class="p">:</span> <span class="n">AeroelasticCase</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
@@ -24716,6 +24797,8 @@ None, all gradients will be computed.</p>
     <span class="p">]</span> <span class="o">=</span> <span class="s2">"finite_difference"</span><span class="p">,</span>
     <span class="n">broyden_fd_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">skip_checks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">AeroelasticCase</span><span class="p">,</span> <span class="n">TrimVariables</span><span class="p">]</span>
 </code></pre></div>
 
@@ -25003,6 +25086,23 @@ this limit.</p>
                   <code>100</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>skip_checks</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, skip the post-convergence NaN/tolerance checks, allowing for this function to be
+jit-wrapped.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -25288,7 +25388,12 @@ this limit.</p>
 <span class="normal">1700</span>
 <span class="normal">1701</span>
 <span class="normal">1702</span>
-<span class="normal">1703</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim</span><span class="p">(</span>
+<span class="normal">1703</span>
+<span class="normal">1704</span>
+<span class="normal">1705</span>
+<span class="normal">1706</span>
+<span class="normal">1707</span>
+<span class="normal">1708</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">zero_force_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
@@ -25306,6 +25411,8 @@ this limit.</p>
     <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"adjoint"</span><span class="p">,</span> <span class="s2">"finite_difference"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"finite_difference"</span><span class="p">,</span>
     <span class="n">broyden_fd_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">skip_checks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">AeroelasticCase</span><span class="p">,</span> <span class="n">TrimVariables</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Trim an aircraft such that the resulting sum of forces on the aircraft is zero without any supports.</span>
@@ -25337,6 +25444,8 @@ this limit.</p>
 <span class="sd">    :param broyden_fd_step: Step size used for the finite-difference bootstrap of the Broyden Jacobian.</span>
 <span class="sd">    :param max_iter: Maximum number of trim iterations. A warning is emitted if the routine fails to converge within</span>
 <span class="sd">    this limit.</span>
+<span class="sd">    :param skip_checks: If True, skip the post-convergence NaN/tolerance checks, allowing for this function to be</span>
+<span class="sd">    jit-wrapped.</span>
 <span class="sd">    :return: Aeroelastic solution object for the trimmed aircraft.</span>
 <span class="sd">    """</span>
 
@@ -25511,10 +25620,11 @@ this limit.</p>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown trim method: </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2">."</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">))):</span>
-        <span class="n">warn</span><span class="p">(</span><span class="s2">"Trim residual is NaN - solution diverged"</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">trim_f_abs_tolerance</span><span class="p">)):</span>
-        <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Trim did not converge within max_iter=</span><span class="si">{</span><span class="n">max_iter</span><span class="si">}</span><span class="s2"> iterations "</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">skip_checks</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">))):</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s2">"Trim residual is NaN - solution diverged"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">bool</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_clamp_final</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">trim_f_abs_tolerance</span><span class="p">)):</span>
+            <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Trim did not converge within max_iter=</span><span class="si">{</span><span class="n">max_iter</span><span class="si">}</span><span class="s2"> iterations "</span><span class="p">)</span>
 
     <span class="n">new_orientation</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">orientation_euler</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">trim_variables</span><span class="o">.</span><span class="n">trim_angles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -25626,18 +25736,18 @@ the trim routine, with values not passed using the fixed values provided in the 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/gradients/coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1705</span>
-<span class="normal">1706</span>
-<span class="normal">1707</span>
-<span class="normal">1708</span>
-<span class="normal">1709</span>
-<span class="normal">1710</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1710</span>
 <span class="normal">1711</span>
 <span class="normal">1712</span>
 <span class="normal">1713</span>
 <span class="normal">1714</span>
 <span class="normal">1715</span>
-<span class="normal">1716</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim_angles_to_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trim_angles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1716</span>
+<span class="normal">1717</span>
+<span class="normal">1718</span>
+<span class="normal">1719</span>
+<span class="normal">1720</span>
+<span class="normal">1721</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trim_angles_to_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trim_angles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Find the 3 Euler angles describing the aircraft orientation. This allows for any combination to be set by</span>
 <span class="sd">    the trim routine, with values not passed using the fixed values provided in the reference orientation.</span>
@@ -25825,6 +25935,7 @@ variables are obtained.</p>
     <span class="n">use_f_ext_follower</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">use_f_ext_dead</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">t_init</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">solve</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticCase</span>
 </code></pre></div>
 
@@ -25924,6 +26035,23 @@ variables are obtained.</p>
                   <code>0.0</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>solve</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, solve the UVLM for the reference geometry to obtain circulations/forces. If False,
+skip the solve and return the zero-circulation aero snapshot.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -25983,13 +26111,18 @@ variables are obtained.</p>
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
-<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="p">(),</span>
     <span class="n">horseshoe</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">use_f_ext_follower</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">use_f_ext_dead</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">t_init</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">solve</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Obtain the static aeroelastic object describing the undeformed wing.</span>
@@ -25997,8 +26130,9 @@ variables are obtained.</p>
 <span class="sd">    :param horseshoe: Horseshoe flag.</span>
 <span class="sd">    :param use_f_ext_follower: If true, allocate an array for follower forces.</span>
 <span class="sd">    :param use_f_ext_dead: If true, allocate an array for dead forces.</span>
-
 <span class="sd">    :param t_init: Initial time</span>
+<span class="sd">    :param solve: If True, solve the UVLM for the reference geometry to obtain circulations/forces. If False,</span>
+<span class="sd">    skip the solve and return the zero-circulation aero snapshot.</span>
 <span class="sd">    :return: Static aeroelastic object for undeformed wing</span>
 <span class="sd">    """</span>
     <span class="n">prescribed_dofs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">make_prescribed_dofs_tuple</span><span class="p">(</span><span class="n">prescribed_dofs</span><span class="p">)</span>
@@ -26012,7 +26146,9 @@ variables are obtained.</p>
         <span class="p">),</span>
         <span class="n">aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">static_solve</span><span class="p">(</span>
             <span class="n">t</span><span class="o">=</span><span class="n">t_init</span><span class="p">,</span> <span class="n">hg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">hg0</span><span class="p">,</span> <span class="n">horseshoe</span><span class="o">=</span><span class="n">horseshoe</span>
-        <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">solve</span>
+        <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">reference_configuration</span><span class="p">(),</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -26114,12 +26250,7 @@ dynamic case.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">453</span>
-<span class="normal">454</span>
-<span class="normal">455</span>
-<span class="normal">456</span>
-<span class="normal">457</span>
-<span class="normal">458</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">458</span>
 <span class="normal">459</span>
 <span class="normal">460</span>
 <span class="normal">461</span>
@@ -26148,7 +26279,12 @@ dynamic case.</p>
 <span class="normal">484</span>
 <span class="normal">485</span>
 <span class="normal">486</span>
-<span class="normal">487</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_dynamic</span><span class="p">(</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_dynamic</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">static_case</span><span class="p">:</span> <span class="n">AeroelasticCase</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>

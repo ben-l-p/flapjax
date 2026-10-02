@@ -174,6 +174,26 @@ gd = GridDiscretisation(m=10, n=20, m_star=40)
 gd_tuple = (10, 20, 40)
 ```
 
+#### Fuselage-type surfaces
+
+We always use the convention that the wake sheds from the trailing edge of the aerodynamic surface, which corresponds to
+the last edge along the chordwise direction (the `m` axis).
+
+For a wing, we integrate the forces and moments along each chordwise strip, before applying these forces to the beam,
+which means that our wake-shedding axes and the integration axes are aligned, a natural choice for wings. For
+fuselage-like bodies, the beam is aligned along the streamwise direction where we want integrate along strips in the
+width-wise direction (the `n` axis), whilst still keeping wake convection from the trailing edge.
+
+To account for this, we allow the user to swap which axis forces are integrated along and applied to the beam, so that
+the wake-shedding axis and the stripwise integration directions are optionally perpendicular. To allow for
+this, `GridDiscretisation` takes a `beam_m` flag (default `False` for the regular wing behaviour):
+
+```python
+gd_fuselage = GridDiscretisation(m=10, n=20, m_star=0, beam_m=True)
+```
+
+where this requires `dof_mapping` for that surface has shape `(m+1,)` rather than `(n+1,)`,
+
 ### Optional parameters
 
 | Parameter                 | Type                         | Default              | Description                                                                                                                                                                                                                                                                                |

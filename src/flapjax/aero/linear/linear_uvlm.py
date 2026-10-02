@@ -1033,6 +1033,7 @@ class LinearUVLM(
             mirror_edge_high=self.reference.mirror_edge_high,
             flowfield=self.reference.flowfield,
             dof_mapping=self.reference.dof_mapping,
+            beam_m=self.reference.beam_m,
             free_wake=self.reference.free_wake,
             gamma_dot_relaxation=self.reference.gamma_dot_relaxation,
             static_horseshoe=self.reference.static_horseshoe,

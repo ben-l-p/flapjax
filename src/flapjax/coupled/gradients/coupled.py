@@ -434,6 +434,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 x0_aero=inner_case.aero.zeta_b0,
                 mirror_edge_low=inner_case.aero.mirror_edge_low,
                 mirror_edge_high=inner_case.aero.mirror_edge_high,
+                beam_m=inner_case.aero.beam_m,
             )
 
             f_aero_beam_local = transform_nodal_vect(

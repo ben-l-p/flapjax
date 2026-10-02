@@ -907,6 +907,7 @@ def project_forcing_to_beam(
     x0_aero: ArrayList,
     mirror_edge_low: ArrayList | None = None,
     mirror_edge_high: ArrayList | None = None,
+    beam_m: Sequence[bool] | None = None,
 ) -> Array:
     r"""
     Project aerodynamic forcing at specified time step onto the beam grid. Returned forces are in the global frame.
@@ -917,6 +918,8 @@ def project_forcing_to_beam(
     :param mirror_edge_low: Per-surface booleans marking whether that surface's ``n=0`` edge lies on a mirror
     plane, ``(n_surf, )()``. Where True, that vertex column's force is halved before being projected onto the beam.
     :param mirror_edge_high: As ``mirror_edge_low``, for the ``n=-1`` edge.
+    :param beam_m: Per-surface flag, ``(n_surf, )``: if True, that surface's beam-mapped axis is ``m``
+        instead of ``n``.
     :return: Steady and unsteady forcing projected onto the beam grid, ``(n_nodes, 6)``
     """
 
@@ -929,27 +932,40 @@ def project_forcing_to_beam(
     mirror_edge_high_ = (
         mirror_edge_high if mirror_edge_high is not None else [None] * len(f_total)
     )
+    beam_m_ = beam_m if beam_m is not None else [False] * len(f_total)
 
-    for i_surf, (f_surf, on_plane_low, on_plane_high) in enumerate(
-        zip(f_total, mirror_edge_low_, mirror_edge_high_)
+    for i_surf, (f_surf, on_plane_low, on_plane_high, beam_m_surf) in enumerate(
+        zip(f_total, mirror_edge_low_, mirror_edge_high_, beam_m_)
     ):
         if on_plane_low is not None:
             f_surf = f_surf.at[:, 0, :].multiply(jnp.where(on_plane_low, 0.5, 1.0))
         if on_plane_high is not None:
             f_surf = f_surf.at[:, -1, :].multiply(jnp.where(on_plane_high, 0.5, 1.0))
 
-        # rotate relative distances to get moment arms
-        this_rmat = rmat[dof_mapping[i_surf], ...]  # (zeta_n, 3, 3)
-        r_x0 = jnp.einsum(
-            "ijk,lik->lij", this_rmat, x0_aero[i_surf]
-        )  # relative distance (zeta_n, zeta_m, 3)
+        if beam_m_surf:
+            # each m station is rigidly attached to its own beam node
+            this_rmat = rmat[dof_mapping[i_surf], ...]  # (zeta_m, 3, 3)
+            r_x0 = jnp.einsum(
+                "mjk,mnk->mnj", this_rmat, x0_aero[i_surf]
+            )  # relative distance (zeta_m, zeta_n, 3)
 
-        result = result.at[dof_mapping[i_surf], :3].add(
-            f_surf.sum(axis=0)
-        )  # forcing is sum along strip (zeta_n, 3)
-        result = result.at[dof_mapping[i_surf], 3:].add(
-            jnp.cross(r_x0, f_surf).sum(axis=0)
-        )  # moment is cross(r, f) summed along strip (zeta_n, 3)
+            result = result.at[dof_mapping[i_surf], :3].add(f_surf.sum(axis=1))
+            result = result.at[dof_mapping[i_surf], 3:].add(
+                jnp.cross(r_x0, f_surf).sum(axis=1)
+            )
+        else:
+            # rotate relative distances to get moment arms
+            this_rmat = rmat[dof_mapping[i_surf], ...]  # (zeta_n, 3, 3)
+            r_x0 = jnp.einsum(
+                "ijk,lik->lij", this_rmat, x0_aero[i_surf]
+            )  # relative distance (zeta_n, zeta_m, 3)
+
+            result = result.at[dof_mapping[i_surf], :3].add(
+                f_surf.sum(axis=0)
+            )  # forcing is sum along strip (zeta_n, 3)
+            result = result.at[dof_mapping[i_surf], 3:].add(
+                jnp.cross(r_x0, f_surf).sum(axis=0)
+            )  # moment is cross(r, f) summed along strip (zeta_n, 3)
     return result
 
 

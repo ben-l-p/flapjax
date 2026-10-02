@@ -33,11 +33,15 @@ class GridDiscretisation:
     :param m: Number of panels in the chordwise direction.
     :param n: Number of panels in the spanwise direction.
     :param m_star: Number of wake panels in the chordwise direction.
+    :param beam_m: If False (default), this surface's spanwise (``n``) axis is the one attached to the
+        beam via ``dof_mapping``. If True, ``m`` is the beam-mapped axis instead. This is used to allow for
+        fuselage-type surfaces where the structural mapping direction and the wake direction align.
     """
 
     m: int
     n: int
     m_star: int
+    beam_m: bool = False
 
 
 @make_pytree
@@ -62,6 +66,7 @@ class AeroCase:
         "free_wake",
         "kernels",
         "batch_size",
+        "beam_m",
     )
 
     def __init__(
@@ -93,6 +98,7 @@ class AeroCase:
         t: Array,
         i_ts: Array | int,
         dof_mapping: ArrayList,
+        beam_m: Sequence[bool],
         static_horseshoe: bool,
         free_wake: bool,
         gamma_dot_relaxation: float | Array,
@@ -129,7 +135,9 @@ class AeroCase:
         :param surf_w_names: Names of wake surfaces, ``(n_surf, )``.
         :param t: Time; batched: ``(n_tstep, )``, snapshot: scalar.
         :param i_ts: Timestep index; batched: ``(n_tstep, )``, snapshot: ``int``.
-        :param dof_mapping: Map from aero grid to beam DOFs, ``(n_surf, )(zeta_n, )``.
+        :param dof_mapping: Map from aero grid to beam DOFs, ``(n_surf, )(zeta_n, )`` (or ``(n_surf, )(zeta_m, )``
+            for a surface with ``beam_m`` set).
+        :param beam_m: Per-surface flag for the axis in which to map forces ``(n_surf, )``.
         :param static_horseshoe: If true, a horseshoe formulation was used for the initial static solution.
         :param free_wake: Free-wake formulation flag.
         :param gamma_dot_relaxation: Circulation time derivative filter.
@@ -163,6 +171,7 @@ class AeroCase:
         self.surf_b_names: Sequence[str] = surf_b_names
         self.surf_w_names: Sequence[str] = surf_w_names
         self.dof_mapping: ArrayList = dof_mapping
+        self.beam_m: Sequence[bool] = beam_m
 
         # settings
         self.static_horseshoe: bool = static_horseshoe
@@ -549,6 +558,7 @@ class AeroCase:
             dof_mapping=self.dof_mapping,
             mirror_edge_low=self.mirror_edge_low,
             mirror_edge_high=self.mirror_edge_high,
+            beam_m=self.beam_m,
         )
 
     def _t_at(self, i_ts: int | None) -> Array:
@@ -630,6 +640,7 @@ class AeroCase:
             mirror_edge_high=self.mirror_edge_high,
             flowfield=self.flowfield,
             dof_mapping=self.dof_mapping,
+            beam_m=self.beam_m,
             batch_size=self.batch_size,
         )
 
@@ -674,6 +685,7 @@ class AeroCase:
             t=jnp.zeros(n_tstep).at[i_ts].set(self.t),
             i_ts=jnp.arange(n_tstep),
             dof_mapping=self.dof_mapping,
+            beam_m=self.beam_m,
             static_horseshoe=self.static_horseshoe,
             free_wake=self.free_wake,
             gamma_dot_relaxation=self.gamma_dot_relaxation,

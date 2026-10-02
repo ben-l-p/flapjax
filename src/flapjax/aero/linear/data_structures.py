@@ -165,6 +165,7 @@ class AeroLinearResult:
             mirror_edge_high=None,
             flowfield=self.reference.flowfield,
             dof_mapping=self.reference.dof_mapping,
+            beam_m=self.reference.beam_m,
             free_wake=self.reference.free_wake,
             gamma_dot_relaxation=self.reference.gamma_dot_relaxation,
             batch_size=1,  # chosen default value

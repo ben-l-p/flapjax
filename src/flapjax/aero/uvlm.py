@@ -87,6 +87,7 @@ class UVLM:
     _static: ClassVar[tuple[str, ...]] = (
         "n_surf",
         "grid_disc",
+        "beam_m",
         "n_bound_panels",
         "n_wake_panels",
         "n_panels_tot",
@@ -244,6 +245,9 @@ class UVLM:
                 )
         self.grid_disc: tuple[GridDiscretisation] = tuple(grid_disc)
 
+        # per-surface flag for whether the beam-mapped axis is m instead of n
+        self.beam_m: tuple[bool, ...] = tuple(gd.beam_m for gd in self.grid_disc)
+
         # count of number of panels
         self.n_bound_panels: tuple[int, ...] = tuple(
             [gd.m * gd.n for gd in self.grid_disc]
@@ -273,7 +277,8 @@ class UVLM:
             )
         for i_surf, map_ in enumerate(self.dof_mapping):
             check_arr_dtype(map_, int, "dof_mapping")
-            check_arr_shape(map_, (self.grid_disc[i_surf].n + 1,), "grid_disc")
+            gd = self.grid_disc[i_surf]
+            check_arr_shape(map_, ((gd.m if gd.beam_m else gd.n) + 1,), "grid_disc")
 
         # this must be optional as it is set as a design variable later
         self.flowfield = None
@@ -582,13 +587,20 @@ class UVLM:
         for i_surf in range(self.n_surf):
             this_hg = jnp.take(
                 hg_n, self.dof_mapping[i_surf], axis=0
-            )  # (n_nodes, 4, 4)
+            )  # (n_span, 4, 4), or (zeta_m, 4, 4) if beam_m
 
-            zetas.append(
-                vmap(vmap(se3_vect_product, (None, 0), 0), (0, 1), 1)(
-                    this_hg, zeta_b0_cs[i_surf]
+            if self.beam_m[i_surf]:
+                zetas.append(
+                    vmap(vmap(se3_vect_product, (None, 0)), (0, 0))(
+                        this_hg, zeta_b0_cs[i_surf]
+                    )
                 )
-            )
+            else:
+                zetas.append(
+                    vmap(vmap(se3_vect_product, (None, 0), 0), (0, 1), 1)(
+                        this_hg, zeta_b0_cs[i_surf]
+                    )
+                )
         return zetas
 
     def hg_dot_to_zeta_b_dot(
@@ -635,21 +647,32 @@ class UVLM:
         for i_surf in range(self.n_surf):
             this_hg = jnp.take(
                 hg_n, self.dof_mapping[i_surf], axis=0
-            )  # (n_nodes, 4, 4)
-            this_hg_dot = jnp.take(
-                hg_dot_n, self.dof_mapping[i_surf], axis=0
-            )  # (n_nodes, 4, 4)
-            this_rmat = this_hg[:, :3, :3]  # (n_span, 3, 3)
-            zeta_dots.append(
-                vmap(vmap(se3_vect_product, (None, 0), 0), (0, 1), 1)(
-                    this_hg_dot, zeta_b0_cs[i_surf]
+            )  # (zeta_n, 4, 4), or (zeta_m, 4, 4)
+            this_hg_dot = jnp.take(hg_dot_n, self.dof_mapping[i_surf], axis=0)
+            this_rmat = this_hg[:, :3, :3]
+
+            if self.beam_m[i_surf]:
+                zeta_dots.append(
+                    vmap(vmap(se3_vect_product, (None, 0)), (0, 0))(
+                        this_hg_dot, zeta_b0_cs[i_surf]
+                    )
+                    + jnp.einsum(
+                        "mjk,mnk->mnj",
+                        this_rmat,
+                        zeta_b0_dot_cs[i_surf],
+                    )
                 )
-                + jnp.einsum(
-                    "njk,mnk->mnj",
-                    this_rmat,
-                    zeta_b0_dot_cs[i_surf],
+            else:
+                zeta_dots.append(
+                    vmap(vmap(se3_vect_product, (None, 0), 0), (0, 1), 1)(
+                        this_hg_dot, zeta_b0_cs[i_surf]
+                    )
+                    + jnp.einsum(
+                        "njk,mnk->mnj",
+                        this_rmat,
+                        zeta_b0_dot_cs[i_surf],
+                    )
                 )
-            )
         return zeta_dots
 
     def _make_gamma_slices(self) -> tuple[tuple[slice, ...], tuple[slice, ...]]:
@@ -1362,6 +1385,7 @@ class UVLM:
             i_ts=jnp.arange(n_tstep),
             t=jnp.zeros(n_tstep),
             dof_mapping=self.dof_mapping,
+            beam_m=self.beam_m,
             static_horseshoe=static_horseshoe,
             free_wake=free_wake,
             gamma_dot_relaxation=gamma_dot_relaxation,
@@ -1523,6 +1547,7 @@ class UVLM:
             i_ts=-1,
             t=jnp.array(0.0),
             dof_mapping=self.dof_mapping,
+            beam_m=self.beam_m,
             flowfield=self.flowfield,
             mirror_point=self.mirror_point,
             mirror_normal=self.mirror_normal,
@@ -1616,6 +1641,7 @@ class UVLM:
             x0_aero=inner_case.zeta_b0,
             mirror_edge_low=inner_case.mirror_edge_low,
             mirror_edge_high=inner_case.mirror_edge_high,
+            beam_m=self.beam_m,
         )
         f_aero_beam_local = transform_nodal_vect(
             vect=f_aero_beam_global, rmat=jnp.swapaxes(hg_n[:, :3, :3], -2, -1)
@@ -2047,6 +2073,7 @@ class UVLM:
             x0_aero=inner_case.zeta_b0,
             mirror_edge_low=inner_case.mirror_edge_low,
             mirror_edge_high=inner_case.mirror_edge_high,
+            beam_m=inner_case.beam_m,
         )
 
         # transform to local frame to match f_aero_beam_n

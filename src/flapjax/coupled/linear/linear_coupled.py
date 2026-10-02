@@ -419,6 +419,7 @@ class LinearCoupled(
             x0_aero=self.aero.case.zeta_b0,
             mirror_edge_low=self.aero.case.mirror_edge_low,
             mirror_edge_high=self.aero.case.mirror_edge_high,
+            beam_m=self.aero.case.beam_m,
         )
 
         # subtract the reference contribution so the aero forcing fed into the beam operator
@@ -434,6 +435,7 @@ class LinearCoupled(
             x0_aero=self.aero.case.zeta_b0,
             mirror_edge_low=self.aero.case.mirror_edge_low,
             mirror_edge_high=self.aero.case.mirror_edge_high,
+            beam_m=self.aero.case.beam_m,
         )
         delta_f_aero_beam = f_aero_beam_total - f_aero_beam_ref
 

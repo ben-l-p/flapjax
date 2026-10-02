@@ -58,7 +58,11 @@ $$
 $$
 
 with $\mathfrak{f}$ used to denote aerodynamic forcing on the aerodynamic grid, and $\mathbf{f}$ being projected onto
-the beam.
+the beam. This sum over the chordwise index $i$ at each beam node $j$ reflects the usual convention, where the
+spanwise grid index is the one mapped onto beam nodes via `dof_mapping` and the chordwise index is integrated away.
+For a fuselage-like body, whose beam bends along the same axis the wake must shed from, `GridDiscretisation` instead
+takes a `beam_m` flag that swaps the roles of the two indices: forcing is summed over the spanwise index at each beam
+node along the (now beam-mapped) chordwise-like index.
 
 For the unsteady case, we introduce lag terms from the wake that need to be captured, as the current UVLM solution
 depends on data from the previous step. The aerodynamic system can be solved as

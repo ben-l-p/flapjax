@@ -503,6 +503,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Required parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fuselage-type-surfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fuselage-type surfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2122,6 +2139,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Required parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fuselage-type-surfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fuselage-type surfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2529,6 +2563,19 @@ wake panel counts respectively, and <code>n_surf</code> to refer to the number o
 <div class="highlight"><pre><span></span><code><span class="n">gd</span> <span class="o">=</span> <span class="n">GridDiscretisation</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">m_star</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
 <span class="n">gd_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
 </code></pre></div>
+<h4 id="fuselage-type-surfaces">Fuselage-type surfaces<a class="headerlink" href="#fuselage-type-surfaces" title="Permanent link">&para;</a></h4>
+<p>We always use the convention that the wake sheds from the trailing edge of the aerodynamic surface, which corresponds to
+the last edge along the chordwise direction (the <code>m</code> axis).</p>
+<p>For a wing, we integrate the forces and moments along each chordwise strip, before applying these forces to the beam,
+which means that our wake-shedding axes and the integration axes are aligned, a natural choice for wings. For
+fuselage-like bodies, the beam is aligned along the streamwise direction where we want integrate along strips in the
+width-wise direction (the <code>n</code> axis), whilst still keeping wake convection from the trailing edge.</p>
+<p>To account for this, we allow the user to swap which axis forces are integrated along and applied to the beam, so that
+the wake-shedding axis and the stripwise integration directions are optionally perpendicular. To allow for
+this, <code>GridDiscretisation</code> takes a <code>beam_m</code> flag (default <code>False</code> for the regular wing behaviour):</p>
+<div class="highlight"><pre><span></span><code><span class="n">gd_fuselage</span> <span class="o">=</span> <span class="n">GridDiscretisation</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">m_star</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">beam_m</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<p>where this requires <code>dof_mapping</code> for that surface has shape <code>(m+1,)</code> rather than <code>(n+1,)</code>,</p>
 <h3 id="optional-parameters_1">Optional parameters<a class="headerlink" href="#optional-parameters_1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

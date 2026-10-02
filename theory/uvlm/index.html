@@ -1950,7 +1950,11 @@ equations as</p>
 \mathbf{f}_{\text{aero}, j} = \sum_{i=1}^{m} \begin{Bmatrix} \mathbf{R}^{\top}_j \, \mathfrak{f}_{\text{steady}, ij} \\ \pmb{\zeta}_{0, ij} \times \left (\mathbf{R}^{\top}_j \, \mathfrak{f}_{\text{steady}, ij}\right) \end{Bmatrix}
 \]</div>
 <p>with <span class="arithmatex">\(\mathfrak{f}\)</span> used to denote aerodynamic forcing on the aerodynamic grid, and <span class="arithmatex">\(\mathbf{f}\)</span> being projected onto
-the beam.</p>
+the beam. This sum over the chordwise index <span class="arithmatex">\(i\)</span> at each beam node <span class="arithmatex">\(j\)</span> reflects the usual convention, where the
+spanwise grid index is the one mapped onto beam nodes via <code>dof_mapping</code> and the chordwise index is integrated away.
+For a fuselage-like body, whose beam bends along the same axis the wake must shed from, <code>GridDiscretisation</code> instead
+takes a <code>beam_m</code> flag that swaps the roles of the two indices: forcing is summed over the spanwise index at each beam
+node along the (now beam-mapped) chordwise-like index.</p>
 <p>For the unsteady case, we introduce lag terms from the wake that need to be captured, as the current UVLM solution
 depends on data from the previous step. The aerodynamic system can be solved as</p>
 <div class="arithmatex">\[

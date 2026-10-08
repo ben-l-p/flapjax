@@ -2968,6 +2968,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#flapjax.aero.frequency_flowfields.ContinuousCosineFlowField" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ContinuousCosineFlowField
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6227,6 +6238,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#flapjax.aero.frequency_flowfields.ContinuousCosineFlowField" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ContinuousCosineFlowField
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -8281,7 +8303,8 @@ for a surface with <code>beam_m</code> set).</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 72</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 71</span>
+<span class="normal"> 72</span>
 <span class="normal"> 73</span>
 <span class="normal"> 74</span>
 <span class="normal"> 75</span>
@@ -8388,8 +8411,7 @@ for a surface with <code>beam_m</code> set).</p>
 <span class="normal">176</span>
 <span class="normal">177</span>
 <span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">zeta_b</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">zeta_b_dot</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
@@ -8588,7 +8610,8 @@ for a surface with <code>beam_m</code> set).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">296</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">295</span>
+<span class="normal">296</span>
 <span class="normal">297</span>
 <span class="normal">298</span>
 <span class="normal">299</span>
@@ -8609,8 +8632,7 @@ for a surface with <code>beam_m</code> set).</p>
 <span class="normal">314</span>
 <span class="normal">315</span>
 <span class="normal">316</span>
-<span class="normal">317</span>
-<span class="normal">318</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroFullStates</span><span class="p">:</span>
+<span class="normal">317</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroFullStates</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Obtain the aerodynamic state at a given timestep (used in the adjoint solution).</span>
 <span class="sd">    :param i_ts: Time step index (required for batched, ignored for snapshot).</span>
@@ -8711,7 +8733,8 @@ for a surface with <code>beam_m</code> set).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">320</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">319</span>
+<span class="normal">320</span>
 <span class="normal">321</span>
 <span class="normal">322</span>
 <span class="normal">323</span>
@@ -8724,8 +8747,7 @@ for a surface with <code>beam_m</code> set).</p>
 <span class="normal">330</span>
 <span class="normal">331</span>
 <span class="normal">332</span>
-<span class="normal">333</span>
-<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
+<span class="normal">333</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Concatenate bound and wake circulation strengths.</span>
 <span class="sd">    :param i_ts: Time step index (required for batched, ignored for snapshot).</span>
 <span class="sd">    :return: Circulation strength, ``(2 * n_surf,)(m | m_star, n)``.</span>
@@ -8818,7 +8840,8 @@ for a surface with <code>beam_m</code> set).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">336</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">335</span>
+<span class="normal">336</span>
 <span class="normal">337</span>
 <span class="normal">338</span>
 <span class="normal">339</span>
@@ -8833,8 +8856,7 @@ for a surface with <code>beam_m</code> set).</p>
 <span class="normal">348</span>
 <span class="normal">349</span>
 <span class="normal">350</span>
-<span class="normal">351</span>
-<span class="normal">352</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">zeta_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
+<span class="normal">351</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">zeta_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Concatenate bound and wake grids.</span>
 <span class="sd">    :param i_ts: Time step index (required for batched, ignored for snapshot).</span>
 <span class="sd">    :return: Grids, ``(2 * n_surf,)(zeta_m | zeta_m_star, zeta_n, 3)``.</span>
@@ -8940,7 +8962,8 @@ for a surface with <code>beam_m</code> set).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">354</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">353</span>
+<span class="normal">354</span>
 <span class="normal">355</span>
 <span class="normal">356</span>
 <span class="normal">357</span>
@@ -8949,8 +8972,7 @@ for a surface with <code>beam_m</code> set).</p>
 <span class="normal">360</span>
 <span class="normal">361</span>
 <span class="normal">362</span>
-<span class="normal">363</span>
-<span class="normal">364</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_arraylist_at_ts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">363</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_arraylist_at_ts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Set an attribute at a given timestep on a batched AeroCase.</span>
 <span class="sd">    :param attr: Name of the attribute to set.</span>
 <span class="sd">    :param values: ArrayList of per-surface values (no leading time axis).</span>
@@ -8988,7 +9010,8 @@ a batched AeroCase.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">366</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">365</span>
+<span class="normal">366</span>
 <span class="normal">367</span>
 <span class="normal">368</span>
 <span class="normal">369</span>
@@ -9013,7 +9036,8 @@ a batched AeroCase.</p>
 <span class="normal">388</span>
 <span class="normal">389</span>
 <span class="normal">390</span>
-<span class="normal">391</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_surf_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">i_surf</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_AeroSurfacePlot</span><span class="p">:</span>
+<span class="normal">391</span>
+<span class="normal">392</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_surf_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">i_surf</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_AeroSurfacePlot</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Get single-surface plot data for a given ``(timestep, surface)`` pair on</span>
 <span class="sd">    a batched AeroCase.</span>
 <span class="sd">    """</span>
@@ -9035,6 +9059,8 @@ a batched AeroCase.</p>
         <span class="n">cl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cl</span><span class="p">[</span><span class="n">i_surf</span><span class="p">][</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
         <span class="n">cd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cd</span><span class="p">[</span><span class="n">i_surf</span><span class="p">][</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
         <span class="n">cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cm</span><span class="p">[</span><span class="n">i_surf</span><span class="p">][</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+        <span class="n">dof_mapping</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
+        <span class="n">beam_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_m</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
         <span class="n">surf_b_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surf_b_names</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
         <span class="n">surf_w_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surf_w_names</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
         <span class="n">i_ts</span><span class="o">=</span><span class="n">i_ts</span><span class="p">,</span>
@@ -9064,8 +9090,7 @@ AeroCase.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">393</span>
-<span class="normal">394</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">394</span>
 <span class="normal">395</span>
 <span class="normal">396</span>
 <span class="normal">397</span>
@@ -9088,7 +9113,10 @@ AeroCase.</p>
 <span class="normal">414</span>
 <span class="normal">415</span>
 <span class="normal">416</span>
-<span class="normal">417</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_AeroSurfacePlot</span><span class="p">:</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_AeroSurfacePlot</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Get single-surface plot data for the given surface on a snapshot</span>
 <span class="sd">    AeroCase."""</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_batched</span><span class="p">:</span>
@@ -9109,6 +9137,8 @@ AeroCase.</p>
         <span class="n">cl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cl</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
         <span class="n">cd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cd</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
         <span class="n">cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cm</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+        <span class="n">dof_mapping</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+        <span class="n">beam_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_m</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
         <span class="n">surf_b_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surf_b_names</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
         <span class="n">surf_w_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surf_w_names</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
         <span class="n">i_ts</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_ts</span><span class="p">),</span>
@@ -9250,10 +9280,7 @@ Ignored for snapshots.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">466</span>
-<span class="normal">467</span>
-<span class="normal">468</span>
-<span class="normal">469</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">469</span>
 <span class="normal">470</span>
 <span class="normal">471</span>
 <span class="normal">472</span>
@@ -9311,7 +9338,10 @@ Ignored for snapshots.</p>
 <span class="normal">524</span>
 <span class="normal">525</span>
 <span class="normal">526</span>
-<span class="normal">527</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">directory</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">plot_bound</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -9390,7 +9420,7 @@ Ignored for snapshots.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">project_forcing_to_beam</span><span class="p">(</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">rmat</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">include_unsteady</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span>
 </code></pre></div>
@@ -9445,7 +9475,7 @@ Ignored for snapshots.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>x0_aero</code>
+                <code>zeta_b0</code>
             </td>
             <td>
                   <code><a class="autorefs autorefs-internal" title="ArrayList (flapjax.algebra.array_utils.ArrayList)" href="../algebra/#flapjax.algebra.array_utils.ArrayList">ArrayList</a></code>
@@ -9504,10 +9534,7 @@ Ignored for snapshots.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">529</span>
-<span class="normal">530</span>
-<span class="normal">531</span>
-<span class="normal">532</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">532</span>
 <span class="normal">533</span>
 <span class="normal">534</span>
 <span class="normal">535</span>
@@ -9537,17 +9564,20 @@ Ignored for snapshots.</p>
 <span class="normal">559</span>
 <span class="normal">560</span>
 <span class="normal">561</span>
-<span class="normal">562</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">project_forcing_to_beam</span><span class="p">(</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span>
+<span class="normal">565</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">project_forcing_to_beam</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">rmat</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">include_unsteady</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Project aerodynamic forcing at ``i_ts`` onto the beam grid (global frame).</span>
 <span class="sd">    :param i_ts: Time step index (ignored for snapshot).</span>
 <span class="sd">    :param rmat: Rotation matrix for each node relative to reference, ``(n_nodes, 3, 3)``.</span>
-<span class="sd">    :param x0_aero: Reference coordinates for aerodynamic grid, ``(n_surf, )(zeta_m, zeta_n, 3)``.</span>
+<span class="sd">    :param zeta_b0: Reference coordinates for aerodynamic grid, ``(n_surf, )(zeta_m, zeta_n, 3)``.</span>
 <span class="sd">    :param include_unsteady: If true, include unsteady forcing.</span>
 <span class="sd">    :return: Steady and unsteady forcing projected onto the beam grid, ``(n_nodes, 6)``.</span>
 <span class="sd">    """</span>
@@ -9565,7 +9595,7 @@ Ignored for snapshots.</p>
     <span class="k">return</span> <span class="n">project_forcing_to_beam</span><span class="p">(</span>
         <span class="n">f_total</span><span class="o">=</span><span class="n">f_total</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">rmat</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="n">x0_aero</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">dof_mapping</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">,</span>
         <span class="n">mirror_edge_low</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mirror_edge_low</span><span class="p">,</span>
         <span class="n">mirror_edge_high</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mirror_edge_high</span><span class="p">,</span>
@@ -9595,16 +9625,16 @@ Ignored for snapshots.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">571</span>
-<span class="normal">572</span>
-<span class="normal">573</span>
-<span class="normal">574</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">574</span>
 <span class="normal">575</span>
 <span class="normal">576</span>
 <span class="normal">577</span>
 <span class="normal">578</span>
 <span class="normal">579</span>
-<span class="normal">580</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_background</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_background</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">x_target</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Background velocity at specified points and time step."""</span>
@@ -9638,10 +9668,7 @@ Ignored for snapshots.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">582</span>
-<span class="normal">583</span>
-<span class="normal">584</span>
-<span class="normal">585</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">585</span>
 <span class="normal">586</span>
 <span class="normal">587</span>
 <span class="normal">588</span>
@@ -9650,7 +9677,10 @@ Ignored for snapshots.</p>
 <span class="normal">591</span>
 <span class="normal">592</span>
 <span class="normal">593</span>
-<span class="normal">594</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_ind</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_ind</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">x_target</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Induced velocity at specified points and time step."""</span>
@@ -9687,13 +9717,13 @@ Ignored for snapshots.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">596</span>
-<span class="normal">597</span>
-<span class="normal">598</span>
-<span class="normal">599</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">599</span>
 <span class="normal">600</span>
 <span class="normal">601</span>
-<span class="normal">602</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_tot</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_tot</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">x_target</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Total (induced + background) velocity at specified points and time step."""</span>
@@ -9725,10 +9755,7 @@ timesteps, placing the current snapshot at index <code>i_ts</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">647</span>
-<span class="normal">648</span>
-<span class="normal">649</span>
-<span class="normal">650</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">650</span>
 <span class="normal">651</span>
 <span class="normal">652</span>
 <span class="normal">653</span>
@@ -9771,7 +9798,10 @@ timesteps, placing the current snapshot at index <code>i_ts</code>.</p>
 <span class="normal">690</span>
 <span class="normal">691</span>
 <span class="normal">692</span>
-<span class="normal">693</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Expand this snapshot into a batched AeroCase with ``n_tstep``</span>
 <span class="sd">    timesteps, placing the current snapshot at index ``i_ts``.</span>
 <span class="sd">    """</span>
@@ -9848,10 +9878,10 @@ timesteps, placing the current snapshot at index <code>i_ts</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">695</span>
-<span class="normal">696</span>
-<span class="normal">697</span>
-<span class="normal">698</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">initialise</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">initial_snapshot</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span> <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Create a batched AeroCase from a snapshot placed at ``i_ts=0``."""</span>
     <span class="k">return</span> <span class="n">initial_snapshot</span><span class="o">.</span><span class="n">to_dynamic</span><span class="p">(</span><span class="n">i_ts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_tstep</span><span class="o">=</span><span class="n">n_tstep</span><span class="p">)</span>
@@ -11644,7 +11674,7 @@ of <code>self.ravel()</code>.</p>
 
 <a href="#flapjax.aero.AeroGradsToCompute" class="headerlink" title="Permanent link">&para;</a></h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">AeroGradsToCompute</span><span class="p">(</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">cs_ang_t</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">cs_vel_t</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -11672,7 +11702,7 @@ adjoint solve. Defaults to computing only the aerodynamic grid gradients.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>x0_aero</code>
+                <code>zeta_b0</code>
             </td>
             <td>
                   <code><span title="bool">bool</span></code>
@@ -16607,27 +16637,27 @@ defaults to no control surfaces.</p>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Invalid delta_w type"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
-        <span class="n">x0_aero_arraylist</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="p">([</span><span class="n">zeta_b0</span><span class="p">])</span>
+        <span class="n">zeta_b0_arraylist</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="p">([</span><span class="n">zeta_b0</span><span class="p">])</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
-        <span class="n">x0_aero_arraylist</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">)</span>
+        <span class="n">zeta_b0_arraylist</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="n">ArrayList</span><span class="p">):</span>
-        <span class="n">x0_aero_arraylist</span> <span class="o">=</span> <span class="n">zeta_b0</span>
+        <span class="n">zeta_b0_arraylist</span> <span class="o">=</span> <span class="n">zeta_b0</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Invalid zeta_b0 type"</span><span class="p">)</span>
 
     <span class="c1"># set aerodynamic local coordinates</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0_aero_arraylist</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_surf</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">zeta_b0_arraylist</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_surf</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">"Expected </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_surf</span><span class="si">}</span><span class="s2"> aerodynamic grid coordinate arrays, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i_surf</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_surf</span><span class="p">):</span>
         <span class="n">check_arr_shape</span><span class="p">(</span>
-            <span class="n">x0_aero_arraylist</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
+            <span class="n">zeta_b0_arraylist</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_disc</span><span class="p">[</span><span class="n">i_surf</span><span class="p">]</span><span class="o">.</span><span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_disc</span><span class="p">[</span><span class="n">i_surf</span><span class="p">]</span><span class="o">.</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
             <span class="s2">"zeta_b0"</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span> <span class="o">=</span> <span class="n">x0_aero_arraylist</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span> <span class="o">=</span> <span class="n">zeta_b0_arraylist</span>
 
     <span class="k">if</span> <span class="n">reference_cs_angles</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs_ang0</span> <span class="o">=</span> <span class="n">reference_cs_angles</span>
@@ -16970,7 +17000,7 @@ variables are obtained.</p>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grads_to_compute</span><span class="p">,</span> <span class="n">AeroGradsToCompute</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">AeroDesignVariables</span><span class="p">(</span>
-            <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span> <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">x0_aero</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span> <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">zeta_b0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">flowfield</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">to_design_variables</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">flowfield</span>
             <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -17496,7 +17526,8 @@ initialised bound grid coordinates based on hg0.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">732</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">731</span>
+<span class="normal">732</span>
 <span class="normal">733</span>
 <span class="normal">734</span>
 <span class="normal">735</span>
@@ -17522,8 +17553,7 @@ initialised bound grid coordinates based on hg0.</p>
 <span class="normal">755</span>
 <span class="normal">756</span>
 <span class="normal">757</span>
-<span class="normal">758</span>
-<span class="normal">759</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_wake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zeta_b</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
+<span class="normal">758</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_wake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zeta_b</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Generate initial wake grid coordinates, based on the bound grid coordinates and the freestream conditions.</span>
 <span class="sd">    :param zeta_b: Initial wake grid coordinates, ``(n_surf, )(zeta_m, zeta_n, 3)``. If None, this will use the</span>
@@ -17680,7 +17710,8 @@ initialised bound grid coordinates based on hg0.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">761</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">760</span>
+<span class="normal">761</span>
 <span class="normal">762</span>
 <span class="normal">763</span>
 <span class="normal">764</span>
@@ -17702,8 +17733,7 @@ initialised bound grid coordinates based on hg0.</p>
 <span class="normal">780</span>
 <span class="normal">781</span>
 <span class="normal">782</span>
-<span class="normal">783</span>
-<span class="normal">784</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">783</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_gamma_dot</span><span class="p">(</span>
     <span class="n">gamma_b_n</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">gamma_b_nm1</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
@@ -17817,7 +17847,8 @@ full vector of strengths, or a sequence of strengths per surface.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">786</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">785</span>
+<span class="normal">786</span>
 <span class="normal">787</span>
 <span class="normal">788</span>
 <span class="normal">789</span>
@@ -17834,8 +17865,7 @@ full vector of strengths, or a sequence of strengths per surface.</p>
 <span class="normal">800</span>
 <span class="normal">801</span>
 <span class="normal">802</span>
-<span class="normal">803</span>
-<span class="normal">804</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@singledispatchmethod</span>
+<span class="normal">803</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@singledispatchmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_gamma_w</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gamma_vec</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Set wake circulation strengths from total circulation strengths at specified time step. Can be passed either a</span>
@@ -18106,7 +18136,8 @@ effective angle of attack, and per-strip lift, drag and moment coefficients.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">815</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">814</span>
+<span class="normal">815</span>
 <span class="normal">816</span>
 <span class="normal">817</span>
 <span class="normal">818</span>
@@ -18179,8 +18210,7 @@ effective angle of attack, and per-strip lift, drag and moment coefficients.</p>
 <span class="normal">885</span>
 <span class="normal">886</span>
 <span class="normal">887</span>
-<span class="normal">888</span>
-<span class="normal">889</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve</span><span class="p">(</span>
+<span class="normal">888</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">AeroFullStates</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -18510,7 +18540,8 @@ angle of attack, and per-strip lift, drag and moment coefficients sampled from t
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 891</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 890</span>
+<span class="normal"> 891</span>
 <span class="normal"> 892</span>
 <span class="normal"> 893</span>
 <span class="normal"> 894</span>
@@ -18834,8 +18865,7 @@ angle of attack, and per-strip lift, drag and moment coefficients sampled from t
 <span class="normal">1212</span>
 <span class="normal">1213</span>
 <span class="normal">1214</span>
-<span class="normal">1215</span>
-<span class="normal">1216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve_from_grid</span><span class="p">(</span>
+<span class="normal">1215</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve_from_grid</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">AeroFullStates</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -19396,7 +19426,8 @@ distance.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1218</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1217</span>
+<span class="normal">1218</span>
 <span class="normal">1219</span>
 <span class="normal">1220</span>
 <span class="normal">1221</span>
@@ -19497,8 +19528,7 @@ distance.</p>
 <span class="normal">1316</span>
 <span class="normal">1317</span>
 <span class="normal">1318</span>
-<span class="normal">1319</span>
-<span class="normal">1320</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">case_solve</span><span class="p">(</span>
+<span class="normal">1319</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">case_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -19767,7 +19797,8 @@ steps. All solution data is initialised to zero.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1322</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1321</span>
+<span class="normal">1322</span>
 <span class="normal">1323</span>
 <span class="normal">1324</span>
 <span class="normal">1325</span>
@@ -19839,8 +19870,7 @@ steps. All solution data is initialised to zero.</p>
 <span class="normal">1391</span>
 <span class="normal">1392</span>
 <span class="normal">1393</span>
-<span class="normal">1394</span>
-<span class="normal">1395</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_case_object</span><span class="p">(</span>
+<span class="normal">1394</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_case_object</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">static_horseshoe</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -20046,7 +20076,8 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1397</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1396</span>
+<span class="normal">1397</span>
 <span class="normal">1398</span>
 <span class="normal">1399</span>
 <span class="normal">1400</span>
@@ -20092,8 +20123,7 @@ TODO: add free wake</p>
 <span class="normal">1440</span>
 <span class="normal">1441</span>
 <span class="normal">1442</span>
-<span class="normal">1443</span>
-<span class="normal">1444</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
+<span class="normal">1443</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -20289,7 +20319,8 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1446</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1445</span>
+<span class="normal">1446</span>
 <span class="normal">1447</span>
 <span class="normal">1448</span>
 <span class="normal">1449</span>
@@ -20359,8 +20390,7 @@ TODO: add free wake</p>
 <span class="normal">1513</span>
 <span class="normal">1514</span>
 <span class="normal">1515</span>
-<span class="normal">1516</span>
-<span class="normal">1517</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prescribed_dynamic_solve</span><span class="p">(</span>
+<span class="normal">1516</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prescribed_dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">init_case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">hg_t</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -20479,7 +20509,8 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1519</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1518</span>
+<span class="normal">1519</span>
 <span class="normal">1520</span>
 <span class="normal">1521</span>
 <span class="normal">1522</span>
@@ -20522,8 +20553,7 @@ TODO: add free wake</p>
 <span class="normal">1559</span>
 <span class="normal">1560</span>
 <span class="normal">1561</span>
-<span class="normal">1562</span>
-<span class="normal">1563</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
+<span class="normal">1562</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Get the reference (initial) snapshot of the aerodynamic case. This will set the timestep as -1.</span>
 <span class="sd">    :return: StaticAero object at initial time step.</span>
@@ -20641,7 +20671,8 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1565</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1564</span>
+<span class="normal">1565</span>
 <span class="normal">1566</span>
 <span class="normal">1567</span>
 <span class="normal">1568</span>
@@ -20650,8 +20681,7 @@ TODO: add free wake</p>
 <span class="normal">1571</span>
 <span class="normal">1572</span>
 <span class="normal">1573</span>
-<span class="normal">1574</span>
-<span class="normal">1575</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_reference</span><span class="p">(</span>
+<span class="normal">1574</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_reference</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">plot_wake</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
@@ -20899,7 +20929,8 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1652</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1651</span>
+<span class="normal">1652</span>
 <span class="normal">1653</span>
 <span class="normal">1654</span>
 <span class="normal">1655</span>
@@ -21028,8 +21059,7 @@ requested.</p>
 <span class="normal">1778</span>
 <span class="normal">1779</span>
 <span class="normal">1780</span>
-<span class="normal">1781</span>
-<span class="normal">1782</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_res_func</span><span class="p">(</span>
+<span class="normal">1781</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -21427,7 +21457,8 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1784</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1783</span>
+<span class="normal">1784</span>
 <span class="normal">1785</span>
 <span class="normal">1786</span>
 <span class="normal">1787</span>
@@ -21530,8 +21561,7 @@ requested.</p>
 <span class="normal">1884</span>
 <span class="normal">1885</span>
 <span class="normal">1886</span>
-<span class="normal">1887</span>
-<span class="normal">1888</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wake_prop_res_func</span><span class="p">(</span>
+<span class="normal">1887</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wake_prop_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -21787,7 +21817,8 @@ the residual design gradient.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1890</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1889</span>
+<span class="normal">1890</span>
 <span class="normal">1891</span>
 <span class="normal">1892</span>
 <span class="normal">1893</span>
@@ -21834,8 +21865,7 @@ the residual design gradient.</p>
 <span class="normal">1934</span>
 <span class="normal">1935</span>
 <span class="normal">1936</span>
-<span class="normal">1937</span>
-<span class="normal">1938</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_dot_res_func</span><span class="p">(</span>
+<span class="normal">1937</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_dot_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">gamma_b_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">gamma_b_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -22166,7 +22196,8 @@ forcing on the bound grid.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1940</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1939</span>
+<span class="normal">1940</span>
 <span class="normal">1941</span>
 <span class="normal">1942</span>
 <span class="normal">1943</span>
@@ -22309,8 +22340,7 @@ forcing on the bound grid.</p>
 <span class="normal">2080</span>
 <span class="normal">2081</span>
 <span class="normal">2082</span>
-<span class="normal">2083</span>
-<span class="normal">2084</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">f_aero_res_func</span><span class="p">(</span>
+<span class="normal">2083</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">f_aero_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -22443,7 +22473,7 @@ forcing on the bound grid.</p>
         <span class="n">f_total</span><span class="o">=</span><span class="n">f_tot</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">hg_n</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
         <span class="n">dof_mapping</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">mirror_edge_low</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">mirror_edge_low</span><span class="p">,</span>
         <span class="n">mirror_edge_high</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">mirror_edge_high</span><span class="p">,</span>
         <span class="n">beam_m</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">beam_m</span><span class="p">,</span>
@@ -22734,7 +22764,8 @@ forcing on the bound grid.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2086</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2085</span>
+<span class="normal">2086</span>
 <span class="normal">2087</span>
 <span class="normal">2088</span>
 <span class="normal">2089</span>
@@ -22838,8 +22869,7 @@ forcing on the bound grid.</p>
 <span class="normal">2187</span>
 <span class="normal">2188</span>
 <span class="normal">2189</span>
-<span class="normal">2190</span>
-<span class="normal">2191</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
+<span class="normal">2190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">varphi_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -23130,7 +23160,8 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2193</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2192</span>
+<span class="normal">2193</span>
 <span class="normal">2194</span>
 <span class="normal">2195</span>
 <span class="normal">2196</span>
@@ -23261,8 +23292,7 @@ requested.</p>
 <span class="normal">2321</span>
 <span class="normal">2322</span>
 <span class="normal">2323</span>
-<span class="normal">2324</span>
-<span class="normal">2325</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
+<span class="normal">2324</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">aero_sol</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">structure_sol</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
@@ -23775,7 +23805,8 @@ displacement and velocity, and profiling times for compilation and run time.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2327</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2326</span>
+<span class="normal">2327</span>
 <span class="normal">2328</span>
 <span class="normal">2329</span>
 <span class="normal">2330</span>
@@ -24081,8 +24112,7 @@ displacement and velocity, and profiling times for compilation and run time.</p>
 <span class="normal">2630</span>
 <span class="normal">2631</span>
 <span class="normal">2632</span>
-<span class="normal">2633</span>
-<span class="normal">2634</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
+<span class="normal">2633</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">varphi_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -27388,7 +27418,8 @@ for a surface with <code>beam_m</code> set).</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 72</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 71</span>
+<span class="normal"> 72</span>
 <span class="normal"> 73</span>
 <span class="normal"> 74</span>
 <span class="normal"> 75</span>
@@ -27495,8 +27526,7 @@ for a surface with <code>beam_m</code> set).</p>
 <span class="normal">176</span>
 <span class="normal">177</span>
 <span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">zeta_b</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">zeta_b_dot</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
@@ -27695,7 +27725,8 @@ for a surface with <code>beam_m</code> set).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">296</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">295</span>
+<span class="normal">296</span>
 <span class="normal">297</span>
 <span class="normal">298</span>
 <span class="normal">299</span>
@@ -27716,8 +27747,7 @@ for a surface with <code>beam_m</code> set).</p>
 <span class="normal">314</span>
 <span class="normal">315</span>
 <span class="normal">316</span>
-<span class="normal">317</span>
-<span class="normal">318</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroFullStates</span><span class="p">:</span>
+<span class="normal">317</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroFullStates</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Obtain the aerodynamic state at a given timestep (used in the adjoint solution).</span>
 <span class="sd">    :param i_ts: Time step index (required for batched, ignored for snapshot).</span>
@@ -27818,7 +27848,8 @@ for a surface with <code>beam_m</code> set).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">320</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">319</span>
+<span class="normal">320</span>
 <span class="normal">321</span>
 <span class="normal">322</span>
 <span class="normal">323</span>
@@ -27831,8 +27862,7 @@ for a surface with <code>beam_m</code> set).</p>
 <span class="normal">330</span>
 <span class="normal">331</span>
 <span class="normal">332</span>
-<span class="normal">333</span>
-<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
+<span class="normal">333</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Concatenate bound and wake circulation strengths.</span>
 <span class="sd">    :param i_ts: Time step index (required for batched, ignored for snapshot).</span>
 <span class="sd">    :return: Circulation strength, ``(2 * n_surf,)(m | m_star, n)``.</span>
@@ -27925,7 +27955,8 @@ for a surface with <code>beam_m</code> set).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">336</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">335</span>
+<span class="normal">336</span>
 <span class="normal">337</span>
 <span class="normal">338</span>
 <span class="normal">339</span>
@@ -27940,8 +27971,7 @@ for a surface with <code>beam_m</code> set).</p>
 <span class="normal">348</span>
 <span class="normal">349</span>
 <span class="normal">350</span>
-<span class="normal">351</span>
-<span class="normal">352</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">zeta_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
+<span class="normal">351</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">zeta_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Concatenate bound and wake grids.</span>
 <span class="sd">    :param i_ts: Time step index (required for batched, ignored for snapshot).</span>
 <span class="sd">    :return: Grids, ``(2 * n_surf,)(zeta_m | zeta_m_star, zeta_n, 3)``.</span>
@@ -28047,7 +28077,8 @@ for a surface with <code>beam_m</code> set).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">354</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">353</span>
+<span class="normal">354</span>
 <span class="normal">355</span>
 <span class="normal">356</span>
 <span class="normal">357</span>
@@ -28056,8 +28087,7 @@ for a surface with <code>beam_m</code> set).</p>
 <span class="normal">360</span>
 <span class="normal">361</span>
 <span class="normal">362</span>
-<span class="normal">363</span>
-<span class="normal">364</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_arraylist_at_ts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">363</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_arraylist_at_ts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Set an attribute at a given timestep on a batched AeroCase.</span>
 <span class="sd">    :param attr: Name of the attribute to set.</span>
 <span class="sd">    :param values: ArrayList of per-surface values (no leading time axis).</span>
@@ -28095,7 +28125,8 @@ a batched AeroCase.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">366</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">365</span>
+<span class="normal">366</span>
 <span class="normal">367</span>
 <span class="normal">368</span>
 <span class="normal">369</span>
@@ -28120,7 +28151,8 @@ a batched AeroCase.</p>
 <span class="normal">388</span>
 <span class="normal">389</span>
 <span class="normal">390</span>
-<span class="normal">391</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_surf_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">i_surf</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_AeroSurfacePlot</span><span class="p">:</span>
+<span class="normal">391</span>
+<span class="normal">392</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_surf_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">i_surf</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_AeroSurfacePlot</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Get single-surface plot data for a given ``(timestep, surface)`` pair on</span>
 <span class="sd">    a batched AeroCase.</span>
 <span class="sd">    """</span>
@@ -28142,6 +28174,8 @@ a batched AeroCase.</p>
         <span class="n">cl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cl</span><span class="p">[</span><span class="n">i_surf</span><span class="p">][</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
         <span class="n">cd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cd</span><span class="p">[</span><span class="n">i_surf</span><span class="p">][</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
         <span class="n">cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cm</span><span class="p">[</span><span class="n">i_surf</span><span class="p">][</span><span class="n">i_ts</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+        <span class="n">dof_mapping</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
+        <span class="n">beam_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_m</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
         <span class="n">surf_b_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surf_b_names</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
         <span class="n">surf_w_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surf_w_names</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
         <span class="n">i_ts</span><span class="o">=</span><span class="n">i_ts</span><span class="p">,</span>
@@ -28171,8 +28205,7 @@ AeroCase.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">393</span>
-<span class="normal">394</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">394</span>
 <span class="normal">395</span>
 <span class="normal">396</span>
 <span class="normal">397</span>
@@ -28195,7 +28228,10 @@ AeroCase.</p>
 <span class="normal">414</span>
 <span class="normal">415</span>
 <span class="normal">416</span>
-<span class="normal">417</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_AeroSurfacePlot</span><span class="p">:</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_AeroSurfacePlot</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Get single-surface plot data for the given surface on a snapshot</span>
 <span class="sd">    AeroCase."""</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_batched</span><span class="p">:</span>
@@ -28216,6 +28252,8 @@ AeroCase.</p>
         <span class="n">cl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cl</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
         <span class="n">cd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cd</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
         <span class="n">cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cm</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+        <span class="n">dof_mapping</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+        <span class="n">beam_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_m</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
         <span class="n">surf_b_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surf_b_names</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
         <span class="n">surf_w_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surf_w_names</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
         <span class="n">i_ts</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_ts</span><span class="p">),</span>
@@ -28357,10 +28395,7 @@ Ignored for snapshots.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">466</span>
-<span class="normal">467</span>
-<span class="normal">468</span>
-<span class="normal">469</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">469</span>
 <span class="normal">470</span>
 <span class="normal">471</span>
 <span class="normal">472</span>
@@ -28418,7 +28453,10 @@ Ignored for snapshots.</p>
 <span class="normal">524</span>
 <span class="normal">525</span>
 <span class="normal">526</span>
-<span class="normal">527</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">directory</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">plot_bound</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -28497,7 +28535,7 @@ Ignored for snapshots.</p>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">project_forcing_to_beam</span><span class="p">(</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">rmat</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">include_unsteady</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span>
 </code></pre></div>
@@ -28552,7 +28590,7 @@ Ignored for snapshots.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>x0_aero</code>
+                <code>zeta_b0</code>
             </td>
             <td>
                   <code><a class="autorefs autorefs-internal" title="ArrayList (flapjax.algebra.array_utils.ArrayList)" href="../algebra/#flapjax.algebra.array_utils.ArrayList">ArrayList</a></code>
@@ -28611,10 +28649,7 @@ Ignored for snapshots.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">529</span>
-<span class="normal">530</span>
-<span class="normal">531</span>
-<span class="normal">532</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">532</span>
 <span class="normal">533</span>
 <span class="normal">534</span>
 <span class="normal">535</span>
@@ -28644,17 +28679,20 @@ Ignored for snapshots.</p>
 <span class="normal">559</span>
 <span class="normal">560</span>
 <span class="normal">561</span>
-<span class="normal">562</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">project_forcing_to_beam</span><span class="p">(</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span>
+<span class="normal">565</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">project_forcing_to_beam</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">rmat</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">include_unsteady</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Project aerodynamic forcing at ``i_ts`` onto the beam grid (global frame).</span>
 <span class="sd">    :param i_ts: Time step index (ignored for snapshot).</span>
 <span class="sd">    :param rmat: Rotation matrix for each node relative to reference, ``(n_nodes, 3, 3)``.</span>
-<span class="sd">    :param x0_aero: Reference coordinates for aerodynamic grid, ``(n_surf, )(zeta_m, zeta_n, 3)``.</span>
+<span class="sd">    :param zeta_b0: Reference coordinates for aerodynamic grid, ``(n_surf, )(zeta_m, zeta_n, 3)``.</span>
 <span class="sd">    :param include_unsteady: If true, include unsteady forcing.</span>
 <span class="sd">    :return: Steady and unsteady forcing projected onto the beam grid, ``(n_nodes, 6)``.</span>
 <span class="sd">    """</span>
@@ -28672,7 +28710,7 @@ Ignored for snapshots.</p>
     <span class="k">return</span> <span class="n">project_forcing_to_beam</span><span class="p">(</span>
         <span class="n">f_total</span><span class="o">=</span><span class="n">f_total</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">rmat</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="n">x0_aero</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">dof_mapping</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">,</span>
         <span class="n">mirror_edge_low</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mirror_edge_low</span><span class="p">,</span>
         <span class="n">mirror_edge_high</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mirror_edge_high</span><span class="p">,</span>
@@ -28702,16 +28740,16 @@ Ignored for snapshots.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">571</span>
-<span class="normal">572</span>
-<span class="normal">573</span>
-<span class="normal">574</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">574</span>
 <span class="normal">575</span>
 <span class="normal">576</span>
 <span class="normal">577</span>
 <span class="normal">578</span>
 <span class="normal">579</span>
-<span class="normal">580</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_background</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_background</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">x_target</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Background velocity at specified points and time step."""</span>
@@ -28745,10 +28783,7 @@ Ignored for snapshots.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">582</span>
-<span class="normal">583</span>
-<span class="normal">584</span>
-<span class="normal">585</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">585</span>
 <span class="normal">586</span>
 <span class="normal">587</span>
 <span class="normal">588</span>
@@ -28757,7 +28792,10 @@ Ignored for snapshots.</p>
 <span class="normal">591</span>
 <span class="normal">592</span>
 <span class="normal">593</span>
-<span class="normal">594</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_ind</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_ind</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">x_target</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Induced velocity at specified points and time step."""</span>
@@ -28794,13 +28832,13 @@ Ignored for snapshots.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">596</span>
-<span class="normal">597</span>
-<span class="normal">598</span>
-<span class="normal">599</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">599</span>
 <span class="normal">600</span>
 <span class="normal">601</span>
-<span class="normal">602</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_tot</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_v_tot</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="n">ArrayList</span><span class="p">](</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">x_target</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Total (induced + background) velocity at specified points and time step."""</span>
@@ -28832,10 +28870,7 @@ timesteps, placing the current snapshot at index <code>i_ts</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">647</span>
-<span class="normal">648</span>
-<span class="normal">649</span>
-<span class="normal">650</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">650</span>
 <span class="normal">651</span>
 <span class="normal">652</span>
 <span class="normal">653</span>
@@ -28878,7 +28913,10 @@ timesteps, placing the current snapshot at index <code>i_ts</code>.</p>
 <span class="normal">690</span>
 <span class="normal">691</span>
 <span class="normal">692</span>
-<span class="normal">693</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Expand this snapshot into a batched AeroCase with ``n_tstep``</span>
 <span class="sd">    timesteps, placing the current snapshot at index ``i_ts``.</span>
 <span class="sd">    """</span>
@@ -28955,10 +28993,10 @@ timesteps, placing the current snapshot at index <code>i_ts</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">695</span>
-<span class="normal">696</span>
-<span class="normal">697</span>
-<span class="normal">698</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">initialise</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">initial_snapshot</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span> <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Create a batched AeroCase from a snapshot placed at ``i_ts=0``."""</span>
     <span class="k">return</span> <span class="n">initial_snapshot</span><span class="o">.</span><span class="n">to_dynamic</span><span class="p">(</span><span class="n">i_ts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_tstep</span><span class="o">=</span><span class="n">n_tstep</span><span class="p">)</span>
@@ -30776,11 +30814,7 @@ Defaults to 0 (incompressible).</p>
 
 
 <a href="#flapjax.aero.frequency_flowfields.FrequencyFlowField" class="headerlink" title="Permanent link">&para;</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">FrequencyFlowField</span><span class="p">(</span>
-    <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">length_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">u_inf</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">FrequencyFlowField</span><span class="p">(</span><span class="n">u_inf</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -30803,38 +30837,6 @@ Defaults to 0 (incompressible).</p>
         </tr>
       </thead>
       <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>sigma</code>
-            </td>
-            <td>
-                  <code><span title="float">float</span> | <span title="jax.Array">Array</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Turbulence intensity (RMS gust velocity), m/s.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>length_scale</code>
-            </td>
-            <td>
-                  <code><span title="float">float</span> | <span title="jax.Array">Array</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Turbulence scale length, m.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
           <tr class="doc-section-item">
             <td>
                 <code>u_inf</code>
@@ -30870,25 +30872,13 @@ Defaults to 0 (incompressible).</p>
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
-    <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">length_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">u_inf</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
-<span class="sd">    :param sigma: Turbulence intensity (RMS gust velocity), m/s.</span>
-<span class="sd">    :param length_scale: Turbulence scale length, m.</span>
 <span class="sd">    :param u_inf: Freestream velocity magnitude, m/s.</span>
 <span class="sd">    """</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">length_scale</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">u_inf</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">u_inf</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
@@ -30978,14 +30968,14 @@ Defaults to 0 (incompressible).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/frequency_flowfields.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">psd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">psd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Power spectral density of the vertical gust velocity.</span>
 
@@ -31105,20 +31095,20 @@ Defaults to 0 (incompressible).</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/flapjax/aero/frequency_flowfields.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">length_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
@@ -31129,9 +31119,9 @@ Defaults to 0 (incompressible).</p>
 <span class="sd">    :param length_scale: Turbulence scale length, m.</span>
 <span class="sd">    :param u_inf: Freestream velocity magnitude, m/s.</span>
 <span class="sd">    """</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_inf</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">length_scale</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">u_inf</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">u_inf</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -31254,20 +31244,20 @@ Defaults to 0 (incompressible).</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/flapjax/aero/frequency_flowfields.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">length_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
@@ -31278,9 +31268,126 @@ Defaults to 0 (incompressible).</p>
 <span class="sd">    :param length_scale: Turbulence scale length, m.</span>
 <span class="sd">    :param u_inf: Freestream velocity magnitude, m/s.</span>
 <span class="sd">    """</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_inf</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">length_scale</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">u_inf</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">u_inf</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+                  </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="flapjax.aero.frequency_flowfields.ContinuousCosineFlowField" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">ContinuousCosineFlowField</span>
+
+
+<a href="#flapjax.aero.frequency_flowfields.ContinuousCosineFlowField" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ContinuousCosineFlowField</span><span class="p">(</span>
+    <span class="n">gust_amplitude</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span> <span class="n">u_inf</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FrequencyFlowField (flapjax.aero.frequency_flowfields.FrequencyFlowField)" href="#flapjax.aero.frequency_flowfields.FrequencyFlowField">FrequencyFlowField</a></code></p>
+
+
+
+        <p>Continuous cosine gust at a fixed frequency and amplitude.</p>
+
+        
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>gust_amplitude</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span> | <span title="jax.Array">Array</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Peak velocity of the continuous cosine gust, m/s.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>u_inf</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span> | <span title="jax.Array">Array</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Freestream velocity magnitude, m/s.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+                  <details class="mkdocstrings-source">
+                    <summary>Source code in <code>src/flapjax/aero/frequency_flowfields.py</code></summary>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gust_amplitude</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span> <span class="n">u_inf</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">    :param gust_amplitude: Peak velocity of the continuous cosine gust, m/s.</span>
+<span class="sd">    :param u_inf: Freestream velocity magnitude, m/s.</span>
+<span class="sd">    """</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_inf</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">gust_amplitude</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gust_amplitude</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -31392,7 +31499,7 @@ Defaults to 0 (incompressible).</p>
 
 <a href="#flapjax.aero.gradients.data_structures.AeroGradsToCompute" class="headerlink" title="Permanent link">&para;</a></h5>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">AeroGradsToCompute</span><span class="p">(</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">cs_ang_t</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">cs_vel_t</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -31420,7 +31527,7 @@ adjoint solve. Defaults to computing only the aerodynamic grid gradients.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>x0_aero</code>
+                <code>zeta_b0</code>
             </td>
             <td>
                   <code><span title="bool">bool</span></code>
@@ -32796,11 +32903,11 @@ for visualisation.</p>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">rmat_nodal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">d_x0_aero</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
+            <span class="n">d_zeta_b0</span><span class="p">:</span> <span class="n">Array</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
                 <span class="s2">"ijk,...lik-&gt;lij"</span><span class="p">,</span> <span class="n">rmat_nodal</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">[</span><span class="n">i_surf</span><span class="p">]</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">d_x0_aero</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">[</span><span class="n">i_surf</span><span class="p">]</span>
+            <span class="n">d_zeta_b0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">[</span><span class="n">i_surf</span><span class="p">]</span>
 
         <span class="n">paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">plot_grid_to_vtk</span><span class="p">(</span>
@@ -32808,7 +32915,7 @@ for visualisation.</p>
                 <span class="n">bound_filename</span><span class="p">,</span>
                 <span class="kc">None</span><span class="p">,</span>
                 <span class="n">node_vector_data</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">"zeta_b0"</span><span class="p">:</span> <span class="n">d_x0_aero</span><span class="p">,</span>
+                    <span class="s2">"zeta_b0"</span><span class="p">:</span> <span class="n">d_zeta_b0</span><span class="p">,</span>
                 <span class="p">},</span>
                 <span class="n">cell_scalar_data</span><span class="o">=</span><span class="p">{},</span>
             <span class="p">)</span>
@@ -44360,7 +44467,7 @@ the freestream direction are unchanged; components perpendicular to the freestre
     <span class="n">f_total</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">rmat</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">dof_mapping</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">mirror_edge_low</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">mirror_edge_high</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">beam_m</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -44417,7 +44524,7 @@ the freestream direction are unchanged; components perpendicular to the freestre
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>x0_aero</code>
+                <code>zeta_b0</code>
             </td>
             <td>
                   <code><a class="autorefs autorefs-internal" title="ArrayList (flapjax.algebra.array_utils.ArrayList)" href="../algebra/#flapjax.algebra.array_utils.ArrayList">ArrayList</a></code>
@@ -44596,7 +44703,7 @@ instead of <code>n</code>.</p>
     <span class="n">f_total</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">rmat</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">dof_mapping</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">mirror_edge_low</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">mirror_edge_high</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">beam_m</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -44605,7 +44712,7 @@ instead of <code>n</code>.</p>
 <span class="sd">    Project aerodynamic forcing at specified time step onto the beam grid. Returned forces are in the global frame.</span>
 <span class="sd">    :param f_total: Total force on aerodynamic grid, ``(n_surf, )(m+1, n+1, 3)``</span>
 <span class="sd">    :param rmat: Rotation matrix for each node relative to reference, ``(n_nodes, 3, 3)``.</span>
-<span class="sd">    :param x0_aero: Reference coordinates for aerodynamic grid, ``(n_surf, )(zeta_m, zeta_n, 3)``.</span>
+<span class="sd">    :param zeta_b0: Reference coordinates for aerodynamic grid, ``(n_surf, )(zeta_m, zeta_n, 3)``.</span>
 <span class="sd">    :param dof_mapping: Mapping between aero and beam discretisations.</span>
 <span class="sd">    :param mirror_edge_low: Per-surface booleans marking whether that surface's ``n=0`` edge lies on a mirror</span>
 <span class="sd">    plane, ``(n_surf, )()``. Where True, that vertex column's force is halved before being projected onto the beam.</span>
@@ -44638,7 +44745,7 @@ instead of <code>n</code>.</p>
             <span class="c1"># each m station is rigidly attached to its own beam node</span>
             <span class="n">this_rmat</span> <span class="o">=</span> <span class="n">rmat</span><span class="p">[</span><span class="n">dof_mapping</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span>  <span class="c1"># (zeta_m, 3, 3)</span>
             <span class="n">r_x0</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
-                <span class="s2">"mjk,mnk-&gt;mnj"</span><span class="p">,</span> <span class="n">this_rmat</span><span class="p">,</span> <span class="n">x0_aero</span><span class="p">[</span><span class="n">i_surf</span><span class="p">]</span>
+                <span class="s2">"mjk,mnk-&gt;mnj"</span><span class="p">,</span> <span class="n">this_rmat</span><span class="p">,</span> <span class="n">zeta_b0</span><span class="p">[</span><span class="n">i_surf</span><span class="p">]</span>
             <span class="p">)</span>  <span class="c1"># relative distance (zeta_m, zeta_n, 3)</span>
 
             <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">dof_mapping</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f_surf</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
@@ -44649,7 +44756,7 @@ instead of <code>n</code>.</p>
             <span class="c1"># rotate relative distances to get moment arms</span>
             <span class="n">this_rmat</span> <span class="o">=</span> <span class="n">rmat</span><span class="p">[</span><span class="n">dof_mapping</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span>  <span class="c1"># (zeta_n, 3, 3)</span>
             <span class="n">r_x0</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
-                <span class="s2">"ijk,lik-&gt;lij"</span><span class="p">,</span> <span class="n">this_rmat</span><span class="p">,</span> <span class="n">x0_aero</span><span class="p">[</span><span class="n">i_surf</span><span class="p">]</span>
+                <span class="s2">"ijk,lik-&gt;lij"</span><span class="p">,</span> <span class="n">this_rmat</span><span class="p">,</span> <span class="n">zeta_b0</span><span class="p">[</span><span class="n">i_surf</span><span class="p">]</span>
             <span class="p">)</span>  <span class="c1"># relative distance (zeta_n, zeta_m, 3)</span>
 
             <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">dof_mapping</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
@@ -46199,27 +46306,27 @@ defaults to no control surfaces.</p>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Invalid delta_w type"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="n">Array</span><span class="p">):</span>
-        <span class="n">x0_aero_arraylist</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="p">([</span><span class="n">zeta_b0</span><span class="p">])</span>
+        <span class="n">zeta_b0_arraylist</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="p">([</span><span class="n">zeta_b0</span><span class="p">])</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
-        <span class="n">x0_aero_arraylist</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">)</span>
+        <span class="n">zeta_b0_arraylist</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="n">ArrayList</span><span class="p">):</span>
-        <span class="n">x0_aero_arraylist</span> <span class="o">=</span> <span class="n">zeta_b0</span>
+        <span class="n">zeta_b0_arraylist</span> <span class="o">=</span> <span class="n">zeta_b0</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Invalid zeta_b0 type"</span><span class="p">)</span>
 
     <span class="c1"># set aerodynamic local coordinates</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x0_aero_arraylist</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_surf</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">zeta_b0_arraylist</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_surf</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">"Expected </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_surf</span><span class="si">}</span><span class="s2"> aerodynamic grid coordinate arrays, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">zeta_b0</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i_surf</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_surf</span><span class="p">):</span>
         <span class="n">check_arr_shape</span><span class="p">(</span>
-            <span class="n">x0_aero_arraylist</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
+            <span class="n">zeta_b0_arraylist</span><span class="p">[</span><span class="n">i_surf</span><span class="p">],</span>
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_disc</span><span class="p">[</span><span class="n">i_surf</span><span class="p">]</span><span class="o">.</span><span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_disc</span><span class="p">[</span><span class="n">i_surf</span><span class="p">]</span><span class="o">.</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
             <span class="s2">"zeta_b0"</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span> <span class="o">=</span> <span class="n">x0_aero_arraylist</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span> <span class="o">=</span> <span class="n">zeta_b0_arraylist</span>
 
     <span class="k">if</span> <span class="n">reference_cs_angles</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs_ang0</span> <span class="o">=</span> <span class="n">reference_cs_angles</span>
@@ -46562,7 +46669,7 @@ variables are obtained.</p>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grads_to_compute</span><span class="p">,</span> <span class="n">AeroGradsToCompute</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">AeroDesignVariables</span><span class="p">(</span>
-            <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span> <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">x0_aero</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span> <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">zeta_b0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">flowfield</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">to_design_variables</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">flowfield</span>
             <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -47088,7 +47195,8 @@ initialised bound grid coordinates based on hg0.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">732</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">731</span>
+<span class="normal">732</span>
 <span class="normal">733</span>
 <span class="normal">734</span>
 <span class="normal">735</span>
@@ -47114,8 +47222,7 @@ initialised bound grid coordinates based on hg0.</p>
 <span class="normal">755</span>
 <span class="normal">756</span>
 <span class="normal">757</span>
-<span class="normal">758</span>
-<span class="normal">759</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_wake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zeta_b</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
+<span class="normal">758</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_wake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zeta_b</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Generate initial wake grid coordinates, based on the bound grid coordinates and the freestream conditions.</span>
 <span class="sd">    :param zeta_b: Initial wake grid coordinates, ``(n_surf, )(zeta_m, zeta_n, 3)``. If None, this will use the</span>
@@ -47272,7 +47379,8 @@ initialised bound grid coordinates based on hg0.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">761</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">760</span>
+<span class="normal">761</span>
 <span class="normal">762</span>
 <span class="normal">763</span>
 <span class="normal">764</span>
@@ -47294,8 +47402,7 @@ initialised bound grid coordinates based on hg0.</p>
 <span class="normal">780</span>
 <span class="normal">781</span>
 <span class="normal">782</span>
-<span class="normal">783</span>
-<span class="normal">784</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">783</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_gamma_dot</span><span class="p">(</span>
     <span class="n">gamma_b_n</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">gamma_b_nm1</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
@@ -47409,7 +47516,8 @@ full vector of strengths, or a sequence of strengths per surface.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">786</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">785</span>
+<span class="normal">786</span>
 <span class="normal">787</span>
 <span class="normal">788</span>
 <span class="normal">789</span>
@@ -47426,8 +47534,7 @@ full vector of strengths, or a sequence of strengths per surface.</p>
 <span class="normal">800</span>
 <span class="normal">801</span>
 <span class="normal">802</span>
-<span class="normal">803</span>
-<span class="normal">804</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@singledispatchmethod</span>
+<span class="normal">803</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@singledispatchmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_gamma_w</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gamma_vec</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Set wake circulation strengths from total circulation strengths at specified time step. Can be passed either a</span>
@@ -47698,7 +47805,8 @@ effective angle of attack, and per-strip lift, drag and moment coefficients.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">815</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">814</span>
+<span class="normal">815</span>
 <span class="normal">816</span>
 <span class="normal">817</span>
 <span class="normal">818</span>
@@ -47771,8 +47879,7 @@ effective angle of attack, and per-strip lift, drag and moment coefficients.</p>
 <span class="normal">885</span>
 <span class="normal">886</span>
 <span class="normal">887</span>
-<span class="normal">888</span>
-<span class="normal">889</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve</span><span class="p">(</span>
+<span class="normal">888</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">AeroFullStates</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -48102,7 +48209,8 @@ angle of attack, and per-strip lift, drag and moment coefficients sampled from t
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 891</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 890</span>
+<span class="normal"> 891</span>
 <span class="normal"> 892</span>
 <span class="normal"> 893</span>
 <span class="normal"> 894</span>
@@ -48426,8 +48534,7 @@ angle of attack, and per-strip lift, drag and moment coefficients sampled from t
 <span class="normal">1212</span>
 <span class="normal">1213</span>
 <span class="normal">1214</span>
-<span class="normal">1215</span>
-<span class="normal">1216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve_from_grid</span><span class="p">(</span>
+<span class="normal">1215</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve_from_grid</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">AeroFullStates</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -48988,7 +49095,8 @@ distance.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1218</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1217</span>
+<span class="normal">1218</span>
 <span class="normal">1219</span>
 <span class="normal">1220</span>
 <span class="normal">1221</span>
@@ -49089,8 +49197,7 @@ distance.</p>
 <span class="normal">1316</span>
 <span class="normal">1317</span>
 <span class="normal">1318</span>
-<span class="normal">1319</span>
-<span class="normal">1320</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">case_solve</span><span class="p">(</span>
+<span class="normal">1319</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">case_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -49359,7 +49466,8 @@ steps. All solution data is initialised to zero.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1322</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1321</span>
+<span class="normal">1322</span>
 <span class="normal">1323</span>
 <span class="normal">1324</span>
 <span class="normal">1325</span>
@@ -49431,8 +49539,7 @@ steps. All solution data is initialised to zero.</p>
 <span class="normal">1391</span>
 <span class="normal">1392</span>
 <span class="normal">1393</span>
-<span class="normal">1394</span>
-<span class="normal">1395</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_case_object</span><span class="p">(</span>
+<span class="normal">1394</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_case_object</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">static_horseshoe</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -49638,7 +49745,8 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1397</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1396</span>
+<span class="normal">1397</span>
 <span class="normal">1398</span>
 <span class="normal">1399</span>
 <span class="normal">1400</span>
@@ -49684,8 +49792,7 @@ TODO: add free wake</p>
 <span class="normal">1440</span>
 <span class="normal">1441</span>
 <span class="normal">1442</span>
-<span class="normal">1443</span>
-<span class="normal">1444</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
+<span class="normal">1443</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -49881,7 +49988,8 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1446</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1445</span>
+<span class="normal">1446</span>
 <span class="normal">1447</span>
 <span class="normal">1448</span>
 <span class="normal">1449</span>
@@ -49951,8 +50059,7 @@ TODO: add free wake</p>
 <span class="normal">1513</span>
 <span class="normal">1514</span>
 <span class="normal">1515</span>
-<span class="normal">1516</span>
-<span class="normal">1517</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prescribed_dynamic_solve</span><span class="p">(</span>
+<span class="normal">1516</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prescribed_dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">init_case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">hg_t</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -50071,7 +50178,8 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1519</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1518</span>
+<span class="normal">1519</span>
 <span class="normal">1520</span>
 <span class="normal">1521</span>
 <span class="normal">1522</span>
@@ -50114,8 +50222,7 @@ TODO: add free wake</p>
 <span class="normal">1559</span>
 <span class="normal">1560</span>
 <span class="normal">1561</span>
-<span class="normal">1562</span>
-<span class="normal">1563</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
+<span class="normal">1562</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Get the reference (initial) snapshot of the aerodynamic case. This will set the timestep as -1.</span>
 <span class="sd">    :return: StaticAero object at initial time step.</span>
@@ -50233,7 +50340,8 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1565</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1564</span>
+<span class="normal">1565</span>
 <span class="normal">1566</span>
 <span class="normal">1567</span>
 <span class="normal">1568</span>
@@ -50242,8 +50350,7 @@ TODO: add free wake</p>
 <span class="normal">1571</span>
 <span class="normal">1572</span>
 <span class="normal">1573</span>
-<span class="normal">1574</span>
-<span class="normal">1575</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_reference</span><span class="p">(</span>
+<span class="normal">1574</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_reference</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">plot_wake</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
@@ -50491,7 +50598,8 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1652</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1651</span>
+<span class="normal">1652</span>
 <span class="normal">1653</span>
 <span class="normal">1654</span>
 <span class="normal">1655</span>
@@ -50620,8 +50728,7 @@ requested.</p>
 <span class="normal">1778</span>
 <span class="normal">1779</span>
 <span class="normal">1780</span>
-<span class="normal">1781</span>
-<span class="normal">1782</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_res_func</span><span class="p">(</span>
+<span class="normal">1781</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -51019,7 +51126,8 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1784</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1783</span>
+<span class="normal">1784</span>
 <span class="normal">1785</span>
 <span class="normal">1786</span>
 <span class="normal">1787</span>
@@ -51122,8 +51230,7 @@ requested.</p>
 <span class="normal">1884</span>
 <span class="normal">1885</span>
 <span class="normal">1886</span>
-<span class="normal">1887</span>
-<span class="normal">1888</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wake_prop_res_func</span><span class="p">(</span>
+<span class="normal">1887</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wake_prop_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -51379,7 +51486,8 @@ the residual design gradient.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1890</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1889</span>
+<span class="normal">1890</span>
 <span class="normal">1891</span>
 <span class="normal">1892</span>
 <span class="normal">1893</span>
@@ -51426,8 +51534,7 @@ the residual design gradient.</p>
 <span class="normal">1934</span>
 <span class="normal">1935</span>
 <span class="normal">1936</span>
-<span class="normal">1937</span>
-<span class="normal">1938</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_dot_res_func</span><span class="p">(</span>
+<span class="normal">1937</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_dot_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">gamma_b_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">gamma_b_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -51758,7 +51865,8 @@ forcing on the bound grid.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1940</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1939</span>
+<span class="normal">1940</span>
 <span class="normal">1941</span>
 <span class="normal">1942</span>
 <span class="normal">1943</span>
@@ -51901,8 +52009,7 @@ forcing on the bound grid.</p>
 <span class="normal">2080</span>
 <span class="normal">2081</span>
 <span class="normal">2082</span>
-<span class="normal">2083</span>
-<span class="normal">2084</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">f_aero_res_func</span><span class="p">(</span>
+<span class="normal">2083</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">f_aero_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -52035,7 +52142,7 @@ forcing on the bound grid.</p>
         <span class="n">f_total</span><span class="o">=</span><span class="n">f_tot</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">hg_n</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
         <span class="n">dof_mapping</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">mirror_edge_low</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">mirror_edge_low</span><span class="p">,</span>
         <span class="n">mirror_edge_high</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">mirror_edge_high</span><span class="p">,</span>
         <span class="n">beam_m</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">beam_m</span><span class="p">,</span>
@@ -52326,7 +52433,8 @@ forcing on the bound grid.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2086</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2085</span>
+<span class="normal">2086</span>
 <span class="normal">2087</span>
 <span class="normal">2088</span>
 <span class="normal">2089</span>
@@ -52430,8 +52538,7 @@ forcing on the bound grid.</p>
 <span class="normal">2187</span>
 <span class="normal">2188</span>
 <span class="normal">2189</span>
-<span class="normal">2190</span>
-<span class="normal">2191</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
+<span class="normal">2190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">varphi_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -52722,7 +52829,8 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2193</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2192</span>
+<span class="normal">2193</span>
 <span class="normal">2194</span>
 <span class="normal">2195</span>
 <span class="normal">2196</span>
@@ -52853,8 +52961,7 @@ requested.</p>
 <span class="normal">2321</span>
 <span class="normal">2322</span>
 <span class="normal">2323</span>
-<span class="normal">2324</span>
-<span class="normal">2325</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
+<span class="normal">2324</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">aero_sol</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">structure_sol</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
@@ -53367,7 +53474,8 @@ displacement and velocity, and profiling times for compilation and run time.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2327</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2326</span>
+<span class="normal">2327</span>
 <span class="normal">2328</span>
 <span class="normal">2329</span>
 <span class="normal">2330</span>
@@ -53673,8 +53781,7 @@ displacement and velocity, and profiling times for compilation and run time.</p>
 <span class="normal">2630</span>
 <span class="normal">2631</span>
 <span class="normal">2632</span>
-<span class="normal">2633</span>
-<span class="normal">2634</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
+<span class="normal">2633</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">varphi_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>

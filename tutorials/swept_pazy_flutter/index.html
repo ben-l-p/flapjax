@@ -2881,7 +2881,7 @@ norm = cast(Normalize, Normalize(vmin=float(u_inf_mags.min()), vmax=float(u_inf_
             <span class="n">rho</span><span class="o">=</span><span class="mf">1.225</span><span class="p">,</span>
             <span class="n">relative_motion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">),</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="n">inner_wing</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="n">inner_wing</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">remove_checks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -2922,7 +2922,7 @@ norm = cast(Normalize, Normalize(vmin=float(u_inf_mags.min()), vmax=float(u_inf_
             rho=1.225,
             relative_motion=True,
         ),
-        x0_aero=inner_wing.aero.zeta_b0,
+        zeta_b0=inner_wing.aero.zeta_b0,
         remove_checks=True,
     )
 

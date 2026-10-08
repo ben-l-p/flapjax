@@ -5627,7 +5627,7 @@ velocity/acceleration fields.</p>
     <span class="n">use_f_ext_follower</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">use_f_ext_dead</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">structure</span><span class="p">:</span> <span class="n">BeamStructure</span><span class="p">,</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticCase</span>
 </code></pre></div>
 
@@ -5696,7 +5696,7 @@ velocity/acceleration fields.</p>
     <span class="n">use_f_ext_follower</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">use_f_ext_dead</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">structure</span><span class="p">:</span> <span class="n">BeamStructure</span><span class="p">,</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Build a batched AeroelasticCase from any single-timestep case."""</span>
     <span class="k">if</span> <span class="n">initial_snapshot</span><span class="o">.</span><span class="n">is_batched</span><span class="p">:</span>
@@ -5726,7 +5726,7 @@ velocity/acceleration fields.</p>
     <span class="n">f_aero_init</span> <span class="o">=</span> <span class="n">aero_case</span><span class="o">.</span><span class="n">project_forcing_to_beam</span><span class="p">(</span>
         <span class="n">i_ts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">struct_case</span><span class="o">.</span><span class="n">hg</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="n">x0_aero</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">include_unsteady</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">f_aero_local</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">make_f_dead_ext</span><span class="p">(</span>
@@ -6869,7 +6869,7 @@ dynamic case.</p>
         <span class="n">flowfield</span><span class="o">=</span><span class="n">flowfield</span><span class="p">,</span>
         <span class="n">delta_w</span><span class="o">=</span><span class="n">aero</span><span class="o">.</span><span class="n">delta_w</span><span class="p">,</span>
         <span class="n">dt</span><span class="o">=</span><span class="n">aero</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">aero_dv</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">),</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">aero_dv</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">),</span>
         <span class="n">orientation_euler</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span>
             <span class="n">struct_dv</span><span class="o">.</span><span class="n">orientation_euler</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">orientation_euler</span>
         <span class="p">),</span>
@@ -6887,7 +6887,7 @@ dynamic case.</p>
     <span class="n">f_ext_aero_global</span> <span class="o">=</span> <span class="n">aero_sol</span><span class="o">.</span><span class="n">project_forcing_to_beam</span><span class="p">(</span>
         <span class="n">i_ts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">hg</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">include_unsteady</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -7774,7 +7774,7 @@ initial states.</p>
             <span class="n">f_total</span><span class="o">=</span><span class="n">f_steady</span><span class="p">,</span>
             <span class="n">rmat</span><span class="o">=</span><span class="n">hg</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
             <span class="n">dof_mapping</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">,</span>
-            <span class="n">x0_aero</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+            <span class="n">zeta_b0</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
             <span class="n">mirror_edge_low</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">mirror_edge_low</span><span class="p">,</span>
             <span class="n">mirror_edge_high</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">mirror_edge_high</span><span class="p">,</span>
             <span class="n">beam_m</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">beam_m</span><span class="p">,</span>
@@ -11905,7 +11905,7 @@ jit-wrapped.</p>
         <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
         <span class="n">flowfield</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="p">,</span>
         <span class="n">delta_w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">delta_w</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">thrust_reference</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">thrust_reference</span>
         <span class="o">|</span> <span class="n">expand_groups</span><span class="p">(</span><span class="n">trim_variables</span><span class="o">.</span><span class="n">thrust</span><span class="p">,</span> <span class="n">thrust_groups</span><span class="p">),</span>
         <span class="n">orientation_euler</span><span class="o">=</span><span class="n">new_orientation</span><span class="p">,</span>
@@ -14100,7 +14100,7 @@ at timestep n.</p>
         <span class="n">f_total</span><span class="o">=</span><span class="n">f_aero_np1</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">rmat</span><span class="p">,</span>
         <span class="n">dof_mapping</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">mirror_edge_low</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">mirror_edge_low</span><span class="p">,</span>
         <span class="n">mirror_edge_high</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">mirror_edge_high</span><span class="p">,</span>
         <span class="n">beam_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">beam_m</span><span class="p">,</span>
@@ -14116,7 +14116,7 @@ at timestep n.</p>
         <span class="n">f_total</span><span class="o">=</span><span class="n">f_aero_ref_total</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">ref</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">hg</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
         <span class="n">dof_mapping</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">mirror_edge_low</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">mirror_edge_low</span><span class="p">,</span>
         <span class="n">mirror_edge_high</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">mirror_edge_high</span><span class="p">,</span>
         <span class="n">beam_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">beam_m</span><span class="p">,</span>
@@ -17733,7 +17733,7 @@ the aero linearisation reference state.</p>
         <span class="n">use_f_ext_follower</span><span class="o">=</span><span class="n">f_ext_follower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">use_f_ext_dead</span><span class="o">=</span><span class="n">f_ext_dead</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">structure</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">f_ext_follower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">case</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">f_ext_follower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -19858,7 +19858,7 @@ velocity/acceleration fields.</p>
     <span class="n">use_f_ext_follower</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">use_f_ext_dead</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">structure</span><span class="p">:</span> <span class="n">BeamStructure</span><span class="p">,</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticCase</span>
 </code></pre></div>
 
@@ -19927,7 +19927,7 @@ velocity/acceleration fields.</p>
     <span class="n">use_f_ext_follower</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">use_f_ext_dead</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">structure</span><span class="p">:</span> <span class="n">BeamStructure</span><span class="p">,</span>
-    <span class="n">x0_aero</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
+    <span class="n">zeta_b0</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Build a batched AeroelasticCase from any single-timestep case."""</span>
     <span class="k">if</span> <span class="n">initial_snapshot</span><span class="o">.</span><span class="n">is_batched</span><span class="p">:</span>
@@ -19957,7 +19957,7 @@ velocity/acceleration fields.</p>
     <span class="n">f_aero_init</span> <span class="o">=</span> <span class="n">aero_case</span><span class="o">.</span><span class="n">project_forcing_to_beam</span><span class="p">(</span>
         <span class="n">i_ts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">struct_case</span><span class="o">.</span><span class="n">hg</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="n">x0_aero</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">include_unsteady</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">f_aero_local</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">make_f_dead_ext</span><span class="p">(</span>
@@ -20613,7 +20613,7 @@ structure path is a PVD; for snapshots it is a single VTU.</p>
         <span class="n">flowfield</span><span class="o">=</span><span class="n">flowfield</span><span class="p">,</span>
         <span class="n">delta_w</span><span class="o">=</span><span class="n">aero</span><span class="o">.</span><span class="n">delta_w</span><span class="p">,</span>
         <span class="n">dt</span><span class="o">=</span><span class="n">aero</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">aero_dv</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">),</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">aero_dv</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">),</span>
         <span class="n">orientation_euler</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span>
             <span class="n">struct_dv</span><span class="o">.</span><span class="n">orientation_euler</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">orientation_euler</span>
         <span class="p">),</span>
@@ -20631,7 +20631,7 @@ structure path is a PVD; for snapshots it is a single VTU.</p>
     <span class="n">f_ext_aero_global</span> <span class="o">=</span> <span class="n">aero_sol</span><span class="o">.</span><span class="n">project_forcing_to_beam</span><span class="p">(</span>
         <span class="n">i_ts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">hg</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">include_unsteady</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -21518,7 +21518,7 @@ initial states.</p>
             <span class="n">f_total</span><span class="o">=</span><span class="n">f_steady</span><span class="p">,</span>
             <span class="n">rmat</span><span class="o">=</span><span class="n">hg</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
             <span class="n">dof_mapping</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">,</span>
-            <span class="n">x0_aero</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+            <span class="n">zeta_b0</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
             <span class="n">mirror_edge_low</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">mirror_edge_low</span><span class="p">,</span>
             <span class="n">mirror_edge_high</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">mirror_edge_high</span><span class="p">,</span>
             <span class="n">beam_m</span><span class="o">=</span><span class="n">inner_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">beam_m</span><span class="p">,</span>
@@ -25649,7 +25649,7 @@ jit-wrapped.</p>
         <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
         <span class="n">flowfield</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="p">,</span>
         <span class="n">delta_w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">delta_w</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">thrust_reference</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">thrust_reference</span>
         <span class="o">|</span> <span class="n">expand_groups</span><span class="p">(</span><span class="n">trim_variables</span><span class="o">.</span><span class="n">thrust</span><span class="p">,</span> <span class="n">thrust_groups</span><span class="p">),</span>
         <span class="n">orientation_euler</span><span class="o">=</span><span class="n">new_orientation</span><span class="p">,</span>
@@ -27641,7 +27641,7 @@ at timestep n.</p>
         <span class="n">f_total</span><span class="o">=</span><span class="n">f_aero_np1</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">rmat</span><span class="p">,</span>
         <span class="n">dof_mapping</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">mirror_edge_low</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">mirror_edge_low</span><span class="p">,</span>
         <span class="n">mirror_edge_high</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">mirror_edge_high</span><span class="p">,</span>
         <span class="n">beam_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">beam_m</span><span class="p">,</span>
@@ -27657,7 +27657,7 @@ at timestep n.</p>
         <span class="n">f_total</span><span class="o">=</span><span class="n">f_aero_ref_total</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">ref</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">hg</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
         <span class="n">dof_mapping</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">dof_mapping</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">mirror_edge_low</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">mirror_edge_low</span><span class="p">,</span>
         <span class="n">mirror_edge_high</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">mirror_edge_high</span><span class="p">,</span>
         <span class="n">beam_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">beam_m</span><span class="p">,</span>
@@ -32586,7 +32586,7 @@ the aero linearisation reference state.</p>
         <span class="n">use_f_ext_follower</span><span class="o">=</span><span class="n">f_ext_follower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">use_f_ext_dead</span><span class="o">=</span><span class="n">f_ext_dead</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">structure</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">case</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">f_ext_follower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">case</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">f_ext_follower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -33809,7 +33809,7 @@ variables.</p>
     <span class="n">f_ext_aero_global</span> <span class="o">=</span> <span class="n">aero_sol</span><span class="o">.</span><span class="n">project_forcing_to_beam</span><span class="p">(</span>
         <span class="n">i_ts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">rmat</span><span class="o">=</span><span class="n">hg</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
-        <span class="n">x0_aero</span><span class="o">=</span><span class="n">inner</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
+        <span class="n">zeta_b0</span><span class="o">=</span><span class="n">inner</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span>
         <span class="n">include_unsteady</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">f_ext_aero_local</span> <span class="o">=</span> <span class="n">transform_nodal_vect</span><span class="p">(</span>

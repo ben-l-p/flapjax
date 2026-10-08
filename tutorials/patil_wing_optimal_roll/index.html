@@ -3610,7 +3610,7 @@ def extend_control(cs_vel_ctrl: Array) -&gt; Array:
         <span class="n">save_adjoint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">grads_to_compute</span><span class="o">=</span><span class="n">AeroelasticGradsToCompute</span><span class="p">(</span>
             <span class="n">structure</span><span class="o">=</span><span class="n">StructureGradsToCompute</span><span class="p">(</span><span class="n">k_cs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">m_cs</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-            <span class="n">aero</span><span class="o">=</span><span class="n">AeroGradsToCompute</span><span class="p">(</span><span class="n">x0_aero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cs_ang_t</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cs_vel_t</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">aero</span><span class="o">=</span><span class="n">AeroGradsToCompute</span><span class="p">(</span><span class="n">zeta_b0</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cs_ang_t</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cs_vel_t</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
         <span class="p">),</span>
     <span class="p">)</span>
 
@@ -3680,7 +3680,7 @@ def compute(cs_vel_t_vec_norm: Array):
         save_adjoint=False,
         grads_to_compute=AeroelasticGradsToCompute(
             structure=StructureGradsToCompute(k_cs=False, m_cs=False),
-            aero=AeroGradsToCompute(x0_aero=False, cs_ang_t=True, cs_vel_t=True),
+            aero=AeroGradsToCompute(zeta_b0=False, cs_ang_t=True, cs_vel_t=True),
         ),
     )
 

@@ -57,7 +57,7 @@ def _build_wing(transpose_grid: bool) -> CoupledAeroelastic:
         dt=dt,
         flowfield=flowfield,
         delta_w=None,
-        x0_aero=grid,
+        zeta_b0=grid,
     )
     return wing
 
@@ -77,7 +77,7 @@ def _solve(transpose_grid: bool):
 class TestGridConvention:
     """A wing built with the standard (n = spanwise, beam-mapped) grid convention and with the
     transposed (m = spanwise, beam-mapped via beam_m) convention should reach the same static
-    aeroelastic equilibrium, since both describe the same physical wing under the same loading.
+    aeroelastic equilibrium.
     """
 
     @classmethod

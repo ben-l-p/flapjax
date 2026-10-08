@@ -52,7 +52,7 @@ def build_reference_case(
     f_ext_aero_global = aero_sol.project_forcing_to_beam(
         i_ts=0,
         rmat=hg[:, :3, :3],
-        x0_aero=inner.aero.zeta_b0,
+        zeta_b0=inner.aero.zeta_b0,
         include_unsteady=False,
     )
     f_ext_aero_local = transform_nodal_vect(

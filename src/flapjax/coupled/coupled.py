@@ -68,7 +68,7 @@ class BaseCoupledAeroelastic:
         m_lumped: Array | None,
         dt: float | Array,
         flowfield: FlowField,
-        x0_aero: ArrayList | Sequence[Array] | Array,
+        zeta_b0: ArrayList | Sequence[Array] | Array,
         delta_w: Sequence[Array | None] | Array | None = None,
         thrust_reference: dict[str, Array] | None = None,
         orientation_euler: Array | None = None,
@@ -89,7 +89,7 @@ class BaseCoupledAeroelastic:
             dt=dt,
             flowfield=flowfield,
             delta_w=delta_w,
-            zeta_b0=x0_aero,
+            zeta_b0=zeta_b0,
             hg0=self.structure.hg0,
             reference_cs_angles=cs_angles_reference,
         )
@@ -208,7 +208,7 @@ class BaseCoupledAeroelastic:
             f_aero_new = aero_case_n.project_forcing_to_beam(
                 i_ts=0,
                 rmat=struct_case_n.hg[:, :3, :3],
-                x0_aero=self.aero.zeta_b0,
+                zeta_b0=self.aero.zeta_b0,
                 include_unsteady=False,
             )  # [n_nodes_, 6], global frame
 
@@ -401,7 +401,7 @@ class BaseCoupledAeroelastic:
                 use_f_ext_follower=f_ext_follower is not None,
                 use_f_ext_dead=f_ext_dead is not None,
                 structure=self.structure,
-                x0_aero=self.aero.zeta_b0,
+                zeta_b0=self.aero.zeta_b0,
             )
 
             # set forces at timestep 0
@@ -423,7 +423,7 @@ class BaseCoupledAeroelastic:
                 use_f_ext_follower=f_ext_follower is not None,
                 use_f_ext_dead=f_ext_dead is not None,
                 structure=self.structure,
-                x0_aero=self.aero.zeta_b0,
+                zeta_b0=self.aero.zeta_b0,
             )
 
         # propagate the dynamic prescribed_dofs to the case

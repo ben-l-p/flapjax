@@ -894,7 +894,7 @@ def generate_xhale(
         delta_w=delta_w,
         dt=dt,
         flowfield=flowfield,
-        x0_aero=[s["x0"] for s in surfaces],
+        zeta_b0=[s["x0"] for s in surfaces],
         thrust_reference={k: jnp.zeros(()) for k in thrust_nodes},
         cs_angles_reference={
             "left_aileron": jnp.asarray(left_aileron_angle),

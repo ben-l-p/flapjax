@@ -320,7 +320,7 @@ def generate_generic_pazy_wing(
         m_lumped=m_lumped_arr,
         dt=dt,
         flowfield=flowfield,
-        x0_aero=aero_grid,
+        zeta_b0=aero_grid,
         delta_w=None
         if wake_delta is None
         else wake_delta

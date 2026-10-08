@@ -904,7 +904,7 @@ def project_forcing_to_beam(
     f_total: ArrayList,
     rmat: Array,
     dof_mapping: ArrayList,
-    x0_aero: ArrayList,
+    zeta_b0: ArrayList,
     mirror_edge_low: ArrayList | None = None,
     mirror_edge_high: ArrayList | None = None,
     beam_m: Sequence[bool] | None = None,
@@ -913,7 +913,7 @@ def project_forcing_to_beam(
     Project aerodynamic forcing at specified time step onto the beam grid. Returned forces are in the global frame.
     :param f_total: Total force on aerodynamic grid, ``(n_surf, )(m+1, n+1, 3)``
     :param rmat: Rotation matrix for each node relative to reference, ``(n_nodes, 3, 3)``.
-    :param x0_aero: Reference coordinates for aerodynamic grid, ``(n_surf, )(zeta_m, zeta_n, 3)``.
+    :param zeta_b0: Reference coordinates for aerodynamic grid, ``(n_surf, )(zeta_m, zeta_n, 3)``.
     :param dof_mapping: Mapping between aero and beam discretisations.
     :param mirror_edge_low: Per-surface booleans marking whether that surface's ``n=0`` edge lies on a mirror
     plane, ``(n_surf, )()``. Where True, that vertex column's force is halved before being projected onto the beam.
@@ -946,7 +946,7 @@ def project_forcing_to_beam(
             # each m station is rigidly attached to its own beam node
             this_rmat = rmat[dof_mapping[i_surf], ...]  # (zeta_m, 3, 3)
             r_x0 = jnp.einsum(
-                "mjk,mnk->mnj", this_rmat, x0_aero[i_surf]
+                "mjk,mnk->mnj", this_rmat, zeta_b0[i_surf]
             )  # relative distance (zeta_m, zeta_n, 3)
 
             result = result.at[dof_mapping[i_surf], :3].add(f_surf.sum(axis=1))
@@ -957,7 +957,7 @@ def project_forcing_to_beam(
             # rotate relative distances to get moment arms
             this_rmat = rmat[dof_mapping[i_surf], ...]  # (zeta_n, 3, 3)
             r_x0 = jnp.einsum(
-                "ijk,lik->lij", this_rmat, x0_aero[i_surf]
+                "ijk,lik->lij", this_rmat, zeta_b0[i_surf]
             )  # relative distance (zeta_n, zeta_m, 3)
 
             result = result.at[dof_mapping[i_surf], :3].add(

@@ -404,7 +404,7 @@ def generate_simple_hale(
         dt=dt,
         flowfield=flowfield,
         delta_w=None,
-        x0_aero=[wing_x0, fin_x0, tail_x0],
+        zeta_b0=[wing_x0, fin_x0, tail_x0],
         thrust_reference={"thrust": jnp.zeros(())},
         cs_angles_reference={
             "left_aileron": jnp.zeros(()),

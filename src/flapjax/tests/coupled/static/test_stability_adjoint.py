@@ -68,7 +68,7 @@ def _apply_dv(
             rho=RHO,
             relative_motion=True,
         ),
-        x0_aero=wing.aero.zeta_b0,
+        zeta_b0=wing.aero.zeta_b0,
         remove_checks=True,
     )
 
@@ -104,7 +104,7 @@ def compute_objective(
 class TestStabilityAdjoint:
     grads_to_compute: AeroelasticGradsToCompute = AeroelasticGradsToCompute(
         structure=StructureGradsToCompute(k_cs=True),
-        aero=AeroGradsToCompute(x0_aero=False, flowfield=True),
+        aero=AeroGradsToCompute(zeta_b0=False, flowfield=True),
     )
 
     @classmethod

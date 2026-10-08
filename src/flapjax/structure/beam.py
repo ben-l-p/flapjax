@@ -3093,7 +3093,7 @@ class BaseBeamStructure:
                 f_ext_aero = aero_sol.project_forcing_to_beam(
                     i_ts=i_ts,
                     rmat=hg_n[:, :3, :3],
-                    x0_aero=aero_obj.zeta_b0,
+                    zeta_b0=aero_obj.zeta_b0,
                     include_unsteady=aero_obj.include_unsteady_force,
                 )
 
@@ -3240,7 +3240,7 @@ class BaseBeamStructure:
             f_aero_n = aero_sol.project_forcing_to_beam(
                 i_ts=i_ts,
                 rmat=hg_n[:, :3, :3],
-                x0_aero=aero_obj.zeta_b0,
+                zeta_b0=aero_obj.zeta_b0,
                 include_unsteady=aero_obj.include_unsteady_force,
             )
 

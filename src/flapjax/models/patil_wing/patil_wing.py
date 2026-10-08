@@ -116,7 +116,7 @@ def generate_patil_wing(
         dt=dt,
         flowfield=flowfield,
         delta_w=None,
-        x0_aero=grid,
+        zeta_b0=grid,
         cs_angles_reference={
             "left_aileron": jnp.zeros(()),
             "right_aileron": jnp.zeros(()),

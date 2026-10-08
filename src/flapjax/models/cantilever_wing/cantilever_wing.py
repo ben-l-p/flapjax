@@ -66,7 +66,7 @@ def generate_cantilever_wing(
         dt=dt,
         flowfield=flowfield,
         delta_w=None,
-        x0_aero=grid,
+        zeta_b0=grid,
     )
 
     return wing

@@ -17,17 +17,11 @@ class FrequencyFlowField:
 
     def __init__(
         self,
-        sigma: float | Array,
-        length_scale: float | Array,
         u_inf: float | Array,
     ):
         r"""
-        :param sigma: Turbulence intensity (RMS gust velocity), m/s.
-        :param length_scale: Turbulence scale length, m.
         :param u_inf: Freestream velocity magnitude, m/s.
         """
-        self.sigma: Array = jnp.array(sigma)
-        self.length_scale: Array = jnp.array(length_scale)
         self.u_inf: Array = jnp.array(u_inf)
 
     def psd(self, omega: Array) -> Array:
@@ -45,6 +39,21 @@ class VonKarmanFlowField(FrequencyFlowField):
     r"""
     Von Kármán continuous turbulence spectrum.
     """
+
+    def __init__(
+        self,
+        sigma: float | Array,
+        length_scale: float | Array,
+        u_inf: float | Array,
+    ):
+        r"""
+        :param sigma: Turbulence intensity (RMS gust velocity), m/s.
+        :param length_scale: Turbulence scale length, m.
+        :param u_inf: Freestream velocity magnitude, m/s.
+        """
+        super().__init__(u_inf)
+        self.sigma: Array = jnp.array(sigma)
+        self.length_scale: Array = jnp.array(length_scale)
 
     def psd(self, omega: Array) -> Array:
         eta = 1.339 * self.length_scale * omega / self.u_inf
@@ -64,6 +73,21 @@ class DrydenFlowField(FrequencyFlowField):
     Dryden continuous turbulence spectrum.
     """
 
+    def __init__(
+        self,
+        sigma: float | Array,
+        length_scale: float | Array,
+        u_inf: float | Array,
+    ):
+        r"""
+        :param sigma: Turbulence intensity (RMS gust velocity), m/s.
+        :param length_scale: Turbulence scale length, m.
+        :param u_inf: Freestream velocity magnitude, m/s.
+        """
+        super().__init__(u_inf)
+        self.sigma: Array = jnp.array(sigma)
+        self.length_scale: Array = jnp.array(length_scale)
+
     def psd(self, omega: Array) -> Array:
         eta = self.length_scale * omega / self.u_inf
         eta2 = eta**2
@@ -74,3 +98,21 @@ class DrydenFlowField(FrequencyFlowField):
             * (1.0 + 3.0 * eta2)
             / (1.0 + eta2) ** 2
         )
+
+
+@make_pytree
+class ContinuousCosineFlowField(FrequencyFlowField):
+    r"""
+    Continuous cosine gust at a fixed frequency and amplitude.
+    """
+
+    def __init__(self, gust_amplitude: float | Array, u_inf: float | Array):
+        r"""
+        :param gust_amplitude: Peak velocity of the continuous cosine gust, m/s.
+        :param u_inf: Freestream velocity magnitude, m/s.
+        """
+        super().__init__(u_inf)
+        self.gust_amplitude: Array = jnp.array(gust_amplitude)
+
+    def psd(self, omega: Array) -> Array:
+        return self.gust_amplitude**2 * jnp.ones_like(omega)

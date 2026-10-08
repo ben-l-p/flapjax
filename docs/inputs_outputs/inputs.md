@@ -258,7 +258,7 @@ wing.set_design_variables(
     m_lumped=None,
     dt=...,
     flowfield=...,
-    x0_aero=...,
+    zeta_b0=...,
     # optional
     delta_w=None,
     thrust_reference=None,
@@ -284,7 +284,7 @@ wing.set_design_variables(
 |-----------------------|-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `dt`                  | scalar                        | Time step length. A common choice is `chord / (u_inf * M)` for `M` chordwise panels                                                                                                                                                                         |u_inf| * m)`. |
 | `flowfield`           | `FlowField`                   | Flow field object defining background velocity as a function of space and time.                                                                                                                                                                             |
-| `x0_aero`             | `(n_surf,)(m+1, n+1, 3)`      | Local aerodynamic grid coordinates for each surface. Can be a single `Array` for one surface or an `ArrayList`/`Sequence` for multiple surfaces, each of shape `(m+1, n+1, 3)`. The chordwise coordinates should be ordered starting from the leading edge. |
+| `zeta_b0`             | `(n_surf,)(m+1, n+1, 3)`      | Local aerodynamic grid coordinates for each surface. Can be a single `Array` for one surface or an `ArrayList`/`Sequence` for multiple surfaces, each of shape `(m+1, n+1, 3)`. The chordwise coordinates should be ordered starting from the leading edge. |
 | `delta_w`             | per-surface `Array` or `None` | Non-uniform wake segment lengths. Only used when `variable_wake_disc=True`.                                                                                                                                                                                 |
 | `cs_angles_reference` | `dict[str, Array]` or `None`  | Reference control-surface angles.                                                                                                                                                                                                                           |
 
@@ -412,7 +412,7 @@ wing.set_design_variables(
     m_lumped=None,
     dt=dt,
     flowfield=flowfield,
-    x0_aero=grid,
+    zeta_b0=grid,
 )
 
 # solve a static problem

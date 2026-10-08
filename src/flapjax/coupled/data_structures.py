@@ -110,7 +110,7 @@ class AeroelasticCase:
         use_f_ext_follower: bool,
         use_f_ext_dead: bool,
         structure: BeamStructure,
-        x0_aero: ArrayList,
+        zeta_b0: ArrayList,
     ) -> AeroelasticCase:
         """Build a batched AeroelasticCase from any single-timestep case."""
         if initial_snapshot.is_batched:
@@ -140,7 +140,7 @@ class AeroelasticCase:
         f_aero_init = aero_case.project_forcing_to_beam(
             i_ts=0,
             rmat=struct_case.hg[0, :, :3, :3],
-            x0_aero=x0_aero,
+            zeta_b0=zeta_b0,
             include_unsteady=False,
         )
         f_aero_local = structure.make_f_dead_ext(
@@ -374,7 +374,7 @@ class AeroelasticDesignVariables(DesignVariables):
                 zeta_b0=ArrayList(
                     [jnp.zeros((*j_shape, *arr.shape)) for arr in system.aero.zeta_b0]
                 )
-                if (grads_to_compute is None or grads_to_compute.aero.x0_aero)
+                if (grads_to_compute is None or grads_to_compute.aero.zeta_b0)
                 else None,
                 flowfield={
                     k: jnp.zeros((*j_shape, *v.shape))

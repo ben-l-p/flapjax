@@ -325,7 +325,7 @@ class NonlinearBeamLinearAero:
             use_f_ext_follower=f_ext_follower is not None,
             use_f_ext_dead=f_ext_dead is not None,
             structure=self.structure,
-            x0_aero=self.aero.case.zeta_b0,
+            zeta_b0=self.aero.case.zeta_b0,
         )
 
         if f_ext_follower is not None and case.structure.f_ext_follower is not None:

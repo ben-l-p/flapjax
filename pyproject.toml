@@ -1,6 +1,6 @@
 [project]
 name = "flapjax"
-version = "1.3.11"
+version = "1.3.12"
 description = "Solver for computing aeroelastic responses and corresponding design derivatives."
 authors = [{ name = "Ben Preston", email = "b.preston23@imperial.ac.uk" }]
 keywords = ["aeroelasticity", "unsteady vortex lattice method", "nonlinear beam", "adjoint methods"]
@@ -21,7 +21,7 @@ license-files = ["LICENSE"]
 dependencies = [
     "jax>=0.8.1",
     "numpy>=2.0",
-    "vtk>=9.4",
+    "vtk==9.7.1",
     "scipy>=1.13",
     "matplotlib>=3.8.4",
     "equinox>=0.13",
@@ -37,14 +37,14 @@ Issues = "https://github.com/ben-l-p/flapjax/issues"
 
 [dependency-groups]
 dev = [
-    "scipy-stubs>=1.17",
+    "scipy-stubs==1.18.1.1",
     "pytest>=9.0",
     "pytest-cov>=7.1",
     "pytest-xdist>=3.6",
-    "ruff>=0.15",
-    "ipykernel>=7.3.0",
-    "pandas>=3.0.5",
-    "pandas-stubs~=3.0.5",
+    "ruff==0.16.10",
+    "ipykernel==7.4.0",
+    "pandas==3.1.0rc0",
+    "pandas-stubs==3.0.5.260914",
     "nbstripout>=0.9.1",
 ]
 docs = [

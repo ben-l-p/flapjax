@@ -22,7 +22,6 @@ from flapjax.algebra.array_utils import ArrayList
 from flapjax.algebra.base import finite_difference
 from flapjax.plotting.aerogrid import plot_grid_to_vtk
 from flapjax.plotting.pvd import write_pvd
-from flapjax.utils.print_utils import warn
 from flapjax.utils.utils import index_to_arr, make_pytree
 
 
@@ -385,6 +384,8 @@ class AeroCase:
             cl=self.cl[i_surf][i_ts, ...],
             cd=self.cd[i_surf][i_ts, ...],
             cm=self.cm[i_surf][i_ts, ...],
+            dof_mapping=self.dof_mapping[i_surf],
+            beam_m=self.beam_m[i_surf],
             surf_b_name=self.surf_b_names[i_surf],
             surf_w_name=self.surf_w_names[i_surf],
             i_ts=i_ts,
@@ -411,6 +412,8 @@ class AeroCase:
             cl=self.cl[idx],
             cd=self.cd[idx],
             cm=self.cm[idx],
+            dof_mapping=self.dof_mapping[idx],
+            beam_m=self.beam_m[idx],
             surf_b_name=self.surf_b_names[idx],
             surf_w_name=self.surf_w_names[idx],
             i_ts=int(self.i_ts),
@@ -530,13 +533,13 @@ class AeroCase:
         self,
         i_ts: int,
         rmat: Array,
-        x0_aero: ArrayList,
+        zeta_b0: ArrayList,
         include_unsteady: bool,
     ) -> Array:
         r"""Project aerodynamic forcing at ``i_ts`` onto the beam grid (global frame).
         :param i_ts: Time step index (ignored for snapshot).
         :param rmat: Rotation matrix for each node relative to reference, ``(n_nodes, 3, 3)``.
-        :param x0_aero: Reference coordinates for aerodynamic grid, ``(n_surf, )(zeta_m, zeta_n, 3)``.
+        :param zeta_b0: Reference coordinates for aerodynamic grid, ``(n_surf, )(zeta_m, zeta_n, 3)``.
         :param include_unsteady: If true, include unsteady forcing.
         :return: Steady and unsteady forcing projected onto the beam grid, ``(n_nodes, 6)``.
         """
@@ -554,7 +557,7 @@ class AeroCase:
         return project_forcing_to_beam(
             f_total=f_total,
             rmat=rmat,
-            x0_aero=x0_aero,
+            zeta_b0=zeta_b0,
             dof_mapping=self.dof_mapping,
             mirror_edge_low=self.mirror_edge_low,
             mirror_edge_high=self.mirror_edge_high,
@@ -715,6 +718,8 @@ class _AeroSurfacePlot:
         cl: Array,
         cd: Array,
         cm: Array,
+        dof_mapping: Array,
+        beam_m: bool,
         surf_b_name: str,
         surf_w_name: str,
         i_ts: int,
@@ -731,6 +736,8 @@ class _AeroSurfacePlot:
         self.cl = cl
         self.cd = cd
         self.cm = cm
+        self.dof_mapping = dof_mapping
+        self.beam_m = beam_m
         self.surf_b_name = surf_b_name
         self.surf_w_name = surf_w_name
         self.i_ts = i_ts
@@ -745,11 +752,17 @@ class _AeroSurfacePlot:
         paths: list[Path] = []
         if plot_bound:
             bound_filename = Path(directory).joinpath(self.surf_b_name)
+            grid_shape = self.zeta_b.shape[:2]
+            if self.beam_m:
+                beam_node = jnp.broadcast_to(self.dof_mapping[:, None], grid_shape)
+            else:
+                beam_node = jnp.broadcast_to(self.dof_mapping[None, :], grid_shape)
             paths.append(
                 plot_grid_to_vtk(
                     self.zeta_b,
                     bound_filename,
                     self.i_ts,
+                    node_scalar_data={"beam_node": beam_node},
                     node_vector_data={
                         "f_steady": self.f_steady,
                         "f_unsteady": self.f_unsteady,
@@ -765,17 +778,14 @@ class _AeroSurfacePlot:
                     },
                 )
             )
-        if plot_wake:
-            if not self.gamma_w.shape[0]:
-                warn("No wake panels to plot, skipping.")
-            else:
-                wake_filename = Path(directory).joinpath(self.surf_w_name)
-                paths.append(
-                    plot_grid_to_vtk(
-                        self.zeta_w,
-                        wake_filename,
-                        self.i_ts,
-                        cell_scalar_data={"gamma": self.gamma_w},
-                    )
+        if plot_wake and self.gamma_w.shape[0]:
+            wake_filename = Path(directory).joinpath(self.surf_w_name)
+            paths.append(
+                plot_grid_to_vtk(
+                    self.zeta_w,
+                    wake_filename,
+                    self.i_ts,
+                    cell_scalar_data={"gamma": self.gamma_w},
                 )
+            )
         return paths

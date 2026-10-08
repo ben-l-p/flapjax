@@ -107,7 +107,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             flowfield=flowfield,
             delta_w=aero.delta_w,
             dt=aero.dt,
-            x0_aero=dv_or(aero_dv.zeta_b0, aero.zeta_b0),
+            zeta_b0=dv_or(aero_dv.zeta_b0, aero.zeta_b0),
             orientation_euler=dv_or(
                 struct_dv.orientation_euler, struct.orientation_euler
             ),
@@ -125,7 +125,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         f_ext_aero_global = aero_sol.project_forcing_to_beam(
             i_ts=0,
             rmat=hg[:, :3, :3],
-            x0_aero=self.aero.zeta_b0,
+            zeta_b0=self.aero.zeta_b0,
             include_unsteady=False,
         )
 
@@ -431,7 +431,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 f_total=f_steady,
                 rmat=hg[:, :3, :3],
                 dof_mapping=inner_case.aero.dof_mapping,
-                x0_aero=inner_case.aero.zeta_b0,
+                zeta_b0=inner_case.aero.zeta_b0,
                 mirror_edge_low=inner_case.aero.mirror_edge_low,
                 mirror_edge_high=inner_case.aero.mirror_edge_high,
                 beam_m=inner_case.aero.beam_m,
@@ -1693,7 +1693,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             dt=self.aero.dt,
             flowfield=self.aero.flowfield,
             delta_w=self.aero.delta_w,
-            x0_aero=self.aero.zeta_b0,
+            zeta_b0=self.aero.zeta_b0,
             thrust_reference=self.structure.thrust_reference
             | expand_groups(trim_variables.thrust, thrust_groups),
             orientation_euler=new_orientation,
@@ -1888,7 +1888,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             dt=inner_case.aero.dt,
             flowfield=inner_case.aero.flowfield,
             delta_w=inner_case.aero.delta_w,
-            x0_aero=inner_case.aero.zeta_b0,
+            zeta_b0=inner_case.aero.zeta_b0,
             orientation_euler=inner_case.trim_angles_to_euler(
                 trim_variables.trim_angles
             ),
@@ -2019,7 +2019,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                         thrust_t=True,
                     ),
                     aero=AeroGradsToCompute(
-                        x0_aero=False, flowfield=False, cs_ang_t=True, cs_vel_t=False
+                        zeta_b0=False, flowfield=False, cs_ang_t=True, cs_vel_t=False
                     ),
                 ),
             )

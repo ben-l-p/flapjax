@@ -25,13 +25,13 @@ class AeroGradsToCompute:
     r"""
     Class which contains flags to determine which gradients are to be computed for the aerodynamic problem during the
     adjoint solve. Defaults to computing only the aerodynamic grid gradients.
-    :param x0_aero: Aerodynamic grid coordinates.
+    :param zeta_b0: Aerodynamic grid coordinates.
     :param flowfield: Flow field parameters.
     :param cs_ang_t: Control surface deflection angle time history.
     :param cs_vel_t: Control surface velocity time history.
     """
 
-    x0_aero: bool = True
+    zeta_b0: bool = True
     flowfield: bool = False
     cs_ang_t: bool = False
     cs_vel_t: bool = False
@@ -376,11 +376,11 @@ class AeroDesignVariables(DesignVariables):
             )
 
             if rmat_nodal is not None:
-                d_x0_aero: Array = jnp.einsum(
+                d_zeta_b0: Array = jnp.einsum(
                     "ijk,...lik->lij", rmat_nodal[i_surf], self.zeta_b0[i_surf]
                 )
             else:
-                d_x0_aero = self.zeta_b0[i_surf]
+                d_zeta_b0 = self.zeta_b0[i_surf]
 
             paths.append(
                 plot_grid_to_vtk(
@@ -388,7 +388,7 @@ class AeroDesignVariables(DesignVariables):
                     bound_filename,
                     None,
                     node_vector_data={
-                        "zeta_b0": d_x0_aero,
+                        "zeta_b0": d_zeta_b0,
                     },
                     cell_scalar_data={},
                 )

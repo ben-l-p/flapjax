@@ -448,27 +448,27 @@ class UVLM:
             raise TypeError("Invalid delta_w type")
 
         if isinstance(zeta_b0, Array):
-            x0_aero_arraylist = ArrayList([zeta_b0])
+            zeta_b0_arraylist = ArrayList([zeta_b0])
         elif isinstance(zeta_b0, Sequence):
-            x0_aero_arraylist = ArrayList(zeta_b0)
+            zeta_b0_arraylist = ArrayList(zeta_b0)
         elif isinstance(zeta_b0, ArrayList):
-            x0_aero_arraylist = zeta_b0
+            zeta_b0_arraylist = zeta_b0
         else:
             raise TypeError("Invalid zeta_b0 type")
 
         # set aerodynamic local coordinates
-        if len(x0_aero_arraylist) != self.n_surf:
+        if len(zeta_b0_arraylist) != self.n_surf:
             raise ValueError(
                 f"Expected {self.n_surf} aerodynamic grid coordinate arrays, got {len(zeta_b0)}"
             )
 
         for i_surf in range(self.n_surf):
             check_arr_shape(
-                x0_aero_arraylist[i_surf],
+                zeta_b0_arraylist[i_surf],
                 (self.grid_disc[i_surf].m + 1, self.grid_disc[i_surf].n + 1, 3),
                 "zeta_b0",
             )
-        self.zeta_b0 = x0_aero_arraylist
+        self.zeta_b0 = zeta_b0_arraylist
 
         if reference_cs_angles is not None:
             self.cs_ang0 = reference_cs_angles
@@ -554,7 +554,7 @@ class UVLM:
         """
         if isinstance(grads_to_compute, AeroGradsToCompute):
             return AeroDesignVariables(
-                zeta_b0=self.zeta_b0 if grads_to_compute.x0_aero else None,
+                zeta_b0=self.zeta_b0 if grads_to_compute.zeta_b0 else None,
                 flowfield=self.flowfield.to_design_variables()
                 if grads_to_compute.flowfield
                 else None,
@@ -721,7 +721,6 @@ class UVLM:
         """
         zeta_te = zeta_b[-1, ...]  # (zeta_n, 3)
         if self.grid_disc[i_surf].m_star == 0:
-            warn("Horseshoe wake requested but m_star == 0, skipping.")
             return zeta_te[None, :]
         else:
             wake_end = (
@@ -1638,7 +1637,7 @@ class UVLM:
             f_total=f_total_zeta,
             rmat=hg_n[:, :3, :3],
             dof_mapping=self.dof_mapping,
-            x0_aero=inner_case.zeta_b0,
+            zeta_b0=inner_case.zeta_b0,
             mirror_edge_low=inner_case.mirror_edge_low,
             mirror_edge_high=inner_case.mirror_edge_high,
             beam_m=self.beam_m,
@@ -2070,7 +2069,7 @@ class UVLM:
             f_total=f_tot,
             rmat=hg_n[:, :3, :3],
             dof_mapping=inner_case.dof_mapping,
-            x0_aero=inner_case.zeta_b0,
+            zeta_b0=inner_case.zeta_b0,
             mirror_edge_low=inner_case.mirror_edge_low,
             mirror_edge_high=inner_case.mirror_edge_high,
             beam_m=inner_case.beam_m,

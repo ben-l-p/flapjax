@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../flying_spaghetti_optimise/">
+        <link rel="prev" href="../straight_pazy_lco/">
       
       
-        <link rel="next" href="../simple_hale_gust/">
+        <link rel="next" href="../swept_pazy_static_deflection/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Flexible Double Pendulum - FLAPJAX</title>
+        <title>Pazy wing continuous gust frequency response - FLAPJAX</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#flexible-double-pendulum" class="md-skip">
+        <a href="#pazy-wing-continuous-gust-frequency-response" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Flexible Double Pendulum
+              Pazy wing continuous gust frequency response
             
           </span>
         </div>
@@ -493,10 +493,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -516,11 +514,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
         
           
           <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
@@ -541,7 +539,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -668,37 +666,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Flexible Double Pendulum
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../double_pendulum/" class="md-nav__link">
         
   
   
@@ -714,81 +685,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#imports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Imports
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#case-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Case parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#create-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Create model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#solve-dynamic-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Solve dynamic system
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#animate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Animate
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -806,8 +702,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -835,11 +733,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
@@ -860,7 +758,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1071,8 +969,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -1092,11 +992,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_8" checked>
         
           
           <label class="md-nav__link" for="__nav_3_3_8" id="__nav_3_3_8_label" tabindex="0">
@@ -1117,7 +1017,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_8_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_8_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_3_8">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1244,10 +1144,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../straight_pazy_gust_frf/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pazy wing continuous gust frequency response
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1263,6 +1190,37 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#frequency-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frequency sweep
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1945,54 +1903,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#imports" class="md-nav__link">
+  <a href="#frequency-sweep" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Imports
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#case-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Case parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#create-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Create model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#solve-dynamic-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Solve dynamic system
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#animate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Animate
+        Frequency sweep
       
     </span>
   </a>
@@ -2016,7 +1930,7 @@
 
 
   
-    <a href="https://github.com/ben-l-p/flapjax/edit/main/docs/tutorials/double_pendulum.ipynb" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/ben-l-p/flapjax/edit/main/docs/tutorials/straight_pazy_gust_frf.ipynb" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2751,7 +2665,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="flexible-double-pendulum">Flexible Double Pendulum<a class="anchor-link" href="#flexible-double-pendulum">¶</a></h1><p>Two very flexible beam segments connected by a hinge joint, with the root mounted to a hinge</p>
+<h1 id="pazy-wing-continuous-gust-frequency-response">Pazy wing continuous gust frequency response<a class="anchor-link" href="#pazy-wing-continuous-gust-frequency-response">¶</a></h1><p>Obtain the frequency response of the straight Pazy wing to a continuous sinusoidal vertical gust. This gives the wingtip response amplitude per unit gust upwash amplitude at each frequency.</p>
 </div>
 </div>
 </div>
@@ -2762,7 +2676,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="imports">Imports<a class="anchor-link" href="#imports">¶</a></h2>
+<p>Imports</p>
 </div>
 </div>
 </div>
@@ -2787,19 +2701,17 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">jnp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.animation</span><span class="w"> </span><span class="kn">import</span> <span class="n">FuncAnimation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTML</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.models.double_pendulum.double_pendulum</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_double_pendulum</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructureCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.aero.flowfields</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstantFlowField</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.models.pazy.straight.pazy_wing</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_pazy_wing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flapjax.structure.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_solve_dofs</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-1">from jax import numpy as jnp
 from matplotlib import pyplot as plt
-from matplotlib.animation import FuncAnimation
-from IPython.display import HTML
 
-from flapjax.models.double_pendulum.double_pendulum import generate_double_pendulum
-from flapjax.structure import StructureCase</div>
+from flapjax.aero.flowfields import ConstantFlowField
+from flapjax.models.pazy.straight.pazy_wing import generate_pazy_wing
+from flapjax.structure.utils import get_solve_dofs</div>
 </div>
 </div>
 </div>
@@ -2812,7 +2724,7 @@ from flapjax.structure import StructureCase</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="case-parameters">Case parameters<a class="anchor-link" href="#case-parameters">¶</a></h2>
+<p>Build the wing at a reference flight condition and obtain the static aeroelastic equilibrium. The freestream velocity is well below the flutter onset for this wing (c.f. the flutter analysis tutorial).</p>
 </div>
 </div>
 </div>
@@ -2835,15 +2747,47 @@ from flapjax.structure import StructureCase</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">dt</span> <span class="o">=</span> <span class="mf">0.005</span>  <span class="c1"># time step length</span>
-<span class="n">t_end</span> <span class="o">=</span> <span class="mf">5.0</span>  <span class="c1"># total simulation time</span>
-<span class="n">n_tstep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">t_end</span> <span class="o">/</span> <span class="n">dt</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># number of nodes per pendulum segment</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">M</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># wing chordwise discretisation</span>
+<span class="n">M_STAR</span> <span class="o">=</span> <span class="mi">40</span>  <span class="c1"># number of wake panels per strip</span>
+<span class="n">U_INF</span> <span class="o">=</span> <span class="mf">18.3</span>  <span class="c1"># freestream velocity, m/s</span>
+<span class="n">RHO</span> <span class="o">=</span> <span class="mf">1.225</span>  <span class="c1"># freestream density, kg/m^3</span>
+<span class="n">AOA</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mf">5.0</span><span class="p">)</span>  <span class="c1"># angle of attack</span>
+
+<span class="n">wing</span> <span class="o">=</span> <span class="n">generate_pazy_wing</span><span class="p">(</span>
+    <span class="n">flowfield</span><span class="o">=</span><span class="n">ConstantFlowField</span><span class="p">(</span>
+        <span class="n">u_inf</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">U_INF</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+        <span class="n">rho</span><span class="o">=</span><span class="n">RHO</span><span class="p">,</span>
+        <span class="n">relative_motion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">aoa</span><span class="o">=</span><span class="n">AOA</span><span class="p">,</span>
+    <span class="n">m</span><span class="o">=</span><span class="n">M</span><span class="p">,</span>
+    <span class="n">m_star</span><span class="o">=</span><span class="n">M_STAR</span><span class="p">,</span>
+    <span class="n">node_multiplier</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">skin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">static_sol</span> <span class="o">=</span> <span class="n">wing</span><span class="o">.</span><span class="n">static_solve</span><span class="p">(</span><span class="n">prescribed_dofs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span> <span class="n">horseshoe</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">dt = 0.005  # time step length
-t_end = 5.0  # total simulation time
-n_tstep = int(jnp.ceil(t_end / dt)) + 1
-n = 10  # number of nodes per pendulum segment</div>
+<div class="clipboard-copy-txt" id="cell-2">M = 8  # wing chordwise discretisation
+M_STAR = 40  # number of wake panels per strip
+U_INF = 18.3  # freestream velocity, m/s
+RHO = 1.225  # freestream density, kg/m^3
+AOA = jnp.deg2rad(5.0)  # angle of attack
+
+wing = generate_pazy_wing(
+    flowfield=ConstantFlowField(
+        u_inf=jnp.array((U_INF, 0.0, 0.0)),
+        rho=RHO,
+        relative_motion=True,
+    ),
+    aoa=AOA,
+    m=M,
+    m_star=M_STAR,
+    node_multiplier=1,
+    skin=True,
+)
+
+static_sol = wing.static_solve(prescribed_dofs=tuple(range(6)), horseshoe=False)</div>
 </div>
 </div>
 </div>
@@ -2856,7 +2800,7 @@ n = 10  # number of nodes per pendulum segment</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="create-model">Create model<a class="anchor-link" href="#create-model">¶</a></h2><p>Generate the double pendulum structure. The two segments are started oriented along the x-axis, connected by a hinge that allows rotation about the y-axis.</p>
+<p>Linearise the coupled system about the static equilibrium. The resulting <code>LinearCoupled</code> object exposes <code>frf</code>, which computes the raw gust-to-structural-response transfer function.</p>
 </div>
 </div>
 </div>
@@ -2879,20 +2823,12 @@ n = 10  # number of nodes per pendulum segment</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">beam</span><span class="p">,</span> <span class="n">root_hinge</span><span class="p">,</span> <span class="n">mid_hinge</span> <span class="o">=</span> <span class="n">generate_double_pendulum</span><span class="p">(</span>
-    <span class="n">n_nodes_per_segment</span><span class="o">=</span><span class="n">n</span><span class="p">,</span>
-    <span class="n">length</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-    <span class="n">hinge_axis</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
-    <span class="n">gravity</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.81</span><span class="p">]),</span>
-    <span class="n">k_bending</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>  <span class="c1"># very low bending stiffness</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">linear</span> <span class="o">=</span> <span class="n">wing</span><span class="o">.</span><span class="n">linearise</span><span class="p">(</span>
+    <span class="n">reference</span><span class="o">=</span><span class="n">static_sol</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_struct_modes</span><span class="o">=</span><span class="mi">10</span>
 <span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">beam, root_hinge, mid_hinge = generate_double_pendulum(
-    n_nodes_per_segment=n,
-    length=1.0,
-    hinge_axis=jnp.array([0.0, 1.0, 0.0]),
-    gravity=jnp.array([0.0, 0.0, -9.81]),
-    k_bending=4.0,  # very low bending stiffness
+<div class="clipboard-copy-txt" id="cell-3">linear = wing.linearise(
+    reference=static_sol, batch_size=4, n_struct_modes=10
 )</div>
 </div>
 </div>
@@ -2906,7 +2842,7 @@ n = 10  # number of nodes per pendulum segment</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="solve-dynamic-system">Solve dynamic system<a class="anchor-link" href="#solve-dynamic-system">¶</a></h2><p>Both joints are hard constraints: a <code>GroundedHinge</code> pins the root to its initial position, and a <code>MultibodyHinge</code> connects the two segments. No DOFs are prescribed — the entire structure swings freely under gravity.</p>
+<h2 id="frequency-sweep">Frequency sweep<a class="anchor-link" href="#frequency-sweep">¶</a></h2><p>Sweep the gust frequency and evaluate the raw FRF (<code>flowfield=None</code>), i.e. the response per unit (1 m/s) gust velocity amplitude at each frequency.</p>
 </div>
 </div>
 </div>
@@ -2929,33 +2865,15 @@ n = 10  # number of nodes per pendulum segment</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">init</span> <span class="o">=</span> <span class="n">beam</span><span class="o">.</span><span class="n">reference_configuration</span><span class="p">(</span><span class="n">prescribed_dofs</span><span class="o">=</span><span class="p">())</span><span class="o">.</span><span class="n">to_dynamic</span><span class="p">()</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">freq_hz</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+<span class="n">omega</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">freq_hz</span>
 
-<span class="c1"># set the initial beam acceleration to be gravity for all dynamic nodes</span>
-<span class="c1"># this isn't essential, but ensures that at timestep 0 the forces are balanced</span>
-<span class="n">g</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.81</span><span class="p">])</span>
-<span class="n">init</span><span class="o">.</span><span class="n">v_dot</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">v_dot</span><span class="o">.</span><span class="n">at</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
-
-<span class="c1"># time march solution</span>
-<span class="n">solution</span><span class="p">:</span> <span class="n">StructureCase</span> <span class="o">=</span> <span class="n">beam</span><span class="o">.</span><span class="n">dynamic_solve</span><span class="p">(</span>
-    <span class="n">init_state</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-    <span class="n">n_tstep</span><span class="o">=</span><span class="n">n_tstep</span><span class="p">,</span>
-    <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">linear</span><span class="o">.</span><span class="n">frf</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="n">omega</span><span class="p">,</span> <span class="n">flowfield</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">init = beam.reference_configuration(prescribed_dofs=()).to_dynamic()
+<div class="clipboard-copy-txt" id="cell-4">freq_hz = jnp.linspace(0.01, 6.0, 150)
+omega = 2.0 * jnp.pi * freq_hz
 
-# set the initial beam acceleration to be gravity for all dynamic nodes
-# this isn't essential, but ensures that at timestep 0 the forces are balanced
-g = jnp.array([0.0, 0.0, -9.81])
-init.v_dot = init.v_dot.at[:, :3].set(g[None, :])
-
-# time march solution
-solution: StructureCase = beam.dynamic_solve(
-    init_state=init,
-    n_tstep=n_tstep,
-    dt=dt,
-)</div>
+h = linear.frf(omega=omega, flowfield=None)</div>
 </div>
 </div>
 </div>
@@ -2968,7 +2886,7 @@ solution: StructureCase = beam.dynamic_solve(
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="animate">Animate<a class="anchor-link" href="#animate">¶</a></h2><p>Animate the pendulum motion</p>
+<p>Extract the response of the wingtip vertical (z) displacement. The FRF returns <code>q</code>/<code>q_dot</code> over the free structural DOFs only (the root is clamped), so we need to map the tip node's global DOF index onto its position in the free-DOF ordering.</p>
 </div>
 </div>
 </div>
@@ -2991,79 +2909,85 @@ solution: StructureCase = beam.dynamic_solve(
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">stride</span> <span class="o">=</span> <span class="n">n_tstep</span> <span class="o">//</span> <span class="mi">200</span>
-<span class="n">frames</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_tstep</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">n_nodes</span> <span class="o">=</span> <span class="n">wing</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">n_nodes</span>
+<span class="n">n_dof</span> <span class="o">=</span> <span class="n">wing</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">n_dof</span>
+<span class="n">tip_z_dof</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_nodes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">2</span>  <span class="c1"># vertical translation DOF at the tip node</span>
 
-<span class="n">fig_anim</span><span class="p">,</span> <span class="n">ax_anim</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="p">(</span><span class="n">line1</span><span class="p">,)</span> <span class="o">=</span> <span class="n">ax_anim</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:blue"</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="p">(</span><span class="n">line2</span><span class="p">,)</span> <span class="o">=</span> <span class="n">ax_anim</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:orange"</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="p">(</span><span class="n">hinge_dots</span><span class="p">,)</span> <span class="o">=</span> <span class="n">ax_anim</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">markeredgecolor</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-                             <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">time_text</span> <span class="o">=</span> <span class="n">ax_anim</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax_anim</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">free_dofs</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">get_solve_dofs</span><span class="p">(</span><span class="n">n_dof</span><span class="o">=</span><span class="n">n_dof</span><span class="p">,</span> <span class="n">prescribed_dofs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">))))</span>
+<span class="n">tip_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">free_dofs</span> <span class="o">==</span> <span class="n">tip_z_dof</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
 
-<span class="n">pad</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="n">x_all</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
-<span class="n">z_all</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span>
-<span class="n">ax_anim</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x_all</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">-</span> <span class="n">pad</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">x_all</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">+</span> <span class="n">pad</span><span class="p">)</span>
-<span class="n">ax_anim</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">z_all</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">-</span> <span class="n">pad</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">z_all</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">+</span> <span class="n">pad</span><span class="p">)</span>
-<span class="n">ax_anim</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span>
-<span class="n">ax_anim</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x [m]"</span><span class="p">)</span>
-<span class="n">ax_anim</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"z [m]"</span><span class="p">)</span>
-<span class="n">ax_anim</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Double Pendulum"</span><span class="p">)</span>
-<span class="n">ax_anim</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="n">i_ts</span><span class="p">):</span>
-    <span class="n">line1</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">solution</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i_ts</span><span class="p">,</span> <span class="p">:</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">solution</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i_ts</span><span class="p">,</span> <span class="p">:</span><span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-    <span class="n">line2</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">solution</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i_ts</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">solution</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i_ts</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-    <span class="n">hinge_dots</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">solution</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i_ts</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">solution</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i_ts</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span>
-        <span class="p">[</span><span class="n">solution</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i_ts</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">solution</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i_ts</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span>
-    <span class="p">)</span>
-    <span class="n">time_text</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"t = </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">i_ts</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dt</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">line1</span><span class="p">,</span> <span class="n">line2</span><span class="p">,</span> <span class="n">hinge_dots</span><span class="p">,</span> <span class="n">time_text</span>
-
-
-<span class="n">anim</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig_anim</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="n">frames</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig_anim</span><span class="p">)</span>
-<span class="n">HTML</span><span class="p">(</span><span class="n">anim</span><span class="o">.</span><span class="n">to_jshtml</span><span class="p">())</span>
+<span class="n">h_tip</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">q</span><span class="p">[:,</span> <span class="n">tip_idx</span><span class="p">]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">stride = n_tstep // 200
-frames = range(0, n_tstep, stride)
+<div class="clipboard-copy-txt" id="cell-5">n_nodes = wing.structure.n_nodes
+n_dof = wing.structure.n_dof
+tip_z_dof = (n_nodes - 1) * 6 + 2  # vertical translation DOF at the tip node
 
-fig_anim, ax_anim = plt.subplots(figsize=(6, 6))
-(line1,) = ax_anim.plot([], [], "-", color="tab:blue", markersize=4, lw=2)
-(line2,) = ax_anim.plot([], [], "-", color="tab:orange", markersize=4, lw=2)
-(hinge_dots,) = ax_anim.plot([], [], "o", color="white", markersize=7, markeredgecolor="black", markeredgewidth=1.5,
-                             zorder=5)
-time_text = ax_anim.text(0.02, 0.95, "", transform=ax_anim.transAxes, fontsize=10)
+free_dofs = jnp.array(get_solve_dofs(n_dof=n_dof, prescribed_dofs=tuple(range(6))))
+tip_idx = int(jnp.where(free_dofs == tip_z_dof)[0][0])
 
-pad = 0.1
-x_all = solution.x[:, :, 0]
-z_all = solution.x[:, :, 2]
-ax_anim.set_xlim(float(x_all.min()) - pad, float(x_all.max()) + pad)
-ax_anim.set_ylim(float(z_all.min()) - pad, float(z_all.max()) + pad)
-ax_anim.set_aspect("equal")
-ax_anim.set_xlabel("x [m]")
-ax_anim.set_ylabel("z [m]")
-ax_anim.set_title("Double Pendulum")
-ax_anim.grid(True, alpha=0.3)
+h_tip = h.q[:, tip_idx]</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=11">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Plot the magnitude and phase of the wingtip response across the frequency sweep.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=12">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_mag</span><span class="p">,</span> <span class="n">ax_phase</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 
+<span class="n">ax_mag</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">freq_hz</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">h_tip</span><span class="p">))</span>
+<span class="n">ax_mag</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"|H_tip_z| [m / (m/s)]"</span><span class="p">)</span>
+<span class="n">ax_mag</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Pazy wing tip vertical displacement response per unit gust velocity"</span><span class="p">)</span>
+<span class="n">ax_mag</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">"both"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
-def update(i_ts):
-    line1.set_data(solution.x[i_ts, :n, 0], solution.x[i_ts, :n, 2])
-    line2.set_data(solution.x[i_ts, n:-1, 0], solution.x[i_ts, n:-1, 2])
-    hinge_dots.set_data(
-        [solution.x[i_ts, 0, 0], solution.x[i_ts, n - 1, 0]],
-        [solution.x[i_ts, 0, 2], solution.x[i_ts, n - 1, 2]],
-    )
-    time_text.set_text(f"t = {float(i_ts * dt):.3f} s")
-    return line1, line2, hinge_dots, time_text
+<span class="n">ax_phase</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">freq_hz</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">h_tip</span><span class="p">)))</span>
+<span class="n">ax_phase</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Phase [deg]"</span><span class="p">)</span>
+<span class="n">ax_phase</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Gust frequency [Hz]"</span><span class="p">)</span>
+<span class="n">ax_phase</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-6">fig, (ax_mag, ax_phase) = plt.subplots(2, 1, sharex=True, figsize=(7, 6))
 
-anim = FuncAnimation(fig_anim, update, frames=frames, blit=True, interval=30)
-plt.close(fig_anim)
-HTML(anim.to_jshtml())</div>
+ax_mag.semilogy(freq_hz, jnp.abs(h_tip))
+ax_mag.set_ylabel("|H_tip_z| [m / (m/s)]")
+ax_mag.set_title("Pazy wing tip vertical displacement response per unit gust velocity")
+ax_mag.grid(True, which="both", alpha=0.3)
+
+ax_phase.plot(freq_hz, jnp.rad2deg(jnp.angle(h_tip)))
+ax_phase.set_ylabel("Phase [deg]")
+ax_phase.set_xlabel("Gust frequency [Hz]")
+ax_phase.grid(True, alpha=0.3)
+
+plt.show()</div>
 </div>
 </div>
 </div>

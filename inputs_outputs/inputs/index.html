@@ -517,6 +517,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#suppressing-a-wake-vortex-at-a-surface-junction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suppressing a wake vortex at a surface junction
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1227,6 +1238,8 @@
       
         
       
+        
+      
     
     
     
@@ -1368,6 +1381,34 @@
     
   
     Pazy wing time-domain LCO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/straight_pazy_gust_frf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pazy wing continuous gust frequency response
   
 
     
@@ -2153,6 +2194,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#suppressing-a-wake-vortex-at-a-surface-junction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suppressing a wake vortex at a surface junction
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2576,6 +2628,12 @@ this, <code>GridDiscretisation</code> takes a <code>beam_m</code> flag (default 
 <div class="highlight"><pre><span></span><code><span class="n">gd_fuselage</span> <span class="o">=</span> <span class="n">GridDiscretisation</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">m_star</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">beam_m</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <p>where this requires <code>dof_mapping</code> for that surface has shape <code>(m+1,)</code> rather than <code>(n+1,)</code>,</p>
+<h4 id="suppressing-a-wake-vortex-at-a-surface-junction">Suppressing a wake vortex at a surface junction<a class="headerlink" href="#suppressing-a-wake-vortex-at-a-surface-junction" title="Permanent link">&para;</a></h4>
+<p>A wing edge that meets with another surface along a chordwise edge (e.g. a fuselage) still sheds a wake there like a
+tip, which can induce spuriously large velocities/forces on the neighbouring surface. <code>exclude_edge</code> (<code>(low, high)</code>
+for <code>n=0</code>/<code>n=-1</code>) drops just that wake filament as an induced-velocity source, keeping its bound circulation unaffected:</p>
+<div class="highlight"><pre><span></span><code><span class="n">gd_wing</span> <span class="o">=</span> <span class="n">GridDiscretisation</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">m_star</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">exclude_edge</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>  <span class="c1"># n=0 edge abuts a fuselage</span>
+</code></pre></div>
 <h3 id="optional-parameters_1">Optional parameters<a class="headerlink" href="#optional-parameters_1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

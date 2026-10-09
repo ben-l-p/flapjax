@@ -978,6 +978,8 @@
       
         
       
+        
+      
     
     
     
@@ -1119,6 +1121,34 @@
     
   
     Pazy wing time-domain LCO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/straight_pazy_gust_frf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pazy wing continuous gust frequency response
   
 
     
@@ -16694,7 +16724,9 @@ the raw transfer function is returned.</p>
 <span class="normal">1402</span>
 <span class="normal">1403</span>
 <span class="normal">1404</span>
-<span class="normal">1405</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
+<span class="normal">1405</span>
+<span class="normal">1406</span>
+<span class="normal">1407</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -16726,7 +16758,9 @@ the raw transfer function is returned.</p>
         <span class="n">case</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="p">,</span>
         <span class="n">reference</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">n_struct_modes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_struct_modes</span><span class="o">=</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">n_modes</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">modal_states</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">),</span>
         <span class="n">bound_upwash</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">skip_checks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
@@ -30235,7 +30269,9 @@ the raw transfer function is returned.</p>
 <span class="normal">1402</span>
 <span class="normal">1403</span>
 <span class="normal">1404</span>
-<span class="normal">1405</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
+<span class="normal">1405</span>
+<span class="normal">1406</span>
+<span class="normal">1407</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -30267,7 +30303,9 @@ the raw transfer function is returned.</p>
         <span class="n">case</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="p">,</span>
         <span class="n">reference</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">n_struct_modes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_struct_modes</span><span class="o">=</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">n_modes</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">modal_states</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">),</span>
         <span class="n">bound_upwash</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">skip_checks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>

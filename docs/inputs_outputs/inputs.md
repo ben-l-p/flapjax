@@ -194,6 +194,16 @@ gd_fuselage = GridDiscretisation(m=10, n=20, m_star=0, beam_m=True)
 
 where this requires `dof_mapping` for that surface has shape `(m+1,)` rather than `(n+1,)`,
 
+#### Suppressing a wake vortex at a surface junction
+
+A wing edge that meets with another surface along a chordwise edge (e.g. a fuselage) still sheds a wake there like a
+tip, which can induce spuriously large velocities/forces on the neighbouring surface. `exclude_edge` (`(low, high)`
+for `n=0`/`n=-1`) drops just that wake filament as an induced-velocity source, keeping its bound circulation unaffected:
+
+```python
+gd_wing = GridDiscretisation(m=10, n=20, m_star=40, exclude_edge=(True, False))  # n=0 edge abuts a fuselage
+```
+
 ### Optional parameters
 
 | Parameter                 | Type                         | Default              | Description                                                                                                                                                                                                                                                                                |

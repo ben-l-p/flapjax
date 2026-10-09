@@ -98,6 +98,7 @@ class UVLM:
         "kernels_w",
         "surf_b_names",
         "surf_w_names",
+        "exclude_edge",
         "free_wake",
         "include_unsteady_force",
         "grid_func",
@@ -247,6 +248,11 @@ class UVLM:
 
         # per-surface flag for whether the beam-mapped axis is m instead of n
         self.beam_m: tuple[bool, ...] = tuple(gd.beam_m for gd in self.grid_disc)
+
+        # per-surface (low, high) flags for excluding that edge's streamwise wake filament
+        self.exclude_edge: tuple[tuple[bool, bool], ...] = tuple(
+            gd.exclude_edge for gd in self.grid_disc
+        )
 
         # count of number of panels
         self.n_bound_panels: tuple[int, ...] = tuple(
@@ -1010,6 +1016,11 @@ class UVLM:
                         zetas=zeta_full,
                         gammas=gamma_full,
                         kernels=[*self.kernels_b, *self.kernels_w],
+                        # only wake edge filament is excluded
+                        exclude_edges=[
+                            *((False, False),) * self.n_surf,
+                            *self.exclude_edge,
+                        ],
                         batch_size=self.batch_size,
                         mirror_normal=self.mirror_normal,
                         mirror_point=self.mirror_point,
@@ -1044,6 +1055,7 @@ class UVLM:
             zetas_w=zeta_w_bar_n if static else None,
             kernels_b=self.kernels_b,
             kernels_w=self.kernels_w if static else None,
+            exclude_edges=self.exclude_edge,
             batch_size=self.batch_size,
             mirror_normal=self.mirror_normal,
             mirror_point=mirror_point_bar,
@@ -1064,6 +1076,7 @@ class UVLM:
                 zetas=zeta_w_bar_n,
                 gammas=gamma_w_bar_n,
                 kernels=self.kernels_w,
+                exclude_edges=self.exclude_edge,
                 batch_size=self.batch_size,
                 mirror_normal=self.mirror_normal,
                 mirror_point=mirror_point_bar,
@@ -1115,6 +1128,8 @@ class UVLM:
                 zetas=ArrayList([*zeta_b_n, *zeta_w_n]),
                 gammas=ArrayList([*gamma_b_n, *gamma_w_n]),
                 kernels=[*self.kernels_b, *self.kernels_w],
+                # only wake edge filament is excluded
+                exclude_edges=[*((False, False),) * self.n_surf, *self.exclude_edge],
                 batch_size=self.batch_size,
                 mirror_normal=self.mirror_normal,
                 mirror_point=self.mirror_point,
@@ -1385,6 +1400,7 @@ class UVLM:
             t=jnp.zeros(n_tstep),
             dof_mapping=self.dof_mapping,
             beam_m=self.beam_m,
+            exclude_edge=self.exclude_edge,
             static_horseshoe=static_horseshoe,
             free_wake=free_wake,
             gamma_dot_relaxation=gamma_dot_relaxation,
@@ -1547,6 +1563,7 @@ class UVLM:
             t=jnp.array(0.0),
             dof_mapping=self.dof_mapping,
             beam_m=self.beam_m,
+            exclude_edge=self.exclude_edge,
             flowfield=self.flowfield,
             mirror_point=self.mirror_point,
             mirror_normal=self.mirror_normal,
@@ -1748,6 +1765,7 @@ class UVLM:
             zetas_w=None,
             kernels_b=inner_case.kernels_b,
             kernels_w=None,
+            exclude_edges=inner_case.exclude_edge,
             batch_size=self.batch_size,
             mirror_normal=inner_case.mirror_normal,
             mirror_point=mirror_point_bar,
@@ -1766,6 +1784,7 @@ class UVLM:
             zetas=zeta_w_bar_n,
             gammas=gamma_w_bar_n,
             kernels=inner_case.kernels_w,
+            exclude_edges=inner_case.exclude_edge,
             batch_size=self.batch_size,
             mirror_normal=inner_case.mirror_normal,
             mirror_point=mirror_point_bar,
@@ -1864,6 +1883,11 @@ class UVLM:
                     zetas=ArrayList([*zeta_b_nm1, *zeta_w_nm1]),
                     gammas=ArrayList([*gamma_b_nm1, *gamma_w_nm1]),
                     kernels=[*inner_case.kernels_b, *inner_case.kernels_w],
+                    # only wake edge filament is excluded
+                    exclude_edges=[
+                        *((False, False),) * self.n_surf,
+                        *inner_case.exclude_edge,
+                    ],
                     batch_size=self.batch_size,
                     mirror_normal=inner_case.mirror_normal,
                     mirror_point=inner_case.mirror_point,
@@ -2029,6 +2053,11 @@ class UVLM:
                 zetas=ArrayList([*zeta_b_n, *zeta_w_n]),
                 gammas=ArrayList([*gamma_b_n, *gamma_w_n]),
                 kernels=[*inner_case.kernels_b, *inner_case.kernels_w],
+                # only wake edge filament is excluded
+                exclude_edges=[
+                    *((False, False),) * self.n_surf,
+                    *inner_case.exclude_edge,
+                ],
                 batch_size=self.batch_size,
                 mirror_normal=inner_case.mirror_normal,
                 mirror_point=inner_case.mirror_point,

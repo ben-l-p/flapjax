@@ -31,6 +31,8 @@ def generate_cantilever_wing(
     m_cs: Array = M_CS_DEFAULT,
     u_inf: Array = U_INF_DEFAULT,
     rho: float = 1.225,
+    k_cs_index: Array | None = None,
+    m_cs_index: Array | None = None,
 ) -> CoupledAeroelastic:
     n_elem = n_nodes - 1
     n = n_nodes - 1
@@ -40,7 +42,13 @@ def generate_cantilever_wing(
     conn = jnp.zeros((n_elem, 2), dtype=int)
     conn = conn.at[:, 0].set(jnp.arange(n_elem))
     conn = conn.at[:, 1].set(jnp.arange(1, n_nodes))
-    beam = BeamStructure(num_nodes=n_nodes, connectivity=conn, y_vector=y_vector)
+    beam = BeamStructure(
+        num_nodes=n_nodes,
+        connectivity=conn,
+        y_vector=y_vector,
+        k_cs_index=k_cs_index,
+        m_cs_index=m_cs_index,
+    )
 
     # aero non-design variables
     gd = GridDiscretisation(m=m, n=n, m_star=m_star)

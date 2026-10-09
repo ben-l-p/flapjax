@@ -10,7 +10,7 @@ from typing import ClassVar, overload
 from jax import Array
 from jax import numpy as jnp
 
-from flapjax.plotting.beam import plot_beam_to_vtk
+from flapjax.plotting.beam import BeamVTUSeries, plot_beam_to_vtk
 from flapjax.plotting.pvd import write_pvd
 from flapjax.structure.gradients.data_structures import StructureFullStates
 from flapjax.structure.utils import (
@@ -330,6 +330,7 @@ class StructureCase:
             thrust_direction=self.thrust_direction,
             t=self.t[i_ts],
             i_ts=i_ts,
+            local=self.local,
             prescribed_dofs=self.prescribed_dofs,
             constraint_data={
                 name: {k: v[i_ts, ...] for k, v in quantities.items()}
@@ -537,10 +538,22 @@ class StructureCase:
             directory_path = Path(directory).resolve()
             directory_path.mkdir(parents=True, exist_ok=True)
 
-            paths = [self[i_ts]._plot_single(directory, n_interp) for i_ts in index_]
+            # Convert the whole trajectory to the global frame once (vectorised over all timesteps)
+            # reuse single VTU topology/writer across the series
+            data = deepcopy(self)
+            data.to_global()
 
-            assert self.t is not None
-            return write_pvd(directory, "beam_dynamic_ts", paths, list(self.t[index_]))
+            series = BeamVTUSeries(
+                hg_ref=data.hg[index_[0]],
+                conn=jnp.array(data.conn, dtype=int),
+                o0=data.o0,
+                n_interp=n_interp,
+                base_filename=Path(directory).joinpath("beam"),
+            )
+            paths = [data[i_ts]._plot_series(series) for i_ts in index_]
+
+            assert data.t is not None
+            return write_pvd(directory, "beam_dynamic_ts", paths, list(data.t[index_]))
 
         if index is not None:
             raise ValueError("`index` is only used for batched Structure")
@@ -554,6 +567,58 @@ class StructureCase:
         # represent all vectors in the inertial frame
         data = deepcopy(self)
         data.to_global()
+
+        (
+            node_scalar_data,
+            node_vector_data,
+            cell_scalar_data,
+            cell_vector_data,
+        ) = data._plot_arrays()
+
+        Path(directory).mkdir(parents=True, exist_ok=True)
+        file_name = Path(directory).joinpath("beam")
+        return plot_beam_to_vtk(
+            hg=data.hg,
+            conn=jnp.array(data.conn, dtype=int),
+            o0=data.o0,
+            n_interp=n_interp,
+            filename=file_name,
+            i_ts=data.i_ts,
+            node_scalar_data=node_scalar_data,
+            node_vector_data=node_vector_data,
+            cell_scalar_data=cell_scalar_data,
+            cell_vector_data=cell_vector_data,
+        )
+
+    def _plot_series(self, series: BeamVTUSeries) -> Path:
+        """Write global-frame snapshot via a reusable ``BeamVTUSeries``."""
+        (
+            node_scalar_data,
+            node_vector_data,
+            cell_scalar_data,
+            cell_vector_data,
+        ) = self._plot_arrays()
+
+        return series.write(
+            self.hg,
+            self.i_ts,
+            node_scalar_data=node_scalar_data,
+            node_vector_data=node_vector_data,
+            cell_scalar_data=cell_scalar_data,
+            cell_vector_data=cell_vector_data,
+        )
+
+    def _plot_arrays(
+        self,
+    ) -> tuple[
+        dict[str, Array | None],
+        dict[str, Array | None],
+        dict[str, Array | None],
+        dict[str, Array | None],
+    ]:
+        """Build the node/cell scalar/vector data dicts for plotting. Assumes
+        ``self`` is already in the global frame."""
+        data = self
 
         # vectors making up local frame rotation matrices
         local_x = data.hg[:, :3, 0]
@@ -579,8 +644,11 @@ class StructureCase:
         m_int = data.f_int[:, 3:]
         f_res = data.f_res[:, :3]
         m_res = data.f_res[:, 3:]
-        f_cut = data.f_cut[:, :3]
-        m_cut = data.f_cut[:, 3:]
+        f_cut_full = (
+            data.f_cut
+        )  # extract once as this is a property - prevents repeated computation
+        f_cut = f_cut_full[:, :3]
+        m_cut = f_cut_full[:, 3:]
 
         # velocity and acceleration data
         v_lin = data.v[:, :3] if data.v is not None else None
@@ -634,20 +702,7 @@ class StructureCase:
             "f_elem_angular": f_elem_ang,
         }
 
-        Path(directory).mkdir(parents=True, exist_ok=True)
-        file_name = Path(directory).joinpath("beam")
-        return plot_beam_to_vtk(
-            hg=data.hg,
-            conn=jnp.array(data.conn, dtype=int),
-            o0=data.o0,
-            n_interp=n_interp,
-            filename=file_name,
-            i_ts=data.i_ts,
-            node_scalar_data=node_scalar_data,
-            node_vector_data=node_vector_data,
-            cell_scalar_data=cell_scalar_data,
-            cell_vector_data=cell_vector_data,
-        )
+        return node_scalar_data, node_vector_data, cell_scalar_data, cell_vector_data
 
 
 @make_pytree

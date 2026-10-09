@@ -66,3 +66,6 @@ write ``.vtu`` and ``.pvd`` files to disk, which can be visualised in ParaView.
                   using
                   the
                   ``static_solve()`` and ``dynamic_solve()`` routines.
+                - Continuous cosine gust FRF [straight](straight_pazy_gust_frf.ipynb) — Frequency sweep of the
+                  wingtip response to a continuous cosine gust using the ``ContinuousCosineFlowField``, obtained
+                  from the coupled ``linearise()`` routine's ``frf()`` method.

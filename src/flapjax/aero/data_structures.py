@@ -35,12 +35,16 @@ class GridDiscretisation:
     :param beam_m: If False (default), this surface's spanwise (``n``) axis is the one attached to the
         beam via ``dof_mapping``. If True, ``m`` is the beam-mapped axis instead. This is used to allow for
         fuselage-type surfaces where the structural mapping direction and the wake direction align.
+    :param exclude_edge: Per-edge flag, ``(low, high)``, for whether to drop that edge's streamwise (``m``-direction)
+        wake filament as an induced-velocity source. Used where this surface's edge is not a genuine free edge (e.g. a
+        wing root coincident with a fuselage edge).
     """
 
     m: int
     n: int
     m_star: int
     beam_m: bool = False
+    exclude_edge: tuple[bool, bool] = (False, False)
 
 
 @make_pytree
@@ -66,6 +70,7 @@ class AeroCase:
         "kernels",
         "batch_size",
         "beam_m",
+        "exclude_edge",
     )
 
     def __init__(
@@ -102,6 +107,7 @@ class AeroCase:
         free_wake: bool,
         gamma_dot_relaxation: float | Array,
         batch_size: int | None,
+        exclude_edge: Sequence[tuple[bool, bool]] | None = None,
     ) -> None:
         r"""
         :param zeta_b: Bound grid coordinates, batched: ``(n_surf, )(n_tstep, zeta_m, zeta_n, 3)`` /
@@ -137,6 +143,8 @@ class AeroCase:
         :param dof_mapping: Map from aero grid to beam DOFs, ``(n_surf, )(zeta_n, )`` (or ``(n_surf, )(zeta_m, )``
             for a surface with ``beam_m`` set).
         :param beam_m: Per-surface flag for the axis in which to map forces ``(n_surf, )``.
+        :param exclude_edge: Per-surface ``(low, high)`` flags for dropping that edge's streamwise wake filament as an
+        induced-velocity source, ``(n_surf, )``, or None for no exclusion.
         :param static_horseshoe: If true, a horseshoe formulation was used for the initial static solution.
         :param free_wake: Free-wake formulation flag.
         :param gamma_dot_relaxation: Circulation time derivative filter.
@@ -171,6 +179,9 @@ class AeroCase:
         self.surf_w_names: Sequence[str] = surf_w_names
         self.dof_mapping: ArrayList = dof_mapping
         self.beam_m: Sequence[bool] = beam_m
+        self.exclude_edge: Sequence[tuple[bool, bool]] = (
+            exclude_edge if exclude_edge is not None else [(False, False)] * self.n_surf
+        )
 
         # settings
         self.static_horseshoe: bool = static_horseshoe
@@ -591,6 +602,8 @@ class AeroCase:
             zetas=self.zeta_full(i_ts),
             gammas=self.gamma_full(i_ts),
             kernels=self.kernels,
+            # only the wake edge filament is excluded
+            exclude_edges=[*((False, False),) * self.n_surf, *self.exclude_edge],
             mirror_normal=self.mirror_normal,
             mirror_point=self.mirror_point,
             batch_size=self.batch_size,
@@ -644,6 +657,7 @@ class AeroCase:
             flowfield=self.flowfield,
             dof_mapping=self.dof_mapping,
             beam_m=self.beam_m,
+            exclude_edge=self.exclude_edge,
             batch_size=self.batch_size,
         )
 
@@ -689,6 +703,7 @@ class AeroCase:
             i_ts=jnp.arange(n_tstep),
             dof_mapping=self.dof_mapping,
             beam_m=self.beam_m,
+            exclude_edge=self.exclude_edge,
             static_horseshoe=self.static_horseshoe,
             free_wake=self.free_wake,
             gamma_dot_relaxation=self.gamma_dot_relaxation,

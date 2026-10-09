@@ -14,6 +14,7 @@ def compute_aic_grid(
     zeta: Array,
     kernel: KernelFunction,
     batch_size: int | None,
+    exclude_edge: tuple[bool, bool] = (False, False),
 ) -> Array:
     """
     Compute the aerodynamic influence coefficient (AIC) across grids of points. When normal is provided, fuses the dot
@@ -23,6 +24,8 @@ def compute_aic_grid(
     :param zeta: Grid vertices, ``(zeta_m, zeta_n, 3)``.
     :param kernel: Kernel function to compute the influence.
     :param batch_size: Batch size for vectorising AIC computations.
+    :param exclude_edge: ``(low, high)`` flags; where True, drops the source grid's ``n=0``/``n=-1`` streamwise
+        filament in the m-direction.
     :return: ``(c_m, c_n, zeta_m, zeta_n, 3)`` if normal is None, else ``(c_m, c_n, zeta_m, zeta_n)``.
     """
     c_m, c_n = c.shape[:2]
@@ -48,6 +51,10 @@ def compute_aic_grid(
         m_influence_ni = jnp.dot(m_influence, ni).reshape(
             m_panels, n_panels + 1
         )  # [m, n+1]
+        if exclude_edge[0]:
+            m_influence_ni = m_influence_ni.at[:, 0].set(0.0)
+        if exclude_edge[1]:
+            m_influence_ni = m_influence_ni.at[:, -1].set(0.0)
         n_influence = vmap(kernel, (None, 0), 0)(ci, n_vect_flat)
         n_influence_ni = jnp.dot(n_influence, ni).reshape(
             m_panels + 1, n_panels
@@ -71,6 +78,7 @@ def compute_aic_sys(
     batch_size: int | None,
     mirror_point: Array | None,
     mirror_normal: Array | None,
+    exclude_edges: Sequence[tuple[bool, bool]] | None = None,
 ) -> list[list[Array]]:
     """
     Compute the AIC matrix for a system of elements. Returns a list of AIC matrices, one for each element.
@@ -81,14 +89,20 @@ def compute_aic_sys(
     :param batch_size: Batch size for vectorising AIC computations.
     :param mirror_normal: Normal vector to mirror across, ``(3, )``. If None, no mirroring will be done.
     :param mirror_point: Point on mirror plane, ``(3, )``. If None, no mirroring will be done.
+    :param exclude_edges: Per-source-surface ``(low, high)`` edge-exclusion flags, ``(n_source, )``. If None, no
+        exclusion is applied.
     :return: Nested sequences of AIC matrices, ``(n_target,)(n_source, c_m, c_n, zeta_m, zeta_n, 3)``, or
     ``(n_target,)(n_source,)(c_m, c_n, zeta_m, zeta_n)`` if projected onto normals.
     """
 
+    exclude_edges_ = (
+        exclude_edges if exclude_edges is not None else [(False, False)] * len(zetas)
+    )
+
     aic_mats = []
     for c, n in zip(cs, ns):
         aic_mats.append([])
-        for zeta, kernel in zip(zetas, kernels):
+        for zeta, kernel, exclude_edge in zip(zetas, kernels, exclude_edges_):
             # compute the AIC matrix, [n_cx, n_cy, n_ex, n_ey, 3]
             aic_ = compute_aic_grid(
                 c=c,
@@ -96,6 +110,7 @@ def compute_aic_sys(
                 zeta=zeta,
                 kernel=kernel,
                 batch_size=batch_size,
+                exclude_edge=exclude_edge,
             )
 
             if mirror_point is not None and mirror_normal is not None:
@@ -106,7 +121,12 @@ def compute_aic_sys(
                     mirror_normal=mirror_normal,
                 )
                 aic_ -= compute_aic_grid(
-                    c=c, n=n, zeta=zeta_mirror, kernel=kernel, batch_size=batch_size
+                    c=c,
+                    n=n,
+                    zeta=zeta_mirror,
+                    kernel=kernel,
+                    batch_size=batch_size,
+                    exclude_edge=exclude_edge,
                 )
             aic_mats[-1].append(aic_)
     return aic_mats
@@ -144,6 +164,7 @@ def compute_aic_solve(
     batch_size: int | None,
     mirror_point: Array | None,
     mirror_normal: Array | None,
+    exclude_edges: Sequence[tuple[bool, bool]] | None = None,
 ) -> Array:
     r"""
     Compute the AIC matrix used for the UVLM solve step.
@@ -157,6 +178,8 @@ def compute_aic_solve(
     :param batch_size: Batch size for vectorising AIC computations.
     :param mirror_normal: Normal vector to mirror across, ``(3, )``. If None, no mirroring will be done.
     :param mirror_point: Point on mirror plane, ``(3, )``. If None, no mirroring will be done.
+    :param exclude_edges: Per-surface ``(low, high)`` edge-exclusion flags, ``(n_source, )``, applied only to the
+        wake source grid of each surface. If None, no exclusion is applied.
     :return: Square AIC matrix for the solve step, ``(c_tot, zeta_tot)``.
     """
     aic_b_mats = compute_aic_sys(
@@ -180,6 +203,7 @@ def compute_aic_solve(
             batch_size=batch_size,
             mirror_point=mirror_point,
             mirror_normal=mirror_normal,
+            exclude_edges=exclude_edges,
         )
 
         aic_b_mats = add_wake_influence(aic_b_mats, aic_w_mats)
@@ -253,6 +277,7 @@ def compute_v_ind[T: Array | ArrayList](
     mirror_point: Array | None,
     mirror_normal: Array | None,
     batch_size: int | None,
+    exclude_edges: Sequence[tuple[bool, bool]] | None = None,
 ) -> T:
     """
     Compute the induced velocity by multiple surfaces of aerodynamic elements at one or multiple grids of points in
@@ -264,16 +289,23 @@ def compute_v_ind[T: Array | ArrayList](
     :param mirror_point: Mirror point, ``(3, )``. If None, no mirroring will be done.
     :param mirror_normal: Normal mirror vector, ``(3, )``. If None, no mirroring will be done.
     :param batch_size: Batch size for vectorising AIC computations.
+    :param exclude_edges: Per-source-surface ``(low, high)`` edge-exclusion flags.
     :return: Array or ArrayList of induced velocity, ``(c_m, c_n, 3)`` or ``(n_target,)(c_m, c_n, 3)``.
     """
 
     # convert cs to an ArrayList. If it is an Array, we will convert back before returning.
     cs_: ArrayList = ArrayList([cs]) if isinstance(cs, Array) else cs
 
+    exclude_edges_ = (
+        exclude_edges if exclude_edges is not None else [(False, False)] * len(zetas)
+    )
+
     v = ArrayList([])
     for c in cs_:
         v.append(jnp.zeros_like(c))
-        for zeta, gamma, kernel in zip(zetas, gammas, kernels):
+        for zeta, gamma, kernel, exclude_edge in zip(
+            zetas, gammas, kernels, exclude_edges_
+        ):
             m_vect = jnp.stack(
                 (zeta[:-1, :, :], zeta[1:, :, :]), axis=-2
             )  # [m, n+1, 2, 3]
@@ -282,6 +314,10 @@ def compute_v_ind[T: Array | ArrayList](
             )  # [m+1, n, 2, 3]
 
             gamma_eff_m = jnp.diff(jnp.pad(gamma, ((0, 0), (1, 1))), axis=1)  # [m, n+1]
+            if exclude_edge[0]:
+                gamma_eff_m = gamma_eff_m.at[:, 0].set(0.0)
+            if exclude_edge[1]:
+                gamma_eff_m = gamma_eff_m.at[:, -1].set(0.0)
             gamma_eff_n = -jnp.diff(
                 jnp.pad(gamma, ((1, 1), (0, 0))), axis=0
             )  # [m+1, n]

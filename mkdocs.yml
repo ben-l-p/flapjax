@@ -97,6 +97,7 @@ nav:
               - Deformed mode frequencies: tutorials/straight_pazy_deformed_modes.ipynb
               - Flutter analysis: tutorials/straight_pazy_flutter.ipynb
               - Time-domain LCO: tutorials/straight_pazy_lco.ipynb
+              - Continuous cosine gust FRF: tutorials/straight_pazy_gust_frf.ipynb
           - Swept Pazy wing:
               - Static deflection: tutorials/swept_pazy_static_deflection.ipynb
               - Deformed mode frequencies: tutorials/swept_pazy_deformed_modes.ipynb

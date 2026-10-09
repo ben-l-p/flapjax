@@ -1373,7 +1373,9 @@ class LinearCoupled(
             case=self._case,
             reference=self._reference,
             batch_size=False,
-            n_struct_modes=None,
+            n_struct_modes=(
+                self.structure.n_modes if self.structure.modal_states else None
+            ),
             bound_upwash=True,
             skip_checks=True,
         )

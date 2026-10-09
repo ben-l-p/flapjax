@@ -387,6 +387,11 @@ class LinearUVLM(
                 zetas=ArrayList([*zeta_b_np1, *zeta_w_n]),
                 gammas=ArrayList([*gamma_b_n, *gamma_w_n]),
                 kernels=[*self.kernels_b, *self.kernels_w],
+                # only wake edge filament is excluded
+                exclude_edges=[
+                    *((False, False),) * self.case.n_surf,
+                    *self.case.exclude_edge,
+                ],
                 batch_size=self.case.batch_size,
                 mirror_normal=self.case.mirror_normal,
                 mirror_point=self.case.mirror_point,
@@ -1034,6 +1039,7 @@ class LinearUVLM(
             flowfield=self.reference.flowfield,
             dof_mapping=self.reference.dof_mapping,
             beam_m=self.reference.beam_m,
+            exclude_edge=self.reference.exclude_edge,
             free_wake=self.reference.free_wake,
             gamma_dot_relaxation=self.reference.gamma_dot_relaxation,
             static_horseshoe=self.reference.static_horseshoe,

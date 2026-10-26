@@ -123,35 +123,7 @@ def generate_generic_pazy_wing(
                 "lumped_mass=True with a node multiplier > 1 leads to nodes with zero mass"
             )
 
-        # build 6x6 mass matrix at each point
-        cg_data_ref = jnp.stack((data.cg_x, data.cg_y, data.cg_z), axis=1)
-        j_inertia_ref = jnp.zeros((n_mass, 3, 3))
-        for i, j, key in (
-            # different ordering from above
-            (0, 0, "i_xx"),
-            (1, 1, "i_yy"),
-            (2, 2, "i_zz"),
-            (0, 1, "i_xy"),
-            (0, 2, "i_xz"),
-            (1, 2, "i_yz"),
-        ):
-            j_inertia_ref = j_inertia_ref.at[:, i, j].set(getattr(data, key))
-            j_inertia_ref = j_inertia_ref.at[:, j, i].set(getattr(data, key))
-        skew_cg_ref = jax.vmap(vec_to_skew)(cg_data_ref)
-
-        if data.inertia_at_axis:
-            j_axis_ref = j_inertia_ref
-        else:
-            j_axis_ref = j_inertia_ref - data.mass[:, None, None] * (
-                skew_cg_ref @ skew_cg_ref
-            )
-
-        m_arr = data.mass[:, None, None]
-        m_lumped_arr = jnp.zeros((n_mass, 6, 6))
-        m_lumped_arr = m_lumped_arr.at[:, :3, :3].set(m_arr * jnp.eye(3))
-        m_lumped_arr = m_lumped_arr.at[:, :3, 3:].set(-m_arr * skew_cg_ref)
-        m_lumped_arr = m_lumped_arr.at[:, 3:, :3].set(m_arr * skew_cg_ref)
-        m_lumped_arr = m_lumped_arr.at[:, 3:, 3:].set(j_axis_ref)
+        m_lumped_arr = build_lumped_mass_matrices(data)
 
         # keypoints sit at every node_multiplier-th node of the refined mesh
         m_lumped_index = jnp.arange(n_mass) * node_multiplier
@@ -209,28 +181,7 @@ def generate_generic_pazy_wing(
         m_lumped_index = None
 
     # stiffness properties, provided for non-shear deformation
-    k_cs_data = jnp.zeros((data.n_keypoints - 1, 6, 6))
-
-    idx_keys = (
-        (0, 0, "k11"),
-        (3, 3, "k22"),
-        (4, 4, "k33"),
-        (5, 5, "k44"),
-        (0, 3, "k12"),
-        (0, 4, "k13"),
-        (0, 5, "k14"),
-        (3, 4, "k23"),
-        (3, 5, "k24"),
-        (4, 5, "k34"),
-    )
-    for i, j, key in idx_keys:
-        # redundant for diagonal terms
-        k_cs_data = k_cs_data.at[:, i, j].set(getattr(data, key))
-        k_cs_data = k_cs_data.at[:, j, i].set(getattr(data, key))
-
-    # add large shear stiffness to diagonal terms to avoid singularity
-    k_cs_data = k_cs_data.at[:, 1, 1].set(1e9)
-    k_cs_data = k_cs_data.at[:, 2, 2].set(1e9)
+    k_cs_data = build_stiffness_matrices(data)
     data_elem_midpoints = 0.5 * (
         s_data[:-1] + s_data[1:]
     )  # arclength midpoints of the data segments, used for interpolation
@@ -330,6 +281,111 @@ def generate_generic_pazy_wing(
     )
 
     return wing
+
+
+def build_lumped_mass_matrices(
+    data: PazyParameters,
+    mass: Array | None = None,
+    cg: Array | None = None,
+    inertia: Array | None = None,
+) -> Array:
+    r"""
+    Build the per-keypoint ``(6, 6)`` lumped mass matrices from Pazy keypoint data.
+    :param data: Pazy keypoint data providing CG offsets and the inertia tensor at each keypoint.
+    :param mass: Optional override for the per-keypoint mass magnitude, ``(n_keypoint,)``.
+    :param cg: Optional override for the per-keypoint CG offset, ``(n_keypoint, 3)``.
+    :param inertia: Optional override for the per-keypoint about-CG inertia tensor's independent
+        components, ordered ``(i_xx, i_yy, i_zz, i_xy, i_xz, i_yz)``, ``(n_keypoint, 6)``.
+    :return: Lumped mass matrices, ``(n_keypoint, 6, 6)``.
+    """
+    mass_ = data.mass if mass is None else mass
+    n_mass = mass_.shape[0]
+
+    cg_ = jnp.stack((data.cg_x, data.cg_y, data.cg_z), axis=1) if cg is None else cg
+    inertia_ = (
+        jnp.stack(
+            (data.i_xx, data.i_yy, data.i_zz, data.i_xy, data.i_xz, data.i_yz), axis=1
+        )
+        if inertia is None
+        else inertia
+    )
+
+    j_inertia_ref = jnp.zeros((n_mass, 3, 3))
+    for k, (i, j) in enumerate(
+        # different ordering from the about-axis inertia tensor built above
+        ((0, 0), (1, 1), (2, 2), (0, 1), (0, 2), (1, 2))
+    ):
+        j_inertia_ref = j_inertia_ref.at[:, i, j].set(inertia_[:, k])
+        j_inertia_ref = j_inertia_ref.at[:, j, i].set(inertia_[:, k])
+    skew_cg_ref = jax.vmap(vec_to_skew)(cg_)
+
+    if data.inertia_at_axis:
+        j_axis_ref = j_inertia_ref
+    else:
+        j_axis_ref = j_inertia_ref - mass_[:, None, None] * (skew_cg_ref @ skew_cg_ref)
+
+    m_arr = mass_[:, None, None]
+    m_lumped_arr = jnp.zeros((n_mass, 6, 6))
+    m_lumped_arr = m_lumped_arr.at[:, :3, :3].set(m_arr * jnp.eye(3))
+    m_lumped_arr = m_lumped_arr.at[:, :3, 3:].set(-m_arr * skew_cg_ref)
+    m_lumped_arr = m_lumped_arr.at[:, 3:, :3].set(m_arr * skew_cg_ref)
+    m_lumped_arr = m_lumped_arr.at[:, 3:, 3:].set(j_axis_ref)
+    return m_lumped_arr
+
+
+def build_stiffness_matrices(
+    data: PazyParameters,
+    k11: Array | None = None,
+    k22: Array | None = None,
+    k33: Array | None = None,
+    k44: Array | None = None,
+    k12: Array | None = None,
+    k13: Array | None = None,
+    k14: Array | None = None,
+    k23: Array | None = None,
+    k24: Array | None = None,
+    k34: Array | None = None,
+) -> Array:
+    r"""
+    Build the per-segment ``(6, 6)`` cross-sectional stiffness matrices from Pazy keypoint data.
+    """
+    overrides = {
+        "k11": k11,
+        "k22": k22,
+        "k33": k33,
+        "k44": k44,
+        "k12": k12,
+        "k13": k13,
+        "k14": k14,
+        "k23": k23,
+        "k24": k24,
+        "k34": k34,
+    }
+    n_elem = data.n_keypoints - 1
+
+    k_cs_data = jnp.zeros((n_elem, 6, 6))
+    idx_keys = (
+        (0, 0, "k11"),
+        (3, 3, "k22"),
+        (4, 4, "k33"),
+        (5, 5, "k44"),
+        (0, 3, "k12"),
+        (0, 4, "k13"),
+        (0, 5, "k14"),
+        (3, 4, "k23"),
+        (3, 5, "k24"),
+        (4, 5, "k34"),
+    )
+    for i, j, key in idx_keys:
+        value = getattr(data, key) if overrides[key] is None else overrides[key]
+        # redundant for diagonal terms
+        k_cs_data = k_cs_data.at[:, i, j].set(value)
+        k_cs_data = k_cs_data.at[:, j, i].set(value)
+
+    # add large shear stiffness
+    k_cs_data = k_cs_data.at[:, 1, 1].set(1e9)
+    k_cs_data = k_cs_data.at[:, 2, 2].set(1e9)
+    return k_cs_data
 
 
 def interp_cs_property(data: Array, data_coords: Array, coords: Array) -> Array:

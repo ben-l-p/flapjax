@@ -97,7 +97,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             else aero.flowfield
         )
         inner_case.set_design_variables(
-            coords=dv_or(struct_dv.x0, struct.x0),
+            coords=dv_or(struct_dv.x0, struct.x0_reference),
             k_cs=dv_or(struct_dv.k_cs, struct.k_cs),
             m_cs=dv_or(struct_dv.m_cs, struct.m_cs),
             m_lumped=dv_or(struct_dv.m_lumped, struct.m_lumped)

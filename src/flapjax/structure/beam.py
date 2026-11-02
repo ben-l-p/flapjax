@@ -581,7 +581,7 @@ class BaseBeamStructure:
         )
         if isinstance(grads_to_compute, StructureGradsToCompute):
             return StructureDesignVariables(
-                x0=self.x0 if grads_to_compute.x0 else None,
+                x0=self.x0_reference if grads_to_compute.x0 else None,
                 orientation_euler=self.orientation_euler
                 if grads_to_compute.orientation_euler
                 else None,
@@ -597,7 +597,7 @@ class BaseBeamStructure:
             )
         else:
             return StructureDesignVariables(
-                x0=self.x0,
+                x0=self.x0_reference,
                 orientation_euler=self.orientation_euler,
                 m_cs=self.m_cs,
                 k_cs=self.k_cs,

@@ -53,7 +53,7 @@ class BeamStructure(BaseBeamStructure):
         """
         inner_case = pytree_clone(self)
         inner_case.set_design_variables(
-            coords=dv_or(dv.x0, self.x0),
+            coords=dv_or(dv.x0, self.x0_reference),
             k_cs=dv_or(dv.k_cs, self.k_cs),
             m_cs=dv_or(dv.m_cs, self.m_cs),
             m_lumped=dv_or(dv.m_lumped, self._m_lumped),
@@ -237,7 +237,7 @@ class BeamStructure(BaseBeamStructure):
 
         # make design variables for current state of structure
         dv = StructureDesignVariables(
-            x0=self.x0,
+            x0=self.x0_reference,
             orientation_euler=self.orientation_euler,
             k_cs=self.k_cs,
             m_cs=self._m_cs,

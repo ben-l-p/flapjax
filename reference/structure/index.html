@@ -10367,7 +10367,7 @@ variables are obtained.</p>
     <span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grads_to_compute</span><span class="p">,</span> <span class="n">StructureGradsToCompute</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">StructureDesignVariables</span><span class="p">(</span>
-            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0</span> <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">x0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0_reference</span> <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">x0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">orientation_euler</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation_euler</span>
             <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">orientation_euler</span>
             <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -10383,7 +10383,7 @@ variables are obtained.</p>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">StructureDesignVariables</span><span class="p">(</span>
-            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span>
+            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0_reference</span><span class="p">,</span>
             <span class="n">orientation_euler</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation_euler</span><span class="p">,</span>
             <span class="n">m_cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">m_cs</span><span class="p">,</span>
             <span class="n">k_cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k_cs</span><span class="p">,</span>
@@ -18776,7 +18776,7 @@ from the initial state.</p>
 <span class="sd">    """</span>
     <span class="n">inner_case</span> <span class="o">=</span> <span class="n">pytree_clone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
     <span class="n">inner_case</span><span class="o">.</span><span class="n">set_design_variables</span><span class="p">(</span>
-        <span class="n">coords</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x0</span><span class="p">),</span>
+        <span class="n">coords</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x0_reference</span><span class="p">),</span>
         <span class="n">k_cs</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">k_cs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_cs</span><span class="p">),</span>
         <span class="n">m_cs</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">m_cs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_cs</span><span class="p">),</span>
         <span class="n">m_lumped</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">m_lumped</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_lumped</span><span class="p">),</span>
@@ -19350,7 +19350,7 @@ the structure's parameters.</p>
 
     <span class="c1"># make design variables for current state of structure</span>
     <span class="n">dv</span> <span class="o">=</span> <span class="n">StructureDesignVariables</span><span class="p">(</span>
-        <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span>
+        <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0_reference</span><span class="p">,</span>
         <span class="n">orientation_euler</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation_euler</span><span class="p">,</span>
         <span class="n">k_cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k_cs</span><span class="p">,</span>
         <span class="n">m_cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_m_cs</span><span class="p">,</span>
@@ -26600,7 +26600,7 @@ variables are obtained.</p>
     <span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grads_to_compute</span><span class="p">,</span> <span class="n">StructureGradsToCompute</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">StructureDesignVariables</span><span class="p">(</span>
-            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0</span> <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">x0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0_reference</span> <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">x0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">orientation_euler</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation_euler</span>
             <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">orientation_euler</span>
             <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -26616,7 +26616,7 @@ variables are obtained.</p>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">StructureDesignVariables</span><span class="p">(</span>
-            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span>
+            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0_reference</span><span class="p">,</span>
             <span class="n">orientation_euler</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation_euler</span><span class="p">,</span>
             <span class="n">m_cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">m_cs</span><span class="p">,</span>
             <span class="n">k_cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k_cs</span><span class="p">,</span>
@@ -42494,7 +42494,7 @@ a value of 1 is undamped.</p>
 <span class="sd">    """</span>
     <span class="n">inner_case</span> <span class="o">=</span> <span class="n">pytree_clone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
     <span class="n">inner_case</span><span class="o">.</span><span class="n">set_design_variables</span><span class="p">(</span>
-        <span class="n">coords</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x0</span><span class="p">),</span>
+        <span class="n">coords</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x0_reference</span><span class="p">),</span>
         <span class="n">k_cs</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">k_cs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_cs</span><span class="p">),</span>
         <span class="n">m_cs</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">m_cs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_cs</span><span class="p">),</span>
         <span class="n">m_lumped</span><span class="o">=</span><span class="n">dv_or</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">m_lumped</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_lumped</span><span class="p">),</span>
@@ -43068,7 +43068,7 @@ the structure's parameters.</p>
 
     <span class="c1"># make design variables for current state of structure</span>
     <span class="n">dv</span> <span class="o">=</span> <span class="n">StructureDesignVariables</span><span class="p">(</span>
-        <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span>
+        <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0_reference</span><span class="p">,</span>
         <span class="n">orientation_euler</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation_euler</span><span class="p">,</span>
         <span class="n">k_cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k_cs</span><span class="p">,</span>
         <span class="n">m_cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_m_cs</span><span class="p">,</span>
@@ -47196,7 +47196,7 @@ variables are obtained.</p>
     <span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grads_to_compute</span><span class="p">,</span> <span class="n">StructureGradsToCompute</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">StructureDesignVariables</span><span class="p">(</span>
-            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0</span> <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">x0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0_reference</span> <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">x0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">orientation_euler</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation_euler</span>
             <span class="k">if</span> <span class="n">grads_to_compute</span><span class="o">.</span><span class="n">orientation_euler</span>
             <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -47212,7 +47212,7 @@ variables are obtained.</p>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">StructureDesignVariables</span><span class="p">(</span>
-            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span>
+            <span class="n">x0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x0_reference</span><span class="p">,</span>
             <span class="n">orientation_euler</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation_euler</span><span class="p">,</span>
             <span class="n">m_cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">m_cs</span><span class="p">,</span>
             <span class="n">k_cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k_cs</span><span class="p">,</span>

@@ -2334,7 +2334,7 @@ norm = cast(Normalize, Normalize(vmin=float(u_inf_mags.min()), vmax=float(u_inf_
     <span class="c1"># set the required design variables for this case</span>
     <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">/</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="n">u_mag</span><span class="p">)</span>
     <span class="n">inner_wing</span><span class="o">.</span><span class="n">set_design_variables</span><span class="p">(</span>
-        <span class="n">coords</span><span class="o">=</span><span class="n">inner_wing</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span>
+        <span class="n">coords</span><span class="o">=</span><span class="n">inner_wing</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">x0_reference</span><span class="p">,</span>
         <span class="n">k_cs</span><span class="o">=</span><span class="n">inner_wing</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">k_cs</span><span class="p">,</span>
         <span class="n">m_cs</span><span class="o">=</span><span class="n">inner_wing</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">m_cs</span><span class="p">,</span>
         <span class="n">m_lumped</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2374,7 +2374,7 @@ norm = cast(Normalize, Normalize(vmin=float(u_inf_mags.min()), vmax=float(u_inf_
     # set the required design variables for this case
     dt = 0.1 / (m * u_mag)
     inner_wing.set_design_variables(
-        coords=inner_wing.structure.x0,
+        coords=inner_wing.structure.x0_reference,
         k_cs=inner_wing.structure.k_cs,
         m_cs=inner_wing.structure.m_cs,
         m_lumped=None,

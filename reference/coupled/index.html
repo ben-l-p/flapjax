@@ -15940,9 +15940,9 @@ to skip plotting.</p>
 
 <a href="#flapjax.coupled.LinearCoupled.modal_rescaled" class="headerlink" title="Permanent link">&para;</a></h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">modal_rescaled</span><span class="p">(</span>
-    <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">chord</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">chord</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_modes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">freq_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
         <span class="mf">0.0</span><span class="p">,</span>
@@ -15980,15 +15980,16 @@ re-linearising.</p>
                 <code>velocity</code>
             </td>
             <td>
-                  <code><span title="float">float</span> | <span title="jax.Array">Array</span></code>
+                  <code><span title="float">float</span> | <span title="jax.Array">Array</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Freestream velocity magnitude(s) at the new condition(s), scalar or <code>(*n_points,)</code>.</p>
+                <p>Freestream velocity magnitude(s) at the new condition(s), scalar or <code>(*n_points,)</code>.
+If <code>None</code>, the reference velocity is kept unchanged.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -15996,15 +15997,16 @@ re-linearising.</p>
                 <code>density</code>
             </td>
             <td>
-                  <code><span title="float">float</span> | <span title="jax.Array">Array</span></code>
+                  <code><span title="float">float</span> | <span title="jax.Array">Array</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Flow density(s) at the new condition(s), scalar or broadcastable with <code>velocity</code>.</p>
+                <p>Flow density(s) at the new condition(s), scalar or broadcastable with <code>velocity</code>.
+If <code>None</code>, the reference density is kept unchanged.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -16012,15 +16014,16 @@ re-linearising.</p>
                 <code>chord</code>
             </td>
             <td>
-                  <code><span title="float">float</span> | <span title="jax.Array">Array</span></code>
+                  <code><span title="float">float</span> | <span title="jax.Array">Array</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Reference chord length(s) at the new condition(s), scalar or broadcastable with <code>velocity</code>.</p>
+                <p>Reference chord length(s) at the new condition(s), scalar or broadcastable with <code>velocity</code>.
+If <code>None</code>, the reference chord is kept unchanged.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -16294,11 +16297,21 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="normal">1315</span>
 <span class="normal">1316</span>
 <span class="normal">1317</span>
-<span class="normal">1318</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal_rescaled</span><span class="p">(</span>
+<span class="normal">1318</span>
+<span class="normal">1319</span>
+<span class="normal">1320</span>
+<span class="normal">1321</span>
+<span class="normal">1322</span>
+<span class="normal">1323</span>
+<span class="normal">1324</span>
+<span class="normal">1325</span>
+<span class="normal">1326</span>
+<span class="normal">1327</span>
+<span class="normal">1328</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal_rescaled</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
-    <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">chord</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">chord</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_modes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">freq_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
     <span class="n">damp_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">jnp</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
@@ -16310,8 +16323,11 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="sd">    Compute eigenvalues of the rescaled linear system at a new velocity, density, and chord length without</span>
 <span class="sd">    re-linearising.</span>
 <span class="sd">    :param velocity: Freestream velocity magnitude(s) at the new condition(s), scalar or ``(*n_points,)``.</span>
+<span class="sd">        If ``None``, the reference velocity is kept unchanged.</span>
 <span class="sd">    :param density: Flow density(s) at the new condition(s), scalar or broadcastable with ``velocity``.</span>
+<span class="sd">        If ``None``, the reference density is kept unchanged.</span>
 <span class="sd">    :param chord: Reference chord length(s) at the new condition(s), scalar or broadcastable with ``velocity``.</span>
+<span class="sd">        If ``None``, the reference chord is kept unchanged.</span>
 <span class="sd">    :param n_modes: Number of modes to keep. If ``None``, all eigenvalues are returned.</span>
 <span class="sd">    :param freq_range: (min, max) natural frequency window in Hz.</span>
 <span class="sd">    :param damp_range: (min, max) damping-ratio window.</span>
@@ -16321,6 +16337,16 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="sd">    :return: Continuous-time eigenvalues of the rescaled system(s), ``(n_out,)`` for scalar</span>
 <span class="sd">        inputs or ``(*n_points, n_out)`` for batched inputs.</span>
 <span class="sd">    """</span>
+    <span class="c1"># reference conditions</span>
+    <span class="n">u_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">u_inf_mag</span>
+    <span class="n">rho_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">rho</span>
+    <span class="n">m_chord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">gamma_b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">chord_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="n">m_chord</span> <span class="o">*</span> <span class="n">u_ref</span>
+
+    <span class="n">velocity</span> <span class="o">=</span> <span class="n">u_ref</span> <span class="k">if</span> <span class="n">velocity</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">velocity</span>
+    <span class="n">density</span> <span class="o">=</span> <span class="n">rho_ref</span> <span class="k">if</span> <span class="n">density</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">density</span>
+    <span class="n">chord</span> <span class="o">=</span> <span class="n">chord_ref</span> <span class="k">if</span> <span class="n">chord</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">chord</span>
+
     <span class="n">velocity</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">chord</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span>
         <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
         <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">density</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
@@ -16332,11 +16358,6 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Rescale and diagonalise the linear system at a single (velocity, density, chord) point.</span>
 <span class="sd">        """</span>
-        <span class="c1"># reference conditions</span>
-        <span class="n">u_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">u_inf_mag</span>
-        <span class="n">rho_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">rho</span>
-        <span class="n">m_chord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">gamma_b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
         <span class="n">dt_new</span> <span class="o">=</span> <span class="n">chord_</span> <span class="o">/</span> <span class="p">(</span><span class="n">m_chord</span> <span class="o">*</span> <span class="n">velocity_</span><span class="p">)</span>
 
         <span class="c1"># discretise structural system at new dt</span>
@@ -16433,11 +16454,13 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 
     <span class="n">n_points</span> <span class="o">=</span> <span class="n">velocity</span><span class="o">.</span><span class="n">size</span>
 
-    <span class="c1"># map scaling across multiple points</span>
-    <span class="n">evals_flat</span> <span class="o">=</span> <span class="n">vmap</span><span class="p">(</span><span class="n">_single</span><span class="p">)(</span>
-        <span class="n">velocity</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
-        <span class="n">density</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
-        <span class="n">chord</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
+    <span class="n">evals_flat</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">args</span><span class="p">:</span> <span class="n">_single</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">),</span>
+        <span class="p">(</span>
+            <span class="n">velocity</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
+            <span class="n">density</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
+            <span class="n">chord</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
+        <span class="p">),</span>
     <span class="p">)</span>  <span class="c1"># (n_points, n_out)</span>
     <span class="k">return</span> <span class="n">evals_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">evals_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 </code></pre></div></td></tr></table></div>
@@ -16537,21 +16560,21 @@ the raw transfer function is returned.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear/linear_coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1328</span>
-<span class="normal">1329</span>
-<span class="normal">1330</span>
-<span class="normal">1331</span>
-<span class="normal">1332</span>
-<span class="normal">1333</span>
-<span class="normal">1334</span>
-<span class="normal">1335</span>
-<span class="normal">1336</span>
-<span class="normal">1337</span>
-<span class="normal">1338</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1338</span>
 <span class="normal">1339</span>
 <span class="normal">1340</span>
 <span class="normal">1341</span>
-<span class="normal">1342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf</span><span class="p">(</span>
+<span class="normal">1342</span>
+<span class="normal">1343</span>
+<span class="normal">1344</span>
+<span class="normal">1345</span>
+<span class="normal">1346</span>
+<span class="normal">1347</span>
+<span class="normal">1348</span>
+<span class="normal">1349</span>
+<span class="normal">1350</span>
+<span class="normal">1351</span>
+<span class="normal">1352</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -16663,17 +16686,7 @@ the raw transfer function is returned.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear/linear_coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1344</span>
-<span class="normal">1345</span>
-<span class="normal">1346</span>
-<span class="normal">1347</span>
-<span class="normal">1348</span>
-<span class="normal">1349</span>
-<span class="normal">1350</span>
-<span class="normal">1351</span>
-<span class="normal">1352</span>
-<span class="normal">1353</span>
-<span class="normal">1354</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1354</span>
 <span class="normal">1355</span>
 <span class="normal">1356</span>
 <span class="normal">1357</span>
@@ -16726,7 +16739,17 @@ the raw transfer function is returned.</p>
 <span class="normal">1404</span>
 <span class="normal">1405</span>
 <span class="normal">1406</span>
-<span class="normal">1407</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
+<span class="normal">1407</span>
+<span class="normal">1408</span>
+<span class="normal">1409</span>
+<span class="normal">1410</span>
+<span class="normal">1411</span>
+<span class="normal">1412</span>
+<span class="normal">1413</span>
+<span class="normal">1414</span>
+<span class="normal">1415</span>
+<span class="normal">1416</span>
+<span class="normal">1417</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -29485,9 +29508,9 @@ to skip plotting.</p>
 
 <a href="#flapjax.coupled.linear.linear_coupled.LinearCoupled.modal_rescaled" class="headerlink" title="Permanent link">&para;</a></h6>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">modal_rescaled</span><span class="p">(</span>
-    <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">chord</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">chord</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_modes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">freq_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
         <span class="mf">0.0</span><span class="p">,</span>
@@ -29525,15 +29548,16 @@ re-linearising.</p>
                 <code>velocity</code>
             </td>
             <td>
-                  <code><span title="float">float</span> | <span title="jax.Array">Array</span></code>
+                  <code><span title="float">float</span> | <span title="jax.Array">Array</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Freestream velocity magnitude(s) at the new condition(s), scalar or <code>(*n_points,)</code>.</p>
+                <p>Freestream velocity magnitude(s) at the new condition(s), scalar or <code>(*n_points,)</code>.
+If <code>None</code>, the reference velocity is kept unchanged.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -29541,15 +29565,16 @@ re-linearising.</p>
                 <code>density</code>
             </td>
             <td>
-                  <code><span title="float">float</span> | <span title="jax.Array">Array</span></code>
+                  <code><span title="float">float</span> | <span title="jax.Array">Array</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Flow density(s) at the new condition(s), scalar or broadcastable with <code>velocity</code>.</p>
+                <p>Flow density(s) at the new condition(s), scalar or broadcastable with <code>velocity</code>.
+If <code>None</code>, the reference density is kept unchanged.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -29557,15 +29582,16 @@ re-linearising.</p>
                 <code>chord</code>
             </td>
             <td>
-                  <code><span title="float">float</span> | <span title="jax.Array">Array</span></code>
+                  <code><span title="float">float</span> | <span title="jax.Array">Array</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Reference chord length(s) at the new condition(s), scalar or broadcastable with <code>velocity</code>.</p>
+                <p>Reference chord length(s) at the new condition(s), scalar or broadcastable with <code>velocity</code>.
+If <code>None</code>, the reference chord is kept unchanged.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -29839,11 +29865,21 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="normal">1315</span>
 <span class="normal">1316</span>
 <span class="normal">1317</span>
-<span class="normal">1318</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal_rescaled</span><span class="p">(</span>
+<span class="normal">1318</span>
+<span class="normal">1319</span>
+<span class="normal">1320</span>
+<span class="normal">1321</span>
+<span class="normal">1322</span>
+<span class="normal">1323</span>
+<span class="normal">1324</span>
+<span class="normal">1325</span>
+<span class="normal">1326</span>
+<span class="normal">1327</span>
+<span class="normal">1328</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal_rescaled</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
-    <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
-    <span class="n">chord</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">chord</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_modes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">freq_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
     <span class="n">damp_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">jnp</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
@@ -29855,8 +29891,11 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="sd">    Compute eigenvalues of the rescaled linear system at a new velocity, density, and chord length without</span>
 <span class="sd">    re-linearising.</span>
 <span class="sd">    :param velocity: Freestream velocity magnitude(s) at the new condition(s), scalar or ``(*n_points,)``.</span>
+<span class="sd">        If ``None``, the reference velocity is kept unchanged.</span>
 <span class="sd">    :param density: Flow density(s) at the new condition(s), scalar or broadcastable with ``velocity``.</span>
+<span class="sd">        If ``None``, the reference density is kept unchanged.</span>
 <span class="sd">    :param chord: Reference chord length(s) at the new condition(s), scalar or broadcastable with ``velocity``.</span>
+<span class="sd">        If ``None``, the reference chord is kept unchanged.</span>
 <span class="sd">    :param n_modes: Number of modes to keep. If ``None``, all eigenvalues are returned.</span>
 <span class="sd">    :param freq_range: (min, max) natural frequency window in Hz.</span>
 <span class="sd">    :param damp_range: (min, max) damping-ratio window.</span>
@@ -29866,6 +29905,16 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="sd">    :return: Continuous-time eigenvalues of the rescaled system(s), ``(n_out,)`` for scalar</span>
 <span class="sd">        inputs or ``(*n_points, n_out)`` for batched inputs.</span>
 <span class="sd">    """</span>
+    <span class="c1"># reference conditions</span>
+    <span class="n">u_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">u_inf_mag</span>
+    <span class="n">rho_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">rho</span>
+    <span class="n">m_chord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">gamma_b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">chord_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="n">m_chord</span> <span class="o">*</span> <span class="n">u_ref</span>
+
+    <span class="n">velocity</span> <span class="o">=</span> <span class="n">u_ref</span> <span class="k">if</span> <span class="n">velocity</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">velocity</span>
+    <span class="n">density</span> <span class="o">=</span> <span class="n">rho_ref</span> <span class="k">if</span> <span class="n">density</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">density</span>
+    <span class="n">chord</span> <span class="o">=</span> <span class="n">chord_ref</span> <span class="k">if</span> <span class="n">chord</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">chord</span>
+
     <span class="n">velocity</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">chord</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span>
         <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
         <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">density</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
@@ -29877,11 +29926,6 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Rescale and diagonalise the linear system at a single (velocity, density, chord) point.</span>
 <span class="sd">        """</span>
-        <span class="c1"># reference conditions</span>
-        <span class="n">u_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">u_inf_mag</span>
-        <span class="n">rho_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">rho</span>
-        <span class="n">m_chord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">gamma_b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
         <span class="n">dt_new</span> <span class="o">=</span> <span class="n">chord_</span> <span class="o">/</span> <span class="p">(</span><span class="n">m_chord</span> <span class="o">*</span> <span class="n">velocity_</span><span class="p">)</span>
 
         <span class="c1"># discretise structural system at new dt</span>
@@ -29978,11 +30022,13 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 
     <span class="n">n_points</span> <span class="o">=</span> <span class="n">velocity</span><span class="o">.</span><span class="n">size</span>
 
-    <span class="c1"># map scaling across multiple points</span>
-    <span class="n">evals_flat</span> <span class="o">=</span> <span class="n">vmap</span><span class="p">(</span><span class="n">_single</span><span class="p">)(</span>
-        <span class="n">velocity</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
-        <span class="n">density</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
-        <span class="n">chord</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
+    <span class="n">evals_flat</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">args</span><span class="p">:</span> <span class="n">_single</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">),</span>
+        <span class="p">(</span>
+            <span class="n">velocity</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
+            <span class="n">density</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
+            <span class="n">chord</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
+        <span class="p">),</span>
     <span class="p">)</span>  <span class="c1"># (n_points, n_out)</span>
     <span class="k">return</span> <span class="n">evals_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">evals_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 </code></pre></div></td></tr></table></div>
@@ -30082,21 +30128,21 @@ the raw transfer function is returned.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear/linear_coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1328</span>
-<span class="normal">1329</span>
-<span class="normal">1330</span>
-<span class="normal">1331</span>
-<span class="normal">1332</span>
-<span class="normal">1333</span>
-<span class="normal">1334</span>
-<span class="normal">1335</span>
-<span class="normal">1336</span>
-<span class="normal">1337</span>
-<span class="normal">1338</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1338</span>
 <span class="normal">1339</span>
 <span class="normal">1340</span>
 <span class="normal">1341</span>
-<span class="normal">1342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf</span><span class="p">(</span>
+<span class="normal">1342</span>
+<span class="normal">1343</span>
+<span class="normal">1344</span>
+<span class="normal">1345</span>
+<span class="normal">1346</span>
+<span class="normal">1347</span>
+<span class="normal">1348</span>
+<span class="normal">1349</span>
+<span class="normal">1350</span>
+<span class="normal">1351</span>
+<span class="normal">1352</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -30208,17 +30254,7 @@ the raw transfer function is returned.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear/linear_coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1344</span>
-<span class="normal">1345</span>
-<span class="normal">1346</span>
-<span class="normal">1347</span>
-<span class="normal">1348</span>
-<span class="normal">1349</span>
-<span class="normal">1350</span>
-<span class="normal">1351</span>
-<span class="normal">1352</span>
-<span class="normal">1353</span>
-<span class="normal">1354</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1354</span>
 <span class="normal">1355</span>
 <span class="normal">1356</span>
 <span class="normal">1357</span>
@@ -30271,7 +30307,17 @@ the raw transfer function is returned.</p>
 <span class="normal">1404</span>
 <span class="normal">1405</span>
 <span class="normal">1406</span>
-<span class="normal">1407</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
+<span class="normal">1407</span>
+<span class="normal">1408</span>
+<span class="normal">1409</span>
+<span class="normal">1410</span>
+<span class="normal">1411</span>
+<span class="normal">1412</span>
+<span class="normal">1413</span>
+<span class="normal">1414</span>
+<span class="normal">1415</span>
+<span class="normal">1416</span>
+<span class="normal">1417</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>

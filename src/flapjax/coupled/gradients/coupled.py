@@ -1909,7 +1909,9 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 load_steps=load_steps,
                 horseshoe=horseshoe,
             )
-        f_clamp = ae_sol.structure.f_res.ravel()[jnp.array(zero_force_dofs)]
+        f_clamp = ae_sol.structure.f_res.ravel()[
+            jnp.array(zero_force_dofs, dtype=int)
+        ]
         if hinge_groups:
             hinge_moment = CoupledAeroelastic._hinge_moment_residual(
                 structure=inner_case.structure,
@@ -2001,7 +2003,9 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         ):
 
             def objective(states: AeroelasticFullStates, *_) -> Array:
-                return states.structure.f_res.ravel()[jnp.array(zero_force_dofs)]
+                return states.structure.f_res.ravel()[
+                    jnp.array(zero_force_dofs, dtype=int)
+                ]
 
             d_f_clamp_d_x: AeroelasticDesignVariables
             d_f_clamp_d_x, _ = inner_case.static_adjoint(

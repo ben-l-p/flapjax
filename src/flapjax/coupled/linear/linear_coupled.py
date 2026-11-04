@@ -1172,9 +1172,9 @@ class LinearCoupled(
 
     def modal_rescaled(
         self,
-        velocity: float | Array,
-        density: float | Array,
-        chord: float | Array,
+        velocity: float | Array | None = None,
+        density: float | Array | None = None,
+        chord: float | Array | None = None,
         n_modes: int | None = None,
         freq_range: tuple[float | Array, float | Array] = (0.0, jnp.inf),
         damp_range: tuple[float | Array, float | Array] = (-jnp.inf, jnp.inf),
@@ -1186,8 +1186,11 @@ class LinearCoupled(
         Compute eigenvalues of the rescaled linear system at a new velocity, density, and chord length without
         re-linearising.
         :param velocity: Freestream velocity magnitude(s) at the new condition(s), scalar or ``(*n_points,)``.
+            If ``None``, the reference velocity is kept unchanged.
         :param density: Flow density(s) at the new condition(s), scalar or broadcastable with ``velocity``.
+            If ``None``, the reference density is kept unchanged.
         :param chord: Reference chord length(s) at the new condition(s), scalar or broadcastable with ``velocity``.
+            If ``None``, the reference chord is kept unchanged.
         :param n_modes: Number of modes to keep. If ``None``, all eigenvalues are returned.
         :param freq_range: (min, max) natural frequency window in Hz.
         :param damp_range: (min, max) damping-ratio window.
@@ -1197,6 +1200,16 @@ class LinearCoupled(
         :return: Continuous-time eigenvalues of the rescaled system(s), ``(n_out,)`` for scalar
             inputs or ``(*n_points, n_out)`` for batched inputs.
         """
+        # reference conditions
+        u_ref = self._case.aero.flowfield.u_inf_mag
+        rho_ref = self._case.aero.flowfield.rho
+        m_chord = self.reference.aero.gamma_b[0].shape[0]
+        chord_ref = self.dt * m_chord * u_ref
+
+        velocity = u_ref if velocity is None else velocity
+        density = rho_ref if density is None else density
+        chord = chord_ref if chord is None else chord
+
         velocity, density, chord = jnp.broadcast_arrays(
             jnp.asarray(velocity, dtype=float),
             jnp.asarray(density, dtype=float),
@@ -1208,11 +1221,6 @@ class LinearCoupled(
             r"""
             Rescale and diagonalise the linear system at a single (velocity, density, chord) point.
             """
-            # reference conditions
-            u_ref = self._case.aero.flowfield.u_inf_mag
-            rho_ref = self._case.aero.flowfield.rho
-            m_chord = self.reference.aero.gamma_b[0].shape[0]
-
             dt_new = chord_ / (m_chord * velocity_)
 
             # discretise structural system at new dt
@@ -1309,11 +1317,13 @@ class LinearCoupled(
 
         n_points = velocity.size
 
-        # map scaling across multiple points
-        evals_flat = vmap(_single)(
-            velocity.reshape(n_points),
-            density.reshape(n_points),
-            chord.reshape(n_points),
+        evals_flat = jax.lax.map(
+            lambda args: _single(*args),
+            (
+                velocity.reshape(n_points),
+                density.reshape(n_points),
+                chord.reshape(n_points),
+            ),
         )  # (n_points, n_out)
         return evals_flat.reshape(*batch_shape, evals_flat.shape[-1])
 

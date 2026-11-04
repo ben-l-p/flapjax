@@ -56,11 +56,14 @@ type ReferenceObject = StructureCase | AeroCase | AeroelasticCase
 type LinearResult = AeroLinearResult | StructureLinearResult | AeroelasticLinearResult
 
 
+@make_pytree
 @dataclass
 class LinearComponent:
     enabled: bool
     slices: slice | Sequence[slice] | None
     shapes: tuple[int, ...] | ArrayListShape | None
+
+    _static: ClassVar[tuple[str, ...]] = ("enabled", "slices", "shapes")
 
 
 @dataclass

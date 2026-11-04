@@ -4,7 +4,7 @@ import os
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 import jax.numpy as jnp
 from jax import Array, vmap
@@ -38,6 +38,7 @@ from flapjax.utils.linear import (
     SliceEntry,
 )
 from flapjax.utils.print_utils import warn
+from flapjax.utils.utils import make_pytree
 
 if TYPE_CHECKING:
     from flapjax.aero.uvlm import UVLM
@@ -76,6 +77,7 @@ class LinearOutputProjection:
     to_output: Callable[[Array, Array | None], Array]
 
 
+@make_pytree
 class LinearUVLM(
     LinearModel[
         AeroCase,
@@ -88,6 +90,19 @@ class LinearUVLM(
     r"""
     Class to represent a linearised UVLM aerodynamic system about a reference state.
     """
+
+    _static: ClassVar[tuple[str, ...]] = (
+        "prescribed_wake",
+        "free_wake",
+        "unsteady_force",
+        "bound_upwash",
+        "wake_upwash",
+        "kernels_b",
+        "kernels_w",
+        "n_inputs",
+        "n_states",
+        "n_outputs",
+    )
 
     def __init__(
         self,

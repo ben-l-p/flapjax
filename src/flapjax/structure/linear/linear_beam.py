@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 from jax import Array, vmap
 from jax import numpy as jnp
@@ -19,11 +19,13 @@ from flapjax.structure.linear.data_structures import (
 from flapjax.structure.utils import get_solve_dofs, transform_nodal_vect
 from flapjax.utils.constants import BASE_LOBATTO_ORDER
 from flapjax.utils.linear import LinearComponent, LinearModel, LinearSystem, SliceEntry
+from flapjax.utils.utils import make_pytree
 
 if TYPE_CHECKING:
     from flapjax.structure.beam import BaseBeamStructure
 
 
+@make_pytree
 class LinearBeam(
     LinearModel[
         StructureCase,
@@ -36,6 +38,21 @@ class LinearBeam(
     r"""
     Class to represent a linearised beam system about a reference state.
     """
+
+    _static: ClassVar[tuple[str, ...]] = (
+        "free_dofs",
+        "n_free_dof",
+        "n_nodes",
+        "modal_states",
+        "modal_inputs",
+        "modal_outputs",
+        "_n_modes",
+        "alpha_m",
+        "beta_k",
+        "n_inputs",
+        "n_states",
+        "n_outputs",
+    )
 
     def __init__(
         self,

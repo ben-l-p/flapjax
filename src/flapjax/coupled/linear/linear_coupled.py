@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from collections.abc import Callable, Sequence
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 import jax
 from jax import Array, vmap
@@ -44,11 +44,13 @@ from flapjax.utils.print_utils import (
     print_table_line,
     print_table_title,
 )
+from flapjax.utils.utils import make_pytree
 
 if TYPE_CHECKING:
     from flapjax.coupled.coupled import BaseCoupledAeroelastic
 
 
+@make_pytree
 class LinearCoupled(
     LinearModel[
         AeroelasticCase,
@@ -58,6 +60,18 @@ class LinearCoupled(
         AeroelasticLinearResult,
     ]
 ):
+    _static: ClassVar[tuple[str, ...]] = (
+        "n_beam_nodal_dof",
+        "n_beam_input_dof",
+        "n_beam_state_dof",
+        "n_beam_output_dof",
+        "n_nodes",
+        "unsteady_force",
+        "n_inputs",
+        "n_states",
+        "n_outputs",
+    )
+
     def __init__(
         self,
         case: BaseCoupledAeroelastic,

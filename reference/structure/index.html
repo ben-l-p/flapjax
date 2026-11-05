@@ -8329,8 +8329,7 @@ the first time step.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">377</span>
-<span class="normal">378</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">378</span>
 <span class="normal">379</span>
 <span class="normal">380</span>
 <span class="normal">381</span>
@@ -8428,7 +8427,8 @@ the first time step.</p>
 <span class="normal">473</span>
 <span class="normal">474</span>
 <span class="normal">475</span>
-<span class="normal">476</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">476</span>
+<span class="normal">477</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">initialise</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">initial_snapshot</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
@@ -8552,13 +8552,13 @@ the first time step.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">490</span>
-<span class="normal">491</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">491</span>
 <span class="normal">492</span>
 <span class="normal">493</span>
 <span class="normal">494</span>
 <span class="normal">495</span>
-<span class="normal">496</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_global</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">496</span>
+<span class="normal">497</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_global</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Convert local structure results to global frame."""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">:</span>
         <span class="n">warn</span><span class="p">(</span><span class="s2">"Results already in global frame, skipping conversion."</span><span class="p">)</span>
@@ -8589,8 +8589,7 @@ the first time step.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">498</span>
-<span class="normal">499</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">499</span>
 <span class="normal">500</span>
 <span class="normal">501</span>
 <span class="normal">502</span>
@@ -8599,7 +8598,8 @@ the first time step.</p>
 <span class="normal">505</span>
 <span class="normal">506</span>
 <span class="normal">507</span>
-<span class="normal">508</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_local</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">508</span>
+<span class="normal">509</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_local</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Convert global structure results to local frame."""</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">:</span>
         <span class="n">warn</span><span class="p">(</span><span class="s2">"Results already in local frame, skipping conversion."</span><span class="p">)</span>
@@ -8720,8 +8720,7 @@ batched Structure, a PVD is written alongside per-timestep VTUs.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">522</span>
-<span class="normal">523</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">523</span>
 <span class="normal">524</span>
 <span class="normal">525</span>
 <span class="normal">526</span>
@@ -8761,7 +8760,10 @@ batched Structure, a PVD is written alongside per-timestep VTUs.</p>
 <span class="normal">560</span>
 <span class="normal">561</span>
 <span class="normal">562</span>
-<span class="normal">563</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+<span class="normal">563</span>
+<span class="normal">564</span>
+<span class="normal">565</span>
+<span class="normal">566</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">directory</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">n_interp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -8795,7 +8797,9 @@ batched Structure, a PVD is written alongside per-timestep VTUs.</p>
         <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">i_ts</span><span class="p">]</span><span class="o">.</span><span class="n">_plot_series</span><span class="p">(</span><span class="n">series</span><span class="p">)</span> <span class="k">for</span> <span class="n">i_ts</span> <span class="ow">in</span> <span class="n">index_</span><span class="p">]</span>
 
         <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="n">write_pvd</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">"beam_dynamic_ts"</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">index_</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">write_pvd</span><span class="p">(</span>
+            <span class="n">directory</span><span class="p">,</span> <span class="s2">"beam_dynamic_ts"</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">index_</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`index` is only used for batched Structure"</span><span class="p">)</span>
@@ -40975,8 +40979,7 @@ the first time step.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">377</span>
-<span class="normal">378</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">378</span>
 <span class="normal">379</span>
 <span class="normal">380</span>
 <span class="normal">381</span>
@@ -41074,7 +41077,8 @@ the first time step.</p>
 <span class="normal">473</span>
 <span class="normal">474</span>
 <span class="normal">475</span>
-<span class="normal">476</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">476</span>
+<span class="normal">477</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">initialise</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">initial_snapshot</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
@@ -41198,13 +41202,13 @@ the first time step.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">490</span>
-<span class="normal">491</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">491</span>
 <span class="normal">492</span>
 <span class="normal">493</span>
 <span class="normal">494</span>
 <span class="normal">495</span>
-<span class="normal">496</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_global</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">496</span>
+<span class="normal">497</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_global</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Convert local structure results to global frame."""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">:</span>
         <span class="n">warn</span><span class="p">(</span><span class="s2">"Results already in global frame, skipping conversion."</span><span class="p">)</span>
@@ -41235,8 +41239,7 @@ the first time step.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">498</span>
-<span class="normal">499</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">499</span>
 <span class="normal">500</span>
 <span class="normal">501</span>
 <span class="normal">502</span>
@@ -41245,7 +41248,8 @@ the first time step.</p>
 <span class="normal">505</span>
 <span class="normal">506</span>
 <span class="normal">507</span>
-<span class="normal">508</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_local</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">508</span>
+<span class="normal">509</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_local</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Convert global structure results to local frame."""</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">:</span>
         <span class="n">warn</span><span class="p">(</span><span class="s2">"Results already in local frame, skipping conversion."</span><span class="p">)</span>
@@ -41366,8 +41370,7 @@ batched Structure, a PVD is written alongside per-timestep VTUs.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/data_structures.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">522</span>
-<span class="normal">523</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">523</span>
 <span class="normal">524</span>
 <span class="normal">525</span>
 <span class="normal">526</span>
@@ -41407,7 +41410,10 @@ batched Structure, a PVD is written alongside per-timestep VTUs.</p>
 <span class="normal">560</span>
 <span class="normal">561</span>
 <span class="normal">562</span>
-<span class="normal">563</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+<span class="normal">563</span>
+<span class="normal">564</span>
+<span class="normal">565</span>
+<span class="normal">566</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">directory</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">n_interp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -41441,7 +41447,9 @@ batched Structure, a PVD is written alongside per-timestep VTUs.</p>
         <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">i_ts</span><span class="p">]</span><span class="o">.</span><span class="n">_plot_series</span><span class="p">(</span><span class="n">series</span><span class="p">)</span> <span class="k">for</span> <span class="n">i_ts</span> <span class="ow">in</span> <span class="n">index_</span><span class="p">]</span>
 
         <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="n">write_pvd</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">"beam_dynamic_ts"</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">index_</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">write_pvd</span><span class="p">(</span>
+            <span class="n">directory</span><span class="p">,</span> <span class="s2">"beam_dynamic_ts"</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="n">index_</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`index` is only used for batched Structure"</span><span class="p">)</span>

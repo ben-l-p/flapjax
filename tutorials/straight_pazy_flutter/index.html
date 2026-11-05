@@ -2358,7 +2358,7 @@ norm = cast(Normalize, Normalize(vmin=float(u_inf_mags.min()), vmax=float(u_inf_
         <span class="n">reference</span><span class="o">=</span><span class="n">static_sol</span><span class="p">,</span> <span class="n">skip_checks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_struct_modes</span><span class="o">=</span><span class="mi">50</span>
     <span class="p">)</span>
     <span class="c1"># obtain eigenvalies of linearised system</span>
-    <span class="n">eigvals</span> <span class="o">=</span> <span class="n">linear_sol</span><span class="o">.</span><span class="n">modal</span><span class="p">(</span>
+    <span class="n">eigvals</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">linear_sol</span><span class="o">.</span><span class="n">modal</span><span class="p">(</span>
         <span class="n">n_modes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">plot_eigvals</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">freq_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">),</span>
@@ -2398,7 +2398,7 @@ norm = cast(Normalize, Normalize(vmin=float(u_inf_mags.min()), vmax=float(u_inf_
         reference=static_sol, skip_checks=True, batch_size=4, n_struct_modes=50
     )
     # obtain eigenvalies of linearised system
-    eigvals = linear_sol.modal(
+    eigvals, _ = linear_sol.modal(
         n_modes=5,
         plot_eigvals=False,
         freq_range=(0.0, 50.0),

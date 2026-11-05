@@ -15267,7 +15267,7 @@ take the same arguments as the first output.</p>
     <span class="n">max_disp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
     <span class="n">max_ang</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
     <span class="n">max_gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -15562,11 +15562,12 @@ to skip plotting.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="jax.Array">Array</span></code>
+                  <code><span title="tuple">tuple</span>[<span title="jax.Array">Array</span>, <span title="jax.Array">Array</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Continuous-time eigenvalues of the system A matrix, <code>(n_states, )</code> or <code>(n_states, 2)</code> if <code>to_components=True</code>.</p>
+                <p>Tuple of (continuous-time eigenvalues, eigenvectors) of the system A matrix: eigenvalues
+<code>(n_out,)</code> and eigenvectors <code>(n_out, n_states)</code>.</p>
               </div>
             </td>
           </tr>
@@ -15750,7 +15751,8 @@ to skip plotting.</p>
 <span class="normal">1182</span>
 <span class="normal">1183</span>
 <span class="normal">1184</span>
-<span class="normal">1185</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal</span><span class="p">(</span>
+<span class="normal">1185</span>
+<span class="normal">1186</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">n_modes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">freq_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
@@ -15768,7 +15770,7 @@ to skip plotting.</p>
     <span class="n">max_disp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
     <span class="n">max_ang</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
     <span class="n">max_gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute stability eigenvalues of the linear system A matrix.</span>
 <span class="sd">    :param n_modes: Number of modes to be kept. If None, all eigenvalues are returned.</span>
@@ -15792,7 +15794,8 @@ to skip plotting.</p>
 <span class="sd">    :param max_disp: Maximum linear displacement used to normalise the plotted mode shape (in reference units).</span>
 <span class="sd">    :param max_ang: Maximum angular displacement used to normalise the plotted mode shape.</span>
 <span class="sd">    :param max_gamma: Maximum circulation used to normalise the plotted mode shape.</span>
-<span class="sd">    :return: Continuous-time eigenvalues of the system A matrix, ``(n_states, )`` or ``(n_states, 2)`` if ``to_components=True``.</span>
+<span class="sd">    :return: Tuple of (continuous-time eigenvalues, eigenvectors) of the system A matrix: eigenvalues</span>
+<span class="sd">        ``(n_out,)`` and eigenvectors ``(n_out, n_states)``.</span>
 <span class="sd">    """</span>
 
     <span class="n">evals_d</span><span class="p">,</span> <span class="n">evecs</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sys</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
@@ -15924,7 +15927,7 @@ to skip plotting.</p>
             <span class="n">max_gamma</span><span class="o">=</span><span class="n">max_gamma</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">evals</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">evals</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">evecs</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -15955,7 +15958,7 @@ to skip plotting.</p>
     <span class="n">min_struct_content</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">remove_complex_conjugate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">sort</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"frequency"</span><span class="p">,</span> <span class="s2">"damping"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"frequency"</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -16137,12 +16140,13 @@ If <code>None</code>, the reference chord is kept unchanged.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="jax.Array">Array</span></code>
+                  <code><span title="tuple">tuple</span>[<span title="jax.Array">Array</span>, <span title="jax.Array">Array</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Continuous-time eigenvalues of the rescaled system(s), <code>(n_out,)</code> for scalar
-inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
+                <p>Tuple of (continuous-time eigenvalues, eigenvectors) of the rescaled system(s).
+Eigenvalues are <code>(n_out,)</code> and eigenvectors <code>(n_out, n_states)</code> for scalar inputs, or
+<code>(*n_points, n_out)</code> and <code>(*n_points, n_out, n_states)</code> respectively for batched inputs.</p>
               </div>
             </td>
           </tr>
@@ -16152,8 +16156,7 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear/linear_coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1187</span>
-<span class="normal">1188</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1188</span>
 <span class="normal">1189</span>
 <span class="normal">1190</span>
 <span class="normal">1191</span>
@@ -16307,7 +16310,14 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="normal">1339</span>
 <span class="normal">1340</span>
 <span class="normal">1341</span>
-<span class="normal">1342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal_rescaled</span><span class="p">(</span>
+<span class="normal">1342</span>
+<span class="normal">1343</span>
+<span class="normal">1344</span>
+<span class="normal">1345</span>
+<span class="normal">1346</span>
+<span class="normal">1347</span>
+<span class="normal">1348</span>
+<span class="normal">1349</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal_rescaled</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -16318,7 +16328,7 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
     <span class="n">min_struct_content</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">remove_complex_conjugate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">sort</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"frequency"</span><span class="p">,</span> <span class="s2">"damping"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"frequency"</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute eigenvalues of the rescaled linear system at a new velocity, density, and chord length without</span>
 <span class="sd">    re-linearising.</span>
@@ -16334,8 +16344,9 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="sd">    :param min_struct_content: Minimum structural eigenvector energy fraction in ``[0, 1]``.</span>
 <span class="sd">    :param remove_complex_conjugate: Drop one partner from each conjugate pair.</span>
 <span class="sd">    :param sort: Sort eigenvalues by ``"frequency"`` or ``"damping"``.</span>
-<span class="sd">    :return: Continuous-time eigenvalues of the rescaled system(s), ``(n_out,)`` for scalar</span>
-<span class="sd">        inputs or ``(*n_points, n_out)`` for batched inputs.</span>
+<span class="sd">    :return: Tuple of (continuous-time eigenvalues, eigenvectors) of the rescaled system(s).</span>
+<span class="sd">        Eigenvalues are ``(n_out,)`` and eigenvectors ``(n_out, n_states)`` for scalar inputs, or</span>
+<span class="sd">        ``(*n_points, n_out)`` and ``(*n_points, n_out, n_states)`` respectively for batched inputs.</span>
 <span class="sd">    """</span>
     <span class="c1"># reference conditions</span>
     <span class="n">u_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">u_inf_mag</span>
@@ -16354,7 +16365,9 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
     <span class="p">)</span>
     <span class="n">batch_shape</span> <span class="o">=</span> <span class="n">velocity</span><span class="o">.</span><span class="n">shape</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_single</span><span class="p">(</span><span class="n">velocity_</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">density_</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">chord_</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_single</span><span class="p">(</span>
+        <span class="n">velocity_</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">density_</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">chord_</span><span class="p">:</span> <span class="n">Array</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Rescale and diagonalise the linear system at a single (velocity, density, chord) point.</span>
 <span class="sd">        """</span>
@@ -16447,22 +16460,25 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
         <span class="k">if</span> <span class="n">n_modes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[:</span><span class="n">n_modes</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">evals</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">evals</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">evecs</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
 
     <span class="k">if</span> <span class="n">batch_shape</span> <span class="o">==</span> <span class="p">():</span>
         <span class="k">return</span> <span class="n">_single</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">chord</span><span class="p">)</span>
 
     <span class="n">n_points</span> <span class="o">=</span> <span class="n">velocity</span><span class="o">.</span><span class="n">size</span>
 
-    <span class="n">evals_flat</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+    <span class="n">evals_flat</span><span class="p">,</span> <span class="n">evecs_flat</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
         <span class="k">lambda</span> <span class="n">args</span><span class="p">:</span> <span class="n">_single</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">),</span>
         <span class="p">(</span>
             <span class="n">velocity</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
             <span class="n">density</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
             <span class="n">chord</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
         <span class="p">),</span>
-    <span class="p">)</span>  <span class="c1"># (n_points, n_out)</span>
-    <span class="k">return</span> <span class="n">evals_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">evals_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">)</span>  <span class="c1"># (n_points, n_out), (n_points, n_out, n_states)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">evals_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">evals_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">evecs_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="o">*</span><span class="n">evecs_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]),</span>
+    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -16560,21 +16576,21 @@ the raw transfer function is returned.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear/linear_coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1352</span>
-<span class="normal">1353</span>
-<span class="normal">1354</span>
-<span class="normal">1355</span>
-<span class="normal">1356</span>
-<span class="normal">1357</span>
-<span class="normal">1358</span>
-<span class="normal">1359</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1359</span>
 <span class="normal">1360</span>
 <span class="normal">1361</span>
 <span class="normal">1362</span>
 <span class="normal">1363</span>
 <span class="normal">1364</span>
 <span class="normal">1365</span>
-<span class="normal">1366</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf</span><span class="p">(</span>
+<span class="normal">1366</span>
+<span class="normal">1367</span>
+<span class="normal">1368</span>
+<span class="normal">1369</span>
+<span class="normal">1370</span>
+<span class="normal">1371</span>
+<span class="normal">1372</span>
+<span class="normal">1373</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -16686,14 +16702,7 @@ the raw transfer function is returned.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear/linear_coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1368</span>
-<span class="normal">1369</span>
-<span class="normal">1370</span>
-<span class="normal">1371</span>
-<span class="normal">1372</span>
-<span class="normal">1373</span>
-<span class="normal">1374</span>
-<span class="normal">1375</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1375</span>
 <span class="normal">1376</span>
 <span class="normal">1377</span>
 <span class="normal">1378</span>
@@ -16749,7 +16758,14 @@ the raw transfer function is returned.</p>
 <span class="normal">1428</span>
 <span class="normal">1429</span>
 <span class="normal">1430</span>
-<span class="normal">1431</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
+<span class="normal">1431</span>
+<span class="normal">1432</span>
+<span class="normal">1433</span>
+<span class="normal">1434</span>
+<span class="normal">1435</span>
+<span class="normal">1436</span>
+<span class="normal">1437</span>
+<span class="normal">1438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -28835,7 +28851,7 @@ take the same arguments as the first output.</p>
     <span class="n">max_disp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
     <span class="n">max_ang</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
     <span class="n">max_gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -29130,11 +29146,12 @@ to skip plotting.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="jax.Array">Array</span></code>
+                  <code><span title="tuple">tuple</span>[<span title="jax.Array">Array</span>, <span title="jax.Array">Array</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Continuous-time eigenvalues of the system A matrix, <code>(n_states, )</code> or <code>(n_states, 2)</code> if <code>to_components=True</code>.</p>
+                <p>Tuple of (continuous-time eigenvalues, eigenvectors) of the system A matrix: eigenvalues
+<code>(n_out,)</code> and eigenvectors <code>(n_out, n_states)</code>.</p>
               </div>
             </td>
           </tr>
@@ -29318,7 +29335,8 @@ to skip plotting.</p>
 <span class="normal">1182</span>
 <span class="normal">1183</span>
 <span class="normal">1184</span>
-<span class="normal">1185</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal</span><span class="p">(</span>
+<span class="normal">1185</span>
+<span class="normal">1186</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">n_modes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">freq_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
@@ -29336,7 +29354,7 @@ to skip plotting.</p>
     <span class="n">max_disp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
     <span class="n">max_ang</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
     <span class="n">max_gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute stability eigenvalues of the linear system A matrix.</span>
 <span class="sd">    :param n_modes: Number of modes to be kept. If None, all eigenvalues are returned.</span>
@@ -29360,7 +29378,8 @@ to skip plotting.</p>
 <span class="sd">    :param max_disp: Maximum linear displacement used to normalise the plotted mode shape (in reference units).</span>
 <span class="sd">    :param max_ang: Maximum angular displacement used to normalise the plotted mode shape.</span>
 <span class="sd">    :param max_gamma: Maximum circulation used to normalise the plotted mode shape.</span>
-<span class="sd">    :return: Continuous-time eigenvalues of the system A matrix, ``(n_states, )`` or ``(n_states, 2)`` if ``to_components=True``.</span>
+<span class="sd">    :return: Tuple of (continuous-time eigenvalues, eigenvectors) of the system A matrix: eigenvalues</span>
+<span class="sd">        ``(n_out,)`` and eigenvectors ``(n_out, n_states)``.</span>
 <span class="sd">    """</span>
 
     <span class="n">evals_d</span><span class="p">,</span> <span class="n">evecs</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sys</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
@@ -29492,7 +29511,7 @@ to skip plotting.</p>
             <span class="n">max_gamma</span><span class="o">=</span><span class="n">max_gamma</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">evals</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">evals</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">evecs</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -29523,7 +29542,7 @@ to skip plotting.</p>
     <span class="n">min_struct_content</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">remove_complex_conjugate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">sort</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"frequency"</span><span class="p">,</span> <span class="s2">"damping"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"frequency"</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -29705,12 +29724,13 @@ If <code>None</code>, the reference chord is kept unchanged.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="jax.Array">Array</span></code>
+                  <code><span title="tuple">tuple</span>[<span title="jax.Array">Array</span>, <span title="jax.Array">Array</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Continuous-time eigenvalues of the rescaled system(s), <code>(n_out,)</code> for scalar
-inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
+                <p>Tuple of (continuous-time eigenvalues, eigenvectors) of the rescaled system(s).
+Eigenvalues are <code>(n_out,)</code> and eigenvectors <code>(n_out, n_states)</code> for scalar inputs, or
+<code>(*n_points, n_out)</code> and <code>(*n_points, n_out, n_states)</code> respectively for batched inputs.</p>
               </div>
             </td>
           </tr>
@@ -29720,8 +29740,7 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear/linear_coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1187</span>
-<span class="normal">1188</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1188</span>
 <span class="normal">1189</span>
 <span class="normal">1190</span>
 <span class="normal">1191</span>
@@ -29875,7 +29894,14 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="normal">1339</span>
 <span class="normal">1340</span>
 <span class="normal">1341</span>
-<span class="normal">1342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal_rescaled</span><span class="p">(</span>
+<span class="normal">1342</span>
+<span class="normal">1343</span>
+<span class="normal">1344</span>
+<span class="normal">1345</span>
+<span class="normal">1346</span>
+<span class="normal">1347</span>
+<span class="normal">1348</span>
+<span class="normal">1349</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal_rescaled</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -29886,7 +29912,7 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
     <span class="n">min_struct_content</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">remove_complex_conjugate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">sort</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"frequency"</span><span class="p">,</span> <span class="s2">"damping"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"frequency"</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute eigenvalues of the rescaled linear system at a new velocity, density, and chord length without</span>
 <span class="sd">    re-linearising.</span>
@@ -29902,8 +29928,9 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
 <span class="sd">    :param min_struct_content: Minimum structural eigenvector energy fraction in ``[0, 1]``.</span>
 <span class="sd">    :param remove_complex_conjugate: Drop one partner from each conjugate pair.</span>
 <span class="sd">    :param sort: Sort eigenvalues by ``"frequency"`` or ``"damping"``.</span>
-<span class="sd">    :return: Continuous-time eigenvalues of the rescaled system(s), ``(n_out,)`` for scalar</span>
-<span class="sd">        inputs or ``(*n_points, n_out)`` for batched inputs.</span>
+<span class="sd">    :return: Tuple of (continuous-time eigenvalues, eigenvectors) of the rescaled system(s).</span>
+<span class="sd">        Eigenvalues are ``(n_out,)`` and eigenvectors ``(n_out, n_states)`` for scalar inputs, or</span>
+<span class="sd">        ``(*n_points, n_out)`` and ``(*n_points, n_out, n_states)`` respectively for batched inputs.</span>
 <span class="sd">    """</span>
     <span class="c1"># reference conditions</span>
     <span class="n">u_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_case</span><span class="o">.</span><span class="n">aero</span><span class="o">.</span><span class="n">flowfield</span><span class="o">.</span><span class="n">u_inf_mag</span>
@@ -29922,7 +29949,9 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
     <span class="p">)</span>
     <span class="n">batch_shape</span> <span class="o">=</span> <span class="n">velocity</span><span class="o">.</span><span class="n">shape</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_single</span><span class="p">(</span><span class="n">velocity_</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">density_</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">chord_</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_single</span><span class="p">(</span>
+        <span class="n">velocity_</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">density_</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">chord_</span><span class="p">:</span> <span class="n">Array</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Rescale and diagonalise the linear system at a single (velocity, density, chord) point.</span>
 <span class="sd">        """</span>
@@ -30015,22 +30044,25 @@ inputs or <code>(*n_points, n_out)</code> for batched inputs.</p>
         <span class="k">if</span> <span class="n">n_modes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[:</span><span class="n">n_modes</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">evals</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">evals</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">evecs</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
 
     <span class="k">if</span> <span class="n">batch_shape</span> <span class="o">==</span> <span class="p">():</span>
         <span class="k">return</span> <span class="n">_single</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">chord</span><span class="p">)</span>
 
     <span class="n">n_points</span> <span class="o">=</span> <span class="n">velocity</span><span class="o">.</span><span class="n">size</span>
 
-    <span class="n">evals_flat</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+    <span class="n">evals_flat</span><span class="p">,</span> <span class="n">evecs_flat</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
         <span class="k">lambda</span> <span class="n">args</span><span class="p">:</span> <span class="n">_single</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">),</span>
         <span class="p">(</span>
             <span class="n">velocity</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
             <span class="n">density</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
             <span class="n">chord</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points</span><span class="p">),</span>
         <span class="p">),</span>
-    <span class="p">)</span>  <span class="c1"># (n_points, n_out)</span>
-    <span class="k">return</span> <span class="n">evals_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">evals_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">)</span>  <span class="c1"># (n_points, n_out), (n_points, n_out, n_states)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">evals_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">evals_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">evecs_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="o">*</span><span class="n">evecs_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]),</span>
+    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -30128,21 +30160,21 @@ the raw transfer function is returned.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear/linear_coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1352</span>
-<span class="normal">1353</span>
-<span class="normal">1354</span>
-<span class="normal">1355</span>
-<span class="normal">1356</span>
-<span class="normal">1357</span>
-<span class="normal">1358</span>
-<span class="normal">1359</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1359</span>
 <span class="normal">1360</span>
 <span class="normal">1361</span>
 <span class="normal">1362</span>
 <span class="normal">1363</span>
 <span class="normal">1364</span>
 <span class="normal">1365</span>
-<span class="normal">1366</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf</span><span class="p">(</span>
+<span class="normal">1366</span>
+<span class="normal">1367</span>
+<span class="normal">1368</span>
+<span class="normal">1369</span>
+<span class="normal">1370</span>
+<span class="normal">1371</span>
+<span class="normal">1372</span>
+<span class="normal">1373</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -30254,14 +30286,7 @@ the raw transfer function is returned.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear/linear_coupled.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1368</span>
-<span class="normal">1369</span>
-<span class="normal">1370</span>
-<span class="normal">1371</span>
-<span class="normal">1372</span>
-<span class="normal">1373</span>
-<span class="normal">1374</span>
-<span class="normal">1375</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1375</span>
 <span class="normal">1376</span>
 <span class="normal">1377</span>
 <span class="normal">1378</span>
@@ -30317,7 +30342,14 @@ the raw transfer function is returned.</p>
 <span class="normal">1428</span>
 <span class="normal">1429</span>
 <span class="normal">1430</span>
-<span class="normal">1431</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
+<span class="normal">1431</span>
+<span class="normal">1432</span>
+<span class="normal">1433</span>
+<span class="normal">1434</span>
+<span class="normal">1435</span>
+<span class="normal">1436</span>
+<span class="normal">1437</span>
+<span class="normal">1438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frf_base</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>

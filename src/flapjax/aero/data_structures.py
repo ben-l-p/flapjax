@@ -373,10 +373,14 @@ class AeroCase:
         for i_surf, val in enumerate(values):
             arr[i_surf] = arr[i_surf].at[i_ts, ...].set(val)
 
-    def get_surf_snapshot(self, i_ts: int, i_surf: int) -> _AeroSurfacePlot:
+    def get_surf_snapshot(
+        self, i_ts: int | Array, i_surf: int | Array
+    ) -> _AeroSurfacePlot:
         r"""Get single-surface plot data for a given ``(timestep, surface)`` pair on
         a batched AeroCase.
         """
+        i_ts = int(i_ts)
+        i_surf = int(i_surf)
         if not self.is_batched:
             raise TypeError("get_surf_snapshot only supported for batched AeroCase")
         assert self.zeta_w is not None
@@ -524,7 +528,7 @@ class AeroCase:
                         directory=directory,
                         name=bound_name,
                         file_dirs=next(zip(*per_ts_paths)),
-                        times=list(self.t[index_]),
+                        times=self.t[index_].tolist(),
                     )
                 )
 
@@ -535,7 +539,7 @@ class AeroCase:
                         directory=directory,
                         name=wake_name,
                         file_dirs=list(zip(*per_ts_paths))[-1],
-                        times=list(self.t[index_]),
+                        times=self.t[index_].tolist(),
                     )
                 )
         return pvd_paths

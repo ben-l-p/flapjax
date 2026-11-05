@@ -1026,7 +1026,7 @@ class LinearCoupled(
         max_disp: float = 0.2,
         max_ang: float = 0.2,
         max_gamma: float = 100.0,
-    ) -> Array:
+    ) -> tuple[Array, Array]:
         r"""
         Compute stability eigenvalues of the linear system A matrix.
         :param n_modes: Number of modes to be kept. If None, all eigenvalues are returned.
@@ -1050,7 +1050,8 @@ class LinearCoupled(
         :param max_disp: Maximum linear displacement used to normalise the plotted mode shape (in reference units).
         :param max_ang: Maximum angular displacement used to normalise the plotted mode shape.
         :param max_gamma: Maximum circulation used to normalise the plotted mode shape.
-        :return: Continuous-time eigenvalues of the system A matrix, ``(n_states, )`` or ``(n_states, 2)`` if ``to_components=True``.
+        :return: Tuple of (continuous-time eigenvalues, eigenvectors) of the system A matrix: eigenvalues
+            ``(n_out,)`` and eigenvectors ``(n_out, n_states)``.
         """
 
         evals_d, evecs = jnp.linalg.eig(self.sys.a)
@@ -1182,7 +1183,7 @@ class LinearCoupled(
                 max_gamma=max_gamma,
             )
 
-        return evals[idx]
+        return evals[idx], evecs[:, idx].T
 
     def modal_rescaled(
         self,
@@ -1195,7 +1196,7 @@ class LinearCoupled(
         min_struct_content: float | Array = 0.0,
         remove_complex_conjugate: bool = True,
         sort: Literal["frequency", "damping"] = "frequency",
-    ) -> Array:
+    ) -> tuple[Array, Array]:
         r"""
         Compute eigenvalues of the rescaled linear system at a new velocity, density, and chord length without
         re-linearising.
@@ -1211,8 +1212,9 @@ class LinearCoupled(
         :param min_struct_content: Minimum structural eigenvector energy fraction in ``[0, 1]``.
         :param remove_complex_conjugate: Drop one partner from each conjugate pair.
         :param sort: Sort eigenvalues by ``"frequency"`` or ``"damping"``.
-        :return: Continuous-time eigenvalues of the rescaled system(s), ``(n_out,)`` for scalar
-            inputs or ``(*n_points, n_out)`` for batched inputs.
+        :return: Tuple of (continuous-time eigenvalues, eigenvectors) of the rescaled system(s).
+            Eigenvalues are ``(n_out,)`` and eigenvectors ``(n_out, n_states)`` for scalar inputs, or
+            ``(*n_points, n_out)`` and ``(*n_points, n_out, n_states)`` respectively for batched inputs.
         """
         # reference conditions
         u_ref = self._case.aero.flowfield.u_inf_mag
@@ -1231,7 +1233,9 @@ class LinearCoupled(
         )
         batch_shape = velocity.shape
 
-        def _single(velocity_: Array, density_: Array, chord_: Array) -> Array:
+        def _single(
+            velocity_: Array, density_: Array, chord_: Array
+        ) -> tuple[Array, Array]:
             r"""
             Rescale and diagonalise the linear system at a single (velocity, density, chord) point.
             """
@@ -1324,22 +1328,25 @@ class LinearCoupled(
             if n_modes is not None:
                 idx = idx[:n_modes]
 
-            return evals[idx]
+            return evals[idx], evecs[:, idx].T
 
         if batch_shape == ():
             return _single(velocity, density, chord)
 
         n_points = velocity.size
 
-        evals_flat = jax.lax.map(
+        evals_flat, evecs_flat = jax.lax.map(
             lambda args: _single(*args),
             (
                 velocity.reshape(n_points),
                 density.reshape(n_points),
                 chord.reshape(n_points),
             ),
-        )  # (n_points, n_out)
-        return evals_flat.reshape(*batch_shape, evals_flat.shape[-1])
+        )  # (n_points, n_out), (n_points, n_out, n_states)
+        return (
+            evals_flat.reshape(*batch_shape, evals_flat.shape[-1]),
+            evecs_flat.reshape(*batch_shape, *evecs_flat.shape[-2:]),
+        )
 
     # noinspection PyMethodOverriding
     def run(

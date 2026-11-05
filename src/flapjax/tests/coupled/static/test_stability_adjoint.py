@@ -95,7 +95,7 @@ def compute_objective(
         batch_size=4,
         n_struct_modes=None,
     )
-    lam_c = linear_sol.modal()
+    lam_c, _ = linear_sol.modal()
     dv = wing.get_design_variables(case=static_sol, grads_to_compute=None)
     states = static_sol.get_full_states(i_ts=None)
     return float(_objective(states=states, dv=dv, lambda_c=lam_c))

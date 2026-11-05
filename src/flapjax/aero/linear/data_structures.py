@@ -103,17 +103,17 @@ class AeroLinearResult:
             try:
                 surf_paths = [paths[i][i_surf] for i in range(len(index_))]
                 name = (self.surf_b_names + self.surf_w_names)[i_surf] + "_ts"
-                write_pvd(directory, name, surf_paths, list(self.t[index_]))
+                write_pvd(directory, name, surf_paths, self.t[index_].tolist())
             except IndexError:
                 pass
 
-    def __getitem__(self, i_ts: int) -> AeroCase:
+    def __getitem__(self, i_ts: int | Array) -> AeroCase:
         r"""
         Get initial_snapshot of aerodynamic surface at a single time step
         :param i_ts: Timestep index
         :return: AeroCase at specified time step
         """
-
+        i_ts = int(i_ts)
         if i_ts < 0 or i_ts >= self.n_tstep:
             raise IndexError("Timestep index out of range")
 

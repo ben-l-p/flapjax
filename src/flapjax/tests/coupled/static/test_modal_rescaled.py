@@ -45,8 +45,8 @@ class TestModalRescaled:
             "sort": "frequency",
             "min_struct_content": 0.0,
         }
-        evals_modal = self.linear_ref.modal(**kwargs)
-        evals_rescaled = self.linear_ref.modal_rescaled(
+        evals_modal, _ = self.linear_ref.modal(**kwargs)
+        evals_rescaled, _ = self.linear_ref.modal_rescaled(
             velocity=U_REF, density=RHO_REF, chord=C_REF, **kwargs
         )
 
@@ -65,10 +65,10 @@ class TestModalRescaled:
             "sort": "frequency",
             "min_struct_content": 0.05,
         }
-        evals_rescaled = self.linear_ref.modal_rescaled(
+        evals_rescaled, _ = self.linear_ref.modal_rescaled(
             velocity=U_TEST, density=RHO_TEST, chord=C_REF, **kwargs
         )
-        evals_truth = self.linear_test.modal(**kwargs)
+        evals_truth, _ = self.linear_test.modal(**kwargs)
 
         # pair by damped frequency then compare both real and imaginary parts
         idx_r = jnp.argsort(jnp.abs(evals_rescaled.imag))

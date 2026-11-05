@@ -294,9 +294,10 @@ class StructureCase:
             constraint_data=self.constraint_data,
         )
 
-    def __getitem__(self, i_ts: int) -> StructureCase:
+    def __getitem__(self, i_ts: int | Array) -> StructureCase:
         """Extract a dynamic snapshot at a specific time index from a batched
         trajectory."""
+        i_ts = int(i_ts)
         if not self.is_batched:
             raise TypeError("__getitem__ only supported for batched Structure")
         assert self.t is not None
@@ -553,7 +554,9 @@ class StructureCase:
             paths = [data[i_ts]._plot_series(series) for i_ts in index_]
 
             assert data.t is not None
-            return write_pvd(directory, "beam_dynamic_ts", paths, list(data.t[index_]))
+            return write_pvd(
+                directory, "beam_dynamic_ts", paths, data.t[index_].tolist()
+            )
 
         if index is not None:
             raise ValueError("`index` is only used for batched Structure")

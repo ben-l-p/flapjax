@@ -8896,7 +8896,7 @@ batched Structure, a PVD is written alongside per-timestep VTUs.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Connectivity array, <code>n_elem, 2)</code>.</p>
+                <p>Connectivity array, `(n_elem, 2)``.</p>
               </div>
             </td>
             <td>
@@ -12328,8 +12328,7 @@ normalisation <code>(n_modes, n_free_dof)</code>.</p>
 <span class="normal">1135</span>
 <span class="normal">1136</span>
 <span class="normal">1137</span>
-<span class="normal">1138</span>
-<span class="normal">1139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal</span><span class="p">(</span>
+<span class="normal">1138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">case</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">remove_complex_conjugate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -12380,23 +12379,22 @@ normalisation <code>(n_modes, n_free_dof)</code>.</p>
             <span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">modes</span><span class="p">[:</span><span class="n">n_plot_vtu</span><span class="p">,</span> <span class="p">:])</span>
         <span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">_i_mode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_plot_vtu</span><span class="p">):</span>
-            <span class="n">plot_modes_vtu</span><span class="p">(</span>
-                <span class="n">reference</span><span class="o">=</span><span class="n">case</span><span class="p">,</span>
-                <span class="n">directory</span><span class="o">=</span><span class="n">vtu_directory</span><span class="p">,</span>
-                <span class="n">q_full</span><span class="o">=</span><span class="n">q_full</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_plot_vtu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_nodes</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
-                <span class="n">freqs</span><span class="o">=</span><span class="n">freqs</span><span class="p">,</span>
-                <span class="n">dampings</span><span class="o">=</span><span class="n">damping</span><span class="p">,</span>
-                <span class="n">gamma_b_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">gamma_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">zeta_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">uvlm</span><span class="o">=</span><span class="n">aero</span><span class="p">,</span>
-                <span class="n">n_interp</span><span class="o">=</span><span class="n">n_interp</span><span class="p">,</span>
-                <span class="n">n_phase</span><span class="o">=</span><span class="n">n_phase</span><span class="p">,</span>
-                <span class="n">max_disp</span><span class="o">=</span><span class="n">max_disp</span><span class="p">,</span>
-                <span class="n">max_ang</span><span class="o">=</span><span class="n">max_ang</span><span class="p">,</span>
-                <span class="n">max_gamma</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="n">plot_modes_vtu</span><span class="p">(</span>
+            <span class="n">reference</span><span class="o">=</span><span class="n">case</span><span class="p">,</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">vtu_directory</span><span class="p">,</span>
+            <span class="n">q_full</span><span class="o">=</span><span class="n">q_full</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_plot_vtu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_nodes</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+            <span class="n">freqs</span><span class="o">=</span><span class="n">freqs</span><span class="p">,</span>
+            <span class="n">dampings</span><span class="o">=</span><span class="n">damping</span><span class="p">,</span>
+            <span class="n">gamma_b_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gamma_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">zeta_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">uvlm</span><span class="o">=</span><span class="n">aero</span><span class="p">,</span>
+            <span class="n">n_interp</span><span class="o">=</span><span class="n">n_interp</span><span class="p">,</span>
+            <span class="n">n_phase</span><span class="o">=</span><span class="n">n_phase</span><span class="p">,</span>
+            <span class="n">max_disp</span><span class="o">=</span><span class="n">max_disp</span><span class="p">,</span>
+            <span class="n">max_ang</span><span class="o">=</span><span class="n">max_ang</span><span class="p">,</span>
+            <span class="n">max_gamma</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">damping</span><span class="p">,</span> <span class="n">modes</span>
 </code></pre></div></td></tr></table></div>
@@ -12569,7 +12567,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1296</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1295</span>
+<span class="normal">1296</span>
 <span class="normal">1297</span>
 <span class="normal">1298</span>
 <span class="normal">1299</span>
@@ -12596,8 +12595,7 @@ linear dynamic analysis.</p>
 <span class="normal">1320</span>
 <span class="normal">1321</span>
 <span class="normal">1322</span>
-<span class="normal">1323</span>
-<span class="normal">1324</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">linearise</span><span class="p">(</span>
+<span class="normal">1323</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">linearise</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">reference</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -12757,7 +12755,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1434</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1433</span>
+<span class="normal">1434</span>
 <span class="normal">1435</span>
 <span class="normal">1436</span>
 <span class="normal">1437</span>
@@ -12795,8 +12794,7 @@ linear dynamic analysis.</p>
 <span class="normal">1469</span>
 <span class="normal">1470</span>
 <span class="normal">1471</span>
-<span class="normal">1472</span>
-<span class="normal">1473</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_nodal_constraint_tangent</span><span class="p">(</span>
+<span class="normal">1472</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_nodal_constraint_tangent</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">mat</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -12916,7 +12914,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1496</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1495</span>
+<span class="normal">1496</span>
 <span class="normal">1497</span>
 <span class="normal">1498</span>
 <span class="normal">1499</span>
@@ -12926,8 +12925,7 @@ linear dynamic analysis.</p>
 <span class="normal">1503</span>
 <span class="normal">1504</span>
 <span class="normal">1505</span>
-<span class="normal">1506</span>
-<span class="normal">1507</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">postprocess_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]]:</span>
+<span class="normal">1506</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">postprocess_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Postprocess all constraints to extract derived quantities (e.g. hinge angles).</span>
 <span class="sd">    :param hg: Nodal SE(3) frames, ``(n_nodes, 4, 4)`` or ``(n_tstep, n_nodes, 4, 4)``.</span>
@@ -13138,7 +13136,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1657</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1656</span>
+<span class="normal">1657</span>
 <span class="normal">1658</span>
 <span class="normal">1659</span>
 <span class="normal">1660</span>
@@ -13196,8 +13195,7 @@ linear dynamic analysis.</p>
 <span class="normal">1712</span>
 <span class="normal">1713</span>
 <span class="normal">1714</span>
-<span class="normal">1715</span>
-<span class="normal">1716</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_constrained</span><span class="p">(</span>
+<span class="normal">1715</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_constrained</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">sys_mat_solve</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">f_res_solve</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -13335,7 +13333,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1718</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1717</span>
+<span class="normal">1718</span>
 <span class="normal">1719</span>
 <span class="normal">1720</span>
 <span class="normal">1721</span>
@@ -13356,8 +13355,7 @@ linear dynamic analysis.</p>
 <span class="normal">1736</span>
 <span class="normal">1737</span>
 <span class="normal">1738</span>
-<span class="normal">1739</span>
-<span class="normal">1740</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_centre_of_mass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1739</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_centre_of_mass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the centre of mass for an arbitrary system.</span>
 <span class="sd">    :param hg: Node SE(3) coordinates, ``(n_node, 4, 4)`` or ``(n_tstep, n_node, 4, 4)``.</span>
@@ -13458,13 +13456,13 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1742</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1741</span>
+<span class="normal">1742</span>
 <span class="normal">1743</span>
 <span class="normal">1744</span>
 <span class="normal">1745</span>
 <span class="normal">1746</span>
-<span class="normal">1747</span>
-<span class="normal">1748</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1747</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the forces within the elements as :math:`\mathbf{f}_{elem} = \mathcal{K}_{cs} \epsilon`.</span>
 <span class="sd">    :param eps: Element strain vectors, ``(n_elem, 6)``.</span>
@@ -13565,15 +13563,15 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1750</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1749</span>
+<span class="normal">1750</span>
 <span class="normal">1751</span>
 <span class="normal">1752</span>
 <span class="normal">1753</span>
 <span class="normal">1754</span>
 <span class="normal">1755</span>
 <span class="normal">1756</span>
-<span class="normal">1757</span>
-<span class="normal">1758</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_d</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1757</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_d</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Assemble global internal force vector as a function of the element relative configuration vectors.</span>
 <span class="sd">    :param p_d: P(d) operator, ``(n_elem, 6, 12)``.</span>
@@ -13680,7 +13678,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1799</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1798</span>
+<span class="normal">1799</span>
 <span class="normal">1800</span>
 <span class="normal">1801</span>
 <span class="normal">1802</span>
@@ -13688,8 +13687,7 @@ linear dynamic analysis.</p>
 <span class="normal">1804</span>
 <span class="normal">1805</span>
 <span class="normal">1806</span>
-<span class="normal">1807</span>
-<span class="normal">1808</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">1807</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_f_dead_ext</span><span class="p">(</span><span class="n">f_ext</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">rmat</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the global external dead force vector.</span>
@@ -13795,7 +13793,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1899</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1898</span>
+<span class="normal">1899</span>
 <span class="normal">1900</span>
 <span class="normal">1901</span>
 <span class="normal">1902</span>
@@ -13806,8 +13805,7 @@ linear dynamic analysis.</p>
 <span class="normal">1907</span>
 <span class="normal">1908</span>
 <span class="normal">1909</span>
-<span class="normal">1910</span>
-<span class="normal">1911</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_thrust_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">thrust</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1910</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_thrust_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">thrust</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Add thrust acting at nodes onto full system forcing.</span>
 <span class="sd">    :param force: Input forcing, ``(n_node, 6)``.</span>
@@ -13900,7 +13898,8 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1913</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1912</span>
+<span class="normal">1913</span>
 <span class="normal">1914</span>
 <span class="normal">1915</span>
 <span class="normal">1916</span>
@@ -13908,8 +13907,7 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 <span class="normal">1918</span>
 <span class="normal">1919</span>
 <span class="normal">1920</span>
-<span class="normal">1921</span>
-<span class="normal">1922</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_eps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1921</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_eps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the element strain vectors as a function of the element relative configuration vectors. Formulation from</span>
 <span class="sd">    Geometrically exact beam finite element formulated on the special Euclidean group SE(3), by Sonneville et al.,</span>
@@ -13997,13 +13995,13 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1924</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1923</span>
+<span class="normal">1924</span>
 <span class="normal">1925</span>
 <span class="normal">1926</span>
 <span class="normal">1927</span>
 <span class="normal">1928</span>
-<span class="normal">1929</span>
-<span class="normal">1930</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_p_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1929</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_p_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the P(d) operator as a function of the element relative configuration vectors.</span>
 <span class="sd">    :param d: Relative configuration vectors, ``(n_elem, 6)``</span>
@@ -14088,7 +14086,8 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1932</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1931</span>
+<span class="normal">1932</span>
 <span class="normal">1933</span>
 <span class="normal">1934</span>
 <span class="normal">1935</span>
@@ -14105,8 +14104,7 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 <span class="normal">1946</span>
 <span class="normal">1947</span>
 <span class="normal">1948</span>
-<span class="normal">1949</span>
-<span class="normal">1950</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1949</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the element relative configuration vectors from the nodal homogeneous transformation matrices</span>
 <span class="sd">    :param hg: Nodal homogeneous transformation matrices, ``(n_nodes, 4, 4)``</span>
@@ -14223,7 +14221,8 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1970</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1969</span>
+<span class="normal">1970</span>
 <span class="normal">1971</span>
 <span class="normal">1972</span>
 <span class="normal">1973</span>
@@ -14232,8 +14231,7 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 <span class="normal">1976</span>
 <span class="normal">1977</span>
 <span class="normal">1978</span>
-<span class="normal">1979</span>
-<span class="normal">1980</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">1979</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_hg_dot</span><span class="p">(</span><span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Obtain the time derivative of the nodal coordinates.</span>
@@ -14516,7 +14514,8 @@ gyroscopic forces, inertial forces and residual forces.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2030</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2029</span>
+<span class="normal">2030</span>
 <span class="normal">2031</span>
 <span class="normal">2032</span>
 <span class="normal">2033</span>
@@ -14646,8 +14645,7 @@ gyroscopic forces, inertial forces and residual forces.</p>
 <span class="normal">2157</span>
 <span class="normal">2158</span>
 <span class="normal">2159</span>
-<span class="normal">2160</span>
-<span class="normal">2161</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resolve_forces</span><span class="p">(</span>
+<span class="normal">2160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resolve_forces</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">dynamic</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -15131,7 +15129,8 @@ damping.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2203</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2202</span>
+<span class="normal">2203</span>
 <span class="normal">2204</span>
 <span class="normal">2205</span>
 <span class="normal">2206</span>
@@ -15266,8 +15265,7 @@ damping.</p>
 <span class="normal">2335</span>
 <span class="normal">2336</span>
 <span class="normal">2337</span>
-<span class="normal">2338</span>
-<span class="normal">2339</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_res</span><span class="p">(</span>
+<span class="normal">2338</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_res</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">solve_dofs</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">p_d</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -15502,7 +15500,8 @@ damping.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2341</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2340</span>
+<span class="normal">2341</span>
 <span class="normal">2342</span>
 <span class="normal">2343</span>
 <span class="normal">2344</span>
@@ -15513,8 +15512,7 @@ damping.</p>
 <span class="normal">2349</span>
 <span class="normal">2350</span>
 <span class="normal">2351</span>
-<span class="normal">2352</span>
-<span class="normal">2353</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">2352</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">update_hg</span><span class="p">(</span><span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Update the nodal homogeneous transformation matrices with the configuration increments.</span>
@@ -15710,7 +15708,8 @@ damping.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2372</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2371</span>
+<span class="normal">2372</span>
 <span class="normal">2373</span>
 <span class="normal">2374</span>
 <span class="normal">2375</span>
@@ -15949,8 +15948,7 @@ damping.</p>
 <span class="normal">2608</span>
 <span class="normal">2609</span>
 <span class="normal">2610</span>
-<span class="normal">2611</span>
-<span class="normal">2612</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
+<span class="normal">2611</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">f_ext_follower</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -16262,7 +16260,8 @@ of this</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2650</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2649</span>
+<span class="normal">2650</span>
 <span class="normal">2651</span>
 <span class="normal">2652</span>
 <span class="normal">2653</span>
@@ -17162,8 +17161,7 @@ of this</p>
 <span class="normal">3547</span>
 <span class="normal">3548</span>
 <span class="normal">3549</span>
-<span class="normal">3550</span>
-<span class="normal">3551</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
+<span class="normal">3550</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">struct_case</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">struct_convergence_status</span><span class="p">:</span> <span class="n">ConvergenceStatus</span><span class="p">,</span>
@@ -18288,7 +18286,8 @@ from the initial state.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3553</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3552</span>
+<span class="normal">3553</span>
 <span class="normal">3554</span>
 <span class="normal">3555</span>
 <span class="normal">3556</span>
@@ -18482,8 +18481,7 @@ from the initial state.</p>
 <span class="normal">3744</span>
 <span class="normal">3745</span>
 <span class="normal">3746</span>
-<span class="normal">3747</span>
-<span class="normal">3748</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
+<span class="normal">3747</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">init_state</span><span class="p">:</span> <span class="n">StructureCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -25129,7 +25127,7 @@ aerodynamic force gradients will be computed.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Connectivity array, <code>n_elem, 2)</code>.</p>
+                <p>Connectivity array, `(n_elem, 2)``.</p>
               </div>
             </td>
             <td>
@@ -28561,8 +28559,7 @@ normalisation <code>(n_modes, n_free_dof)</code>.</p>
 <span class="normal">1135</span>
 <span class="normal">1136</span>
 <span class="normal">1137</span>
-<span class="normal">1138</span>
-<span class="normal">1139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal</span><span class="p">(</span>
+<span class="normal">1138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">case</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">remove_complex_conjugate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -28613,23 +28610,22 @@ normalisation <code>(n_modes, n_free_dof)</code>.</p>
             <span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">modes</span><span class="p">[:</span><span class="n">n_plot_vtu</span><span class="p">,</span> <span class="p">:])</span>
         <span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">_i_mode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_plot_vtu</span><span class="p">):</span>
-            <span class="n">plot_modes_vtu</span><span class="p">(</span>
-                <span class="n">reference</span><span class="o">=</span><span class="n">case</span><span class="p">,</span>
-                <span class="n">directory</span><span class="o">=</span><span class="n">vtu_directory</span><span class="p">,</span>
-                <span class="n">q_full</span><span class="o">=</span><span class="n">q_full</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_plot_vtu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_nodes</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
-                <span class="n">freqs</span><span class="o">=</span><span class="n">freqs</span><span class="p">,</span>
-                <span class="n">dampings</span><span class="o">=</span><span class="n">damping</span><span class="p">,</span>
-                <span class="n">gamma_b_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">gamma_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">zeta_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">uvlm</span><span class="o">=</span><span class="n">aero</span><span class="p">,</span>
-                <span class="n">n_interp</span><span class="o">=</span><span class="n">n_interp</span><span class="p">,</span>
-                <span class="n">n_phase</span><span class="o">=</span><span class="n">n_phase</span><span class="p">,</span>
-                <span class="n">max_disp</span><span class="o">=</span><span class="n">max_disp</span><span class="p">,</span>
-                <span class="n">max_ang</span><span class="o">=</span><span class="n">max_ang</span><span class="p">,</span>
-                <span class="n">max_gamma</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="n">plot_modes_vtu</span><span class="p">(</span>
+            <span class="n">reference</span><span class="o">=</span><span class="n">case</span><span class="p">,</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">vtu_directory</span><span class="p">,</span>
+            <span class="n">q_full</span><span class="o">=</span><span class="n">q_full</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_plot_vtu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_nodes</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+            <span class="n">freqs</span><span class="o">=</span><span class="n">freqs</span><span class="p">,</span>
+            <span class="n">dampings</span><span class="o">=</span><span class="n">damping</span><span class="p">,</span>
+            <span class="n">gamma_b_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gamma_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">zeta_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">uvlm</span><span class="o">=</span><span class="n">aero</span><span class="p">,</span>
+            <span class="n">n_interp</span><span class="o">=</span><span class="n">n_interp</span><span class="p">,</span>
+            <span class="n">n_phase</span><span class="o">=</span><span class="n">n_phase</span><span class="p">,</span>
+            <span class="n">max_disp</span><span class="o">=</span><span class="n">max_disp</span><span class="p">,</span>
+            <span class="n">max_ang</span><span class="o">=</span><span class="n">max_ang</span><span class="p">,</span>
+            <span class="n">max_gamma</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">damping</span><span class="p">,</span> <span class="n">modes</span>
 </code></pre></div></td></tr></table></div>
@@ -28802,7 +28798,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1296</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1295</span>
+<span class="normal">1296</span>
 <span class="normal">1297</span>
 <span class="normal">1298</span>
 <span class="normal">1299</span>
@@ -28829,8 +28826,7 @@ linear dynamic analysis.</p>
 <span class="normal">1320</span>
 <span class="normal">1321</span>
 <span class="normal">1322</span>
-<span class="normal">1323</span>
-<span class="normal">1324</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">linearise</span><span class="p">(</span>
+<span class="normal">1323</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">linearise</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">reference</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -28990,7 +28986,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1434</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1433</span>
+<span class="normal">1434</span>
 <span class="normal">1435</span>
 <span class="normal">1436</span>
 <span class="normal">1437</span>
@@ -29028,8 +29025,7 @@ linear dynamic analysis.</p>
 <span class="normal">1469</span>
 <span class="normal">1470</span>
 <span class="normal">1471</span>
-<span class="normal">1472</span>
-<span class="normal">1473</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_nodal_constraint_tangent</span><span class="p">(</span>
+<span class="normal">1472</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_nodal_constraint_tangent</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">mat</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -29149,7 +29145,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1496</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1495</span>
+<span class="normal">1496</span>
 <span class="normal">1497</span>
 <span class="normal">1498</span>
 <span class="normal">1499</span>
@@ -29159,8 +29156,7 @@ linear dynamic analysis.</p>
 <span class="normal">1503</span>
 <span class="normal">1504</span>
 <span class="normal">1505</span>
-<span class="normal">1506</span>
-<span class="normal">1507</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">postprocess_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]]:</span>
+<span class="normal">1506</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">postprocess_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Postprocess all constraints to extract derived quantities (e.g. hinge angles).</span>
 <span class="sd">    :param hg: Nodal SE(3) frames, ``(n_nodes, 4, 4)`` or ``(n_tstep, n_nodes, 4, 4)``.</span>
@@ -29371,7 +29367,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1657</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1656</span>
+<span class="normal">1657</span>
 <span class="normal">1658</span>
 <span class="normal">1659</span>
 <span class="normal">1660</span>
@@ -29429,8 +29426,7 @@ linear dynamic analysis.</p>
 <span class="normal">1712</span>
 <span class="normal">1713</span>
 <span class="normal">1714</span>
-<span class="normal">1715</span>
-<span class="normal">1716</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_constrained</span><span class="p">(</span>
+<span class="normal">1715</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_constrained</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">sys_mat_solve</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">f_res_solve</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -29568,7 +29564,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1718</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1717</span>
+<span class="normal">1718</span>
 <span class="normal">1719</span>
 <span class="normal">1720</span>
 <span class="normal">1721</span>
@@ -29589,8 +29586,7 @@ linear dynamic analysis.</p>
 <span class="normal">1736</span>
 <span class="normal">1737</span>
 <span class="normal">1738</span>
-<span class="normal">1739</span>
-<span class="normal">1740</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_centre_of_mass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1739</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_centre_of_mass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the centre of mass for an arbitrary system.</span>
 <span class="sd">    :param hg: Node SE(3) coordinates, ``(n_node, 4, 4)`` or ``(n_tstep, n_node, 4, 4)``.</span>
@@ -29691,13 +29687,13 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1742</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1741</span>
+<span class="normal">1742</span>
 <span class="normal">1743</span>
 <span class="normal">1744</span>
 <span class="normal">1745</span>
 <span class="normal">1746</span>
-<span class="normal">1747</span>
-<span class="normal">1748</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1747</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the forces within the elements as :math:`\mathbf{f}_{elem} = \mathcal{K}_{cs} \epsilon`.</span>
 <span class="sd">    :param eps: Element strain vectors, ``(n_elem, 6)``.</span>
@@ -29798,15 +29794,15 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1750</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1749</span>
+<span class="normal">1750</span>
 <span class="normal">1751</span>
 <span class="normal">1752</span>
 <span class="normal">1753</span>
 <span class="normal">1754</span>
 <span class="normal">1755</span>
 <span class="normal">1756</span>
-<span class="normal">1757</span>
-<span class="normal">1758</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_d</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1757</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_d</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Assemble global internal force vector as a function of the element relative configuration vectors.</span>
 <span class="sd">    :param p_d: P(d) operator, ``(n_elem, 6, 12)``.</span>
@@ -29913,7 +29909,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1799</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1798</span>
+<span class="normal">1799</span>
 <span class="normal">1800</span>
 <span class="normal">1801</span>
 <span class="normal">1802</span>
@@ -29921,8 +29918,7 @@ linear dynamic analysis.</p>
 <span class="normal">1804</span>
 <span class="normal">1805</span>
 <span class="normal">1806</span>
-<span class="normal">1807</span>
-<span class="normal">1808</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">1807</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_f_dead_ext</span><span class="p">(</span><span class="n">f_ext</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">rmat</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the global external dead force vector.</span>
@@ -30028,7 +30024,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1899</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1898</span>
+<span class="normal">1899</span>
 <span class="normal">1900</span>
 <span class="normal">1901</span>
 <span class="normal">1902</span>
@@ -30039,8 +30036,7 @@ linear dynamic analysis.</p>
 <span class="normal">1907</span>
 <span class="normal">1908</span>
 <span class="normal">1909</span>
-<span class="normal">1910</span>
-<span class="normal">1911</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_thrust_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">thrust</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1910</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_thrust_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">thrust</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Add thrust acting at nodes onto full system forcing.</span>
 <span class="sd">    :param force: Input forcing, ``(n_node, 6)``.</span>
@@ -30133,7 +30129,8 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1913</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1912</span>
+<span class="normal">1913</span>
 <span class="normal">1914</span>
 <span class="normal">1915</span>
 <span class="normal">1916</span>
@@ -30141,8 +30138,7 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 <span class="normal">1918</span>
 <span class="normal">1919</span>
 <span class="normal">1920</span>
-<span class="normal">1921</span>
-<span class="normal">1922</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_eps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1921</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_eps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the element strain vectors as a function of the element relative configuration vectors. Formulation from</span>
 <span class="sd">    Geometrically exact beam finite element formulated on the special Euclidean group SE(3), by Sonneville et al.,</span>
@@ -30230,13 +30226,13 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1924</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1923</span>
+<span class="normal">1924</span>
 <span class="normal">1925</span>
 <span class="normal">1926</span>
 <span class="normal">1927</span>
 <span class="normal">1928</span>
-<span class="normal">1929</span>
-<span class="normal">1930</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_p_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1929</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_p_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the P(d) operator as a function of the element relative configuration vectors.</span>
 <span class="sd">    :param d: Relative configuration vectors, ``(n_elem, 6)``</span>
@@ -30321,7 +30317,8 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1932</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1931</span>
+<span class="normal">1932</span>
 <span class="normal">1933</span>
 <span class="normal">1934</span>
 <span class="normal">1935</span>
@@ -30338,8 +30335,7 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 <span class="normal">1946</span>
 <span class="normal">1947</span>
 <span class="normal">1948</span>
-<span class="normal">1949</span>
-<span class="normal">1950</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1949</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the element relative configuration vectors from the nodal homogeneous transformation matrices</span>
 <span class="sd">    :param hg: Nodal homogeneous transformation matrices, ``(n_nodes, 4, 4)``</span>
@@ -30456,7 +30452,8 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1970</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1969</span>
+<span class="normal">1970</span>
 <span class="normal">1971</span>
 <span class="normal">1972</span>
 <span class="normal">1973</span>
@@ -30465,8 +30462,7 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 <span class="normal">1976</span>
 <span class="normal">1977</span>
 <span class="normal">1978</span>
-<span class="normal">1979</span>
-<span class="normal">1980</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">1979</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_hg_dot</span><span class="p">(</span><span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Obtain the time derivative of the nodal coordinates.</span>
@@ -30749,7 +30745,8 @@ gyroscopic forces, inertial forces and residual forces.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2030</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2029</span>
+<span class="normal">2030</span>
 <span class="normal">2031</span>
 <span class="normal">2032</span>
 <span class="normal">2033</span>
@@ -30879,8 +30876,7 @@ gyroscopic forces, inertial forces and residual forces.</p>
 <span class="normal">2157</span>
 <span class="normal">2158</span>
 <span class="normal">2159</span>
-<span class="normal">2160</span>
-<span class="normal">2161</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resolve_forces</span><span class="p">(</span>
+<span class="normal">2160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resolve_forces</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">dynamic</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -31364,7 +31360,8 @@ damping.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2203</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2202</span>
+<span class="normal">2203</span>
 <span class="normal">2204</span>
 <span class="normal">2205</span>
 <span class="normal">2206</span>
@@ -31499,8 +31496,7 @@ damping.</p>
 <span class="normal">2335</span>
 <span class="normal">2336</span>
 <span class="normal">2337</span>
-<span class="normal">2338</span>
-<span class="normal">2339</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_res</span><span class="p">(</span>
+<span class="normal">2338</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_res</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">solve_dofs</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">p_d</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -31735,7 +31731,8 @@ damping.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2341</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2340</span>
+<span class="normal">2341</span>
 <span class="normal">2342</span>
 <span class="normal">2343</span>
 <span class="normal">2344</span>
@@ -31746,8 +31743,7 @@ damping.</p>
 <span class="normal">2349</span>
 <span class="normal">2350</span>
 <span class="normal">2351</span>
-<span class="normal">2352</span>
-<span class="normal">2353</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">2352</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">update_hg</span><span class="p">(</span><span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Update the nodal homogeneous transformation matrices with the configuration increments.</span>
@@ -31943,7 +31939,8 @@ damping.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2372</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2371</span>
+<span class="normal">2372</span>
 <span class="normal">2373</span>
 <span class="normal">2374</span>
 <span class="normal">2375</span>
@@ -32182,8 +32179,7 @@ damping.</p>
 <span class="normal">2608</span>
 <span class="normal">2609</span>
 <span class="normal">2610</span>
-<span class="normal">2611</span>
-<span class="normal">2612</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
+<span class="normal">2611</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">f_ext_follower</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -32495,7 +32491,8 @@ of this</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2650</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2649</span>
+<span class="normal">2650</span>
 <span class="normal">2651</span>
 <span class="normal">2652</span>
 <span class="normal">2653</span>
@@ -33395,8 +33392,7 @@ of this</p>
 <span class="normal">3547</span>
 <span class="normal">3548</span>
 <span class="normal">3549</span>
-<span class="normal">3550</span>
-<span class="normal">3551</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
+<span class="normal">3550</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">struct_case</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">struct_convergence_status</span><span class="p">:</span> <span class="n">ConvergenceStatus</span><span class="p">,</span>
@@ -34521,7 +34517,8 @@ from the initial state.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3553</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3552</span>
+<span class="normal">3553</span>
 <span class="normal">3554</span>
 <span class="normal">3555</span>
 <span class="normal">3556</span>
@@ -34715,8 +34712,7 @@ from the initial state.</p>
 <span class="normal">3744</span>
 <span class="normal">3745</span>
 <span class="normal">3746</span>
-<span class="normal">3747</span>
-<span class="normal">3748</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
+<span class="normal">3747</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">init_state</span><span class="p">:</span> <span class="n">StructureCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -41619,7 +41615,7 @@ batched Structure, a PVD is written alongside per-timestep VTUs.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Connectivity array, <code>n_elem, 2)</code>.</p>
+                <p>Connectivity array, `(n_elem, 2)``.</p>
               </div>
             </td>
             <td>
@@ -49161,8 +49157,7 @@ normalisation <code>(n_modes, n_free_dof)</code>.</p>
 <span class="normal">1135</span>
 <span class="normal">1136</span>
 <span class="normal">1137</span>
-<span class="normal">1138</span>
-<span class="normal">1139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal</span><span class="p">(</span>
+<span class="normal">1138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">modal</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">case</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">remove_complex_conjugate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -49213,23 +49208,22 @@ normalisation <code>(n_modes, n_free_dof)</code>.</p>
             <span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">modes</span><span class="p">[:</span><span class="n">n_plot_vtu</span><span class="p">,</span> <span class="p">:])</span>
         <span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">_i_mode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_plot_vtu</span><span class="p">):</span>
-            <span class="n">plot_modes_vtu</span><span class="p">(</span>
-                <span class="n">reference</span><span class="o">=</span><span class="n">case</span><span class="p">,</span>
-                <span class="n">directory</span><span class="o">=</span><span class="n">vtu_directory</span><span class="p">,</span>
-                <span class="n">q_full</span><span class="o">=</span><span class="n">q_full</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_plot_vtu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_nodes</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
-                <span class="n">freqs</span><span class="o">=</span><span class="n">freqs</span><span class="p">,</span>
-                <span class="n">dampings</span><span class="o">=</span><span class="n">damping</span><span class="p">,</span>
-                <span class="n">gamma_b_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">gamma_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">zeta_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">uvlm</span><span class="o">=</span><span class="n">aero</span><span class="p">,</span>
-                <span class="n">n_interp</span><span class="o">=</span><span class="n">n_interp</span><span class="p">,</span>
-                <span class="n">n_phase</span><span class="o">=</span><span class="n">n_phase</span><span class="p">,</span>
-                <span class="n">max_disp</span><span class="o">=</span><span class="n">max_disp</span><span class="p">,</span>
-                <span class="n">max_ang</span><span class="o">=</span><span class="n">max_ang</span><span class="p">,</span>
-                <span class="n">max_gamma</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="n">plot_modes_vtu</span><span class="p">(</span>
+            <span class="n">reference</span><span class="o">=</span><span class="n">case</span><span class="p">,</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">vtu_directory</span><span class="p">,</span>
+            <span class="n">q_full</span><span class="o">=</span><span class="n">q_full</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_plot_vtu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_nodes</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+            <span class="n">freqs</span><span class="o">=</span><span class="n">freqs</span><span class="p">,</span>
+            <span class="n">dampings</span><span class="o">=</span><span class="n">damping</span><span class="p">,</span>
+            <span class="n">gamma_b_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gamma_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">zeta_w_full</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">uvlm</span><span class="o">=</span><span class="n">aero</span><span class="p">,</span>
+            <span class="n">n_interp</span><span class="o">=</span><span class="n">n_interp</span><span class="p">,</span>
+            <span class="n">n_phase</span><span class="o">=</span><span class="n">n_phase</span><span class="p">,</span>
+            <span class="n">max_disp</span><span class="o">=</span><span class="n">max_disp</span><span class="p">,</span>
+            <span class="n">max_ang</span><span class="o">=</span><span class="n">max_ang</span><span class="p">,</span>
+            <span class="n">max_gamma</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">damping</span><span class="p">,</span> <span class="n">modes</span>
 </code></pre></div></td></tr></table></div>
@@ -49402,7 +49396,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1296</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1295</span>
+<span class="normal">1296</span>
 <span class="normal">1297</span>
 <span class="normal">1298</span>
 <span class="normal">1299</span>
@@ -49429,8 +49424,7 @@ linear dynamic analysis.</p>
 <span class="normal">1320</span>
 <span class="normal">1321</span>
 <span class="normal">1322</span>
-<span class="normal">1323</span>
-<span class="normal">1324</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">linearise</span><span class="p">(</span>
+<span class="normal">1323</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">linearise</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">reference</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -49590,7 +49584,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1434</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1433</span>
+<span class="normal">1434</span>
 <span class="normal">1435</span>
 <span class="normal">1436</span>
 <span class="normal">1437</span>
@@ -49628,8 +49623,7 @@ linear dynamic analysis.</p>
 <span class="normal">1469</span>
 <span class="normal">1470</span>
 <span class="normal">1471</span>
-<span class="normal">1472</span>
-<span class="normal">1473</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_nodal_constraint_tangent</span><span class="p">(</span>
+<span class="normal">1472</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_nodal_constraint_tangent</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">mat</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -49749,7 +49743,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1496</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1495</span>
+<span class="normal">1496</span>
 <span class="normal">1497</span>
 <span class="normal">1498</span>
 <span class="normal">1499</span>
@@ -49759,8 +49754,7 @@ linear dynamic analysis.</p>
 <span class="normal">1503</span>
 <span class="normal">1504</span>
 <span class="normal">1505</span>
-<span class="normal">1506</span>
-<span class="normal">1507</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">postprocess_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]]:</span>
+<span class="normal">1506</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">postprocess_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Postprocess all constraints to extract derived quantities (e.g. hinge angles).</span>
 <span class="sd">    :param hg: Nodal SE(3) frames, ``(n_nodes, 4, 4)`` or ``(n_tstep, n_nodes, 4, 4)``.</span>
@@ -49971,7 +49965,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1657</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1656</span>
+<span class="normal">1657</span>
 <span class="normal">1658</span>
 <span class="normal">1659</span>
 <span class="normal">1660</span>
@@ -50029,8 +50024,7 @@ linear dynamic analysis.</p>
 <span class="normal">1712</span>
 <span class="normal">1713</span>
 <span class="normal">1714</span>
-<span class="normal">1715</span>
-<span class="normal">1716</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_constrained</span><span class="p">(</span>
+<span class="normal">1715</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_constrained</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">sys_mat_solve</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">f_res_solve</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -50168,7 +50162,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1718</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1717</span>
+<span class="normal">1718</span>
 <span class="normal">1719</span>
 <span class="normal">1720</span>
 <span class="normal">1721</span>
@@ -50189,8 +50184,7 @@ linear dynamic analysis.</p>
 <span class="normal">1736</span>
 <span class="normal">1737</span>
 <span class="normal">1738</span>
-<span class="normal">1739</span>
-<span class="normal">1740</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_centre_of_mass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1739</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_centre_of_mass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the centre of mass for an arbitrary system.</span>
 <span class="sd">    :param hg: Node SE(3) coordinates, ``(n_node, 4, 4)`` or ``(n_tstep, n_node, 4, 4)``.</span>
@@ -50291,13 +50285,13 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1742</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1741</span>
+<span class="normal">1742</span>
 <span class="normal">1743</span>
 <span class="normal">1744</span>
 <span class="normal">1745</span>
 <span class="normal">1746</span>
-<span class="normal">1747</span>
-<span class="normal">1748</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1747</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_elem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the forces within the elements as :math:`\mathbf{f}_{elem} = \mathcal{K}_{cs} \epsilon`.</span>
 <span class="sd">    :param eps: Element strain vectors, ``(n_elem, 6)``.</span>
@@ -50398,15 +50392,15 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1750</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1749</span>
+<span class="normal">1750</span>
 <span class="normal">1751</span>
 <span class="normal">1752</span>
 <span class="normal">1753</span>
 <span class="normal">1754</span>
 <span class="normal">1755</span>
 <span class="normal">1756</span>
-<span class="normal">1757</span>
-<span class="normal">1758</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_d</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1757</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_d</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Assemble global internal force vector as a function of the element relative configuration vectors.</span>
 <span class="sd">    :param p_d: P(d) operator, ``(n_elem, 6, 12)``.</span>
@@ -50513,7 +50507,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1799</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1798</span>
+<span class="normal">1799</span>
 <span class="normal">1800</span>
 <span class="normal">1801</span>
 <span class="normal">1802</span>
@@ -50521,8 +50516,7 @@ linear dynamic analysis.</p>
 <span class="normal">1804</span>
 <span class="normal">1805</span>
 <span class="normal">1806</span>
-<span class="normal">1807</span>
-<span class="normal">1808</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">1807</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_f_dead_ext</span><span class="p">(</span><span class="n">f_ext</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">rmat</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the global external dead force vector.</span>
@@ -50628,7 +50622,8 @@ linear dynamic analysis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1899</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1898</span>
+<span class="normal">1899</span>
 <span class="normal">1900</span>
 <span class="normal">1901</span>
 <span class="normal">1902</span>
@@ -50639,8 +50634,7 @@ linear dynamic analysis.</p>
 <span class="normal">1907</span>
 <span class="normal">1908</span>
 <span class="normal">1909</span>
-<span class="normal">1910</span>
-<span class="normal">1911</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_thrust_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">thrust</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1910</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_thrust_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">thrust</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Add thrust acting at nodes onto full system forcing.</span>
 <span class="sd">    :param force: Input forcing, ``(n_node, 6)``.</span>
@@ -50733,7 +50727,8 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1913</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1912</span>
+<span class="normal">1913</span>
 <span class="normal">1914</span>
 <span class="normal">1915</span>
 <span class="normal">1916</span>
@@ -50741,8 +50736,7 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 <span class="normal">1918</span>
 <span class="normal">1919</span>
 <span class="normal">1920</span>
-<span class="normal">1921</span>
-<span class="normal">1922</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_eps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1921</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_eps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the element strain vectors as a function of the element relative configuration vectors. Formulation from</span>
 <span class="sd">    Geometrically exact beam finite element formulated on the special Euclidean group SE(3), by Sonneville et al.,</span>
@@ -50830,13 +50824,13 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1924</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1923</span>
+<span class="normal">1924</span>
 <span class="normal">1925</span>
 <span class="normal">1926</span>
 <span class="normal">1927</span>
 <span class="normal">1928</span>
-<span class="normal">1929</span>
-<span class="normal">1930</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_p_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1929</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_p_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the P(d) operator as a function of the element relative configuration vectors.</span>
 <span class="sd">    :param d: Relative configuration vectors, ``(n_elem, 6)``</span>
@@ -50921,7 +50915,8 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1932</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1931</span>
+<span class="normal">1932</span>
 <span class="normal">1933</span>
 <span class="normal">1934</span>
 <span class="normal">1935</span>
@@ -50938,8 +50933,7 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 <span class="normal">1946</span>
 <span class="normal">1947</span>
 <span class="normal">1948</span>
-<span class="normal">1949</span>
-<span class="normal">1950</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="normal">1949</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the element relative configuration vectors from the nodal homogeneous transformation matrices</span>
 <span class="sd">    :param hg: Nodal homogeneous transformation matrices, ``(n_nodes, 4, 4)``</span>
@@ -51056,7 +51050,8 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1970</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1969</span>
+<span class="normal">1970</span>
 <span class="normal">1971</span>
 <span class="normal">1972</span>
 <span class="normal">1973</span>
@@ -51065,8 +51060,7 @@ Geometrically exact beam finite element formulated on the special Euclidean grou
 <span class="normal">1976</span>
 <span class="normal">1977</span>
 <span class="normal">1978</span>
-<span class="normal">1979</span>
-<span class="normal">1980</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">1979</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_hg_dot</span><span class="p">(</span><span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Obtain the time derivative of the nodal coordinates.</span>
@@ -51349,7 +51343,8 @@ gyroscopic forces, inertial forces and residual forces.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2030</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2029</span>
+<span class="normal">2030</span>
 <span class="normal">2031</span>
 <span class="normal">2032</span>
 <span class="normal">2033</span>
@@ -51479,8 +51474,7 @@ gyroscopic forces, inertial forces and residual forces.</p>
 <span class="normal">2157</span>
 <span class="normal">2158</span>
 <span class="normal">2159</span>
-<span class="normal">2160</span>
-<span class="normal">2161</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resolve_forces</span><span class="p">(</span>
+<span class="normal">2160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resolve_forces</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">dynamic</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -51964,7 +51958,8 @@ damping.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2203</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2202</span>
+<span class="normal">2203</span>
 <span class="normal">2204</span>
 <span class="normal">2205</span>
 <span class="normal">2206</span>
@@ -52099,8 +52094,7 @@ damping.</p>
 <span class="normal">2335</span>
 <span class="normal">2336</span>
 <span class="normal">2337</span>
-<span class="normal">2338</span>
-<span class="normal">2339</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_res</span><span class="p">(</span>
+<span class="normal">2338</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_f_res</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">solve_dofs</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">p_d</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -52335,7 +52329,8 @@ damping.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2341</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2340</span>
+<span class="normal">2341</span>
 <span class="normal">2342</span>
 <span class="normal">2343</span>
 <span class="normal">2344</span>
@@ -52346,8 +52341,7 @@ damping.</p>
 <span class="normal">2349</span>
 <span class="normal">2350</span>
 <span class="normal">2351</span>
-<span class="normal">2352</span>
-<span class="normal">2353</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">2352</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">update_hg</span><span class="p">(</span><span class="n">hg</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Update the nodal homogeneous transformation matrices with the configuration increments.</span>
@@ -52543,7 +52537,8 @@ damping.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2372</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2371</span>
+<span class="normal">2372</span>
 <span class="normal">2373</span>
 <span class="normal">2374</span>
 <span class="normal">2375</span>
@@ -52782,8 +52777,7 @@ damping.</p>
 <span class="normal">2608</span>
 <span class="normal">2609</span>
 <span class="normal">2610</span>
-<span class="normal">2611</span>
-<span class="normal">2612</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
+<span class="normal">2611</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">prescribed_dofs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">f_ext_follower</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -53095,7 +53089,8 @@ of this</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2650</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2649</span>
+<span class="normal">2650</span>
 <span class="normal">2651</span>
 <span class="normal">2652</span>
 <span class="normal">2653</span>
@@ -53995,8 +53990,7 @@ of this</p>
 <span class="normal">3547</span>
 <span class="normal">3548</span>
 <span class="normal">3549</span>
-<span class="normal">3550</span>
-<span class="normal">3551</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
+<span class="normal">3550</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">struct_case</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">struct_convergence_status</span><span class="p">:</span> <span class="n">ConvergenceStatus</span><span class="p">,</span>
@@ -55121,7 +55115,8 @@ from the initial state.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3553</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3552</span>
+<span class="normal">3553</span>
 <span class="normal">3554</span>
 <span class="normal">3555</span>
 <span class="normal">3556</span>
@@ -55315,8 +55310,7 @@ from the initial state.</p>
 <span class="normal">3744</span>
 <span class="normal">3745</span>
 <span class="normal">3746</span>
-<span class="normal">3747</span>
-<span class="normal">3748</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
+<span class="normal">3747</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">init_state</span><span class="p">:</span> <span class="n">StructureCase</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>

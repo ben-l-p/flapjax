@@ -17149,7 +17149,9 @@ variables are obtained.</p>
 
 <a href="#flapjax.aero.UVLM.hg_to_zeta_b" class="headerlink" title="Permanent link">&para;</a></h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">hg_to_zeta_b</span><span class="p">(</span>
-    <span class="n">hg_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">cs_ang_n</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span>
+    <span class="n">hg_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">cs_ang_n</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">zeta_b0_cs</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span>
 </code></pre></div>
 
@@ -17190,15 +17192,33 @@ variables are obtained.</p>
                 <code>cs_ang_n</code>
             </td>
             <td>
-                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="jax.Array">Array</span>]</code>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="jax.Array">Array</span>] | None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Control surface angles as {surface_name: angle} pairs at time step n.</p>
+                <p>Control surface angles as {surface_name: angle} pairs at time step n. Ignored if
+<code>zeta_b0_cs</code> is provided.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>zeta_b0_cs</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="ArrayList (flapjax.algebra.array_utils.ArrayList)" href="../algebra/#flapjax.algebra.array_utils.ArrayList">ArrayList</a> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Precomputed local aerodynamic grid for control surface deflections to reuse across repeated
+calls with an unchanged <code>cs_ang_n</code>. If None, computed from <code>cs_ang_n</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
       </tbody>
@@ -17260,17 +17280,39 @@ variables are obtained.</p>
 <span class="normal">607</span>
 <span class="normal">608</span>
 <span class="normal">609</span>
-<span class="normal">610</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hg_to_zeta_b</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">cs_ang_n</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hg_to_zeta_b</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">hg_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">cs_ang_n</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">zeta_b0_cs</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Convert beam global grid coordinates to aerodynamic global grid coordinates.</span>
 <span class="sd">    :param hg_n: Beam global grid coordinates at time step n, ``(n_nodes, 4, 4)``.</span>
-<span class="sd">    :param cs_ang_n: Control surface angles as {surface_name: angle} pairs at time step n.</span>
+<span class="sd">    :param cs_ang_n: Control surface angles as {surface_name: angle} pairs at time step n. Ignored if</span>
+<span class="sd">    ``zeta_b0_cs`` is provided.</span>
+<span class="sd">    :param zeta_b0_cs: Precomputed local aerodynamic grid for control surface deflections to reuse across repeated</span>
+<span class="sd">    calls with an unchanged ``cs_ang_n``. If None, computed from ``cs_ang_n``.</span>
 <span class="sd">    :return: Full aerodynamic global grid coordinates for each surface, ``(n_surf, )(zeta_m, zeta_n, 3)``.</span>
 <span class="sd">    """</span>
 
-    <span class="n">zeta_b0_cs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_func</span><span class="p">(</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="o">**</span><span class="n">cs_ang_n</span>
-    <span class="p">)</span>  <span class="c1"># get local aerodynamic grid for control surface deflections.</span>
+    <span class="k">if</span> <span class="n">zeta_b0_cs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cs_ang_n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Either cs_ang_n or zeta_b0_cs must be provided."</span><span class="p">)</span>
+        <span class="n">zeta_b0_cs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_func</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="o">**</span><span class="n">cs_ang_n</span>
+        <span class="p">)</span>  <span class="c1"># get local aerodynamic grid for control surface deflections.</span>
 
     <span class="n">zetas</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="p">([])</span>
     <span class="k">for</span> <span class="n">i_surf</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_surf</span><span class="p">):</span>
@@ -17422,18 +17464,7 @@ variables are obtained.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">612</span>
-<span class="normal">613</span>
-<span class="normal">614</span>
-<span class="normal">615</span>
-<span class="normal">616</span>
-<span class="normal">617</span>
-<span class="normal">618</span>
-<span class="normal">619</span>
-<span class="normal">620</span>
-<span class="normal">621</span>
-<span class="normal">622</span>
-<span class="normal">623</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">623</span>
 <span class="normal">624</span>
 <span class="normal">625</span>
 <span class="normal">626</span>
@@ -17492,7 +17523,18 @@ variables are obtained.</p>
 <span class="normal">679</span>
 <span class="normal">680</span>
 <span class="normal">681</span>
-<span class="normal">682</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hg_dot_to_zeta_b_dot</span><span class="p">(</span>
+<span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hg_dot_to_zeta_b_dot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">hg_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">hg_dot_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -17644,18 +17686,7 @@ initialised bound grid coordinates based on hg0.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">737</span>
-<span class="normal">738</span>
-<span class="normal">739</span>
-<span class="normal">740</span>
-<span class="normal">741</span>
-<span class="normal">742</span>
-<span class="normal">743</span>
-<span class="normal">744</span>
-<span class="normal">745</span>
-<span class="normal">746</span>
-<span class="normal">747</span>
-<span class="normal">748</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">748</span>
 <span class="normal">749</span>
 <span class="normal">750</span>
 <span class="normal">751</span>
@@ -17671,7 +17702,18 @@ initialised bound grid coordinates based on hg0.</p>
 <span class="normal">761</span>
 <span class="normal">762</span>
 <span class="normal">763</span>
-<span class="normal">764</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_wake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zeta_b</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
+<span class="normal">764</span>
+<span class="normal">765</span>
+<span class="normal">766</span>
+<span class="normal">767</span>
+<span class="normal">768</span>
+<span class="normal">769</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span>
+<span class="normal">773</span>
+<span class="normal">774</span>
+<span class="normal">775</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_wake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zeta_b</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Generate initial wake grid coordinates, based on the bound grid coordinates and the freestream conditions.</span>
 <span class="sd">    :param zeta_b: Initial wake grid coordinates, ``(n_surf, )(zeta_m, zeta_n, 3)``. If None, this will use the</span>
@@ -17828,18 +17870,7 @@ initialised bound grid coordinates based on hg0.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">766</span>
-<span class="normal">767</span>
-<span class="normal">768</span>
-<span class="normal">769</span>
-<span class="normal">770</span>
-<span class="normal">771</span>
-<span class="normal">772</span>
-<span class="normal">773</span>
-<span class="normal">774</span>
-<span class="normal">775</span>
-<span class="normal">776</span>
-<span class="normal">777</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">777</span>
 <span class="normal">778</span>
 <span class="normal">779</span>
 <span class="normal">780</span>
@@ -17851,7 +17882,18 @@ initialised bound grid coordinates based on hg0.</p>
 <span class="normal">786</span>
 <span class="normal">787</span>
 <span class="normal">788</span>
-<span class="normal">789</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span>
+<span class="normal">792</span>
+<span class="normal">793</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span>
+<span class="normal">798</span>
+<span class="normal">799</span>
+<span class="normal">800</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_gamma_dot</span><span class="p">(</span>
     <span class="n">gamma_b_n</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">gamma_b_nm1</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
@@ -17965,25 +18007,25 @@ full vector of strengths, or a sequence of strengths per surface.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">791</span>
-<span class="normal">792</span>
-<span class="normal">793</span>
-<span class="normal">794</span>
-<span class="normal">795</span>
-<span class="normal">796</span>
-<span class="normal">797</span>
-<span class="normal">798</span>
-<span class="normal">799</span>
-<span class="normal">800</span>
-<span class="normal">801</span>
-<span class="normal">802</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">802</span>
 <span class="normal">803</span>
 <span class="normal">804</span>
 <span class="normal">805</span>
 <span class="normal">806</span>
 <span class="normal">807</span>
 <span class="normal">808</span>
-<span class="normal">809</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@singledispatchmethod</span>
+<span class="normal">809</span>
+<span class="normal">810</span>
+<span class="normal">811</span>
+<span class="normal">812</span>
+<span class="normal">813</span>
+<span class="normal">814</span>
+<span class="normal">815</span>
+<span class="normal">816</span>
+<span class="normal">817</span>
+<span class="normal">818</span>
+<span class="normal">819</span>
+<span class="normal">820</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@singledispatchmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_gamma_w</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gamma_vec</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Set wake circulation strengths from total circulation strengths at specified time step. Can be passed either a</span>
@@ -18254,18 +18296,7 @@ effective angle of attack, and per-strip lift, drag and moment coefficients.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">820</span>
-<span class="normal">821</span>
-<span class="normal">822</span>
-<span class="normal">823</span>
-<span class="normal">824</span>
-<span class="normal">825</span>
-<span class="normal">826</span>
-<span class="normal">827</span>
-<span class="normal">828</span>
-<span class="normal">829</span>
-<span class="normal">830</span>
-<span class="normal">831</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">831</span>
 <span class="normal">832</span>
 <span class="normal">833</span>
 <span class="normal">834</span>
@@ -18328,7 +18359,18 @@ effective angle of attack, and per-strip lift, drag and moment coefficients.</p>
 <span class="normal">891</span>
 <span class="normal">892</span>
 <span class="normal">893</span>
-<span class="normal">894</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve</span><span class="p">(</span>
+<span class="normal">894</span>
+<span class="normal">895</span>
+<span class="normal">896</span>
+<span class="normal">897</span>
+<span class="normal">898</span>
+<span class="normal">899</span>
+<span class="normal">900</span>
+<span class="normal">901</span>
+<span class="normal">902</span>
+<span class="normal">903</span>
+<span class="normal">904</span>
+<span class="normal">905</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">AeroFullStates</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -18658,18 +18700,7 @@ angle of attack, and per-strip lift, drag and moment coefficients sampled from t
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 896</span>
-<span class="normal"> 897</span>
-<span class="normal"> 898</span>
-<span class="normal"> 899</span>
-<span class="normal"> 900</span>
-<span class="normal"> 901</span>
-<span class="normal"> 902</span>
-<span class="normal"> 903</span>
-<span class="normal"> 904</span>
-<span class="normal"> 905</span>
-<span class="normal"> 906</span>
-<span class="normal"> 907</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 907</span>
 <span class="normal"> 908</span>
 <span class="normal"> 909</span>
 <span class="normal"> 910</span>
@@ -18992,7 +19023,18 @@ angle of attack, and per-strip lift, drag and moment coefficients sampled from t
 <span class="normal">1227</span>
 <span class="normal">1228</span>
 <span class="normal">1229</span>
-<span class="normal">1230</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve_from_grid</span><span class="p">(</span>
+<span class="normal">1230</span>
+<span class="normal">1231</span>
+<span class="normal">1232</span>
+<span class="normal">1233</span>
+<span class="normal">1234</span>
+<span class="normal">1235</span>
+<span class="normal">1236</span>
+<span class="normal">1237</span>
+<span class="normal">1238</span>
+<span class="normal">1239</span>
+<span class="normal">1240</span>
+<span class="normal">1241</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve_from_grid</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">AeroFullStates</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -19562,18 +19604,7 @@ distance.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1232</span>
-<span class="normal">1233</span>
-<span class="normal">1234</span>
-<span class="normal">1235</span>
-<span class="normal">1236</span>
-<span class="normal">1237</span>
-<span class="normal">1238</span>
-<span class="normal">1239</span>
-<span class="normal">1240</span>
-<span class="normal">1241</span>
-<span class="normal">1242</span>
-<span class="normal">1243</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1243</span>
 <span class="normal">1244</span>
 <span class="normal">1245</span>
 <span class="normal">1246</span>
@@ -19664,7 +19695,18 @@ distance.</p>
 <span class="normal">1331</span>
 <span class="normal">1332</span>
 <span class="normal">1333</span>
-<span class="normal">1334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">case_solve</span><span class="p">(</span>
+<span class="normal">1334</span>
+<span class="normal">1335</span>
+<span class="normal">1336</span>
+<span class="normal">1337</span>
+<span class="normal">1338</span>
+<span class="normal">1339</span>
+<span class="normal">1340</span>
+<span class="normal">1341</span>
+<span class="normal">1342</span>
+<span class="normal">1343</span>
+<span class="normal">1344</span>
+<span class="normal">1345</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">case_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -19933,18 +19975,7 @@ steps. All solution data is initialised to zero.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1336</span>
-<span class="normal">1337</span>
-<span class="normal">1338</span>
-<span class="normal">1339</span>
-<span class="normal">1340</span>
-<span class="normal">1341</span>
-<span class="normal">1342</span>
-<span class="normal">1343</span>
-<span class="normal">1344</span>
-<span class="normal">1345</span>
-<span class="normal">1346</span>
-<span class="normal">1347</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1347</span>
 <span class="normal">1348</span>
 <span class="normal">1349</span>
 <span class="normal">1350</span>
@@ -20007,7 +20038,18 @@ steps. All solution data is initialised to zero.</p>
 <span class="normal">1407</span>
 <span class="normal">1408</span>
 <span class="normal">1409</span>
-<span class="normal">1410</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_case_object</span><span class="p">(</span>
+<span class="normal">1410</span>
+<span class="normal">1411</span>
+<span class="normal">1412</span>
+<span class="normal">1413</span>
+<span class="normal">1414</span>
+<span class="normal">1415</span>
+<span class="normal">1416</span>
+<span class="normal">1417</span>
+<span class="normal">1418</span>
+<span class="normal">1419</span>
+<span class="normal">1420</span>
+<span class="normal">1421</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_case_object</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">static_horseshoe</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -20214,18 +20256,7 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1412</span>
-<span class="normal">1413</span>
-<span class="normal">1414</span>
-<span class="normal">1415</span>
-<span class="normal">1416</span>
-<span class="normal">1417</span>
-<span class="normal">1418</span>
-<span class="normal">1419</span>
-<span class="normal">1420</span>
-<span class="normal">1421</span>
-<span class="normal">1422</span>
-<span class="normal">1423</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1423</span>
 <span class="normal">1424</span>
 <span class="normal">1425</span>
 <span class="normal">1426</span>
@@ -20261,7 +20292,18 @@ TODO: add free wake</p>
 <span class="normal">1456</span>
 <span class="normal">1457</span>
 <span class="normal">1458</span>
-<span class="normal">1459</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
+<span class="normal">1459</span>
+<span class="normal">1460</span>
+<span class="normal">1461</span>
+<span class="normal">1462</span>
+<span class="normal">1463</span>
+<span class="normal">1464</span>
+<span class="normal">1465</span>
+<span class="normal">1466</span>
+<span class="normal">1467</span>
+<span class="normal">1468</span>
+<span class="normal">1469</span>
+<span class="normal">1470</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -20457,18 +20499,7 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1461</span>
-<span class="normal">1462</span>
-<span class="normal">1463</span>
-<span class="normal">1464</span>
-<span class="normal">1465</span>
-<span class="normal">1466</span>
-<span class="normal">1467</span>
-<span class="normal">1468</span>
-<span class="normal">1469</span>
-<span class="normal">1470</span>
-<span class="normal">1471</span>
-<span class="normal">1472</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1472</span>
 <span class="normal">1473</span>
 <span class="normal">1474</span>
 <span class="normal">1475</span>
@@ -20528,7 +20559,18 @@ TODO: add free wake</p>
 <span class="normal">1529</span>
 <span class="normal">1530</span>
 <span class="normal">1531</span>
-<span class="normal">1532</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prescribed_dynamic_solve</span><span class="p">(</span>
+<span class="normal">1532</span>
+<span class="normal">1533</span>
+<span class="normal">1534</span>
+<span class="normal">1535</span>
+<span class="normal">1536</span>
+<span class="normal">1537</span>
+<span class="normal">1538</span>
+<span class="normal">1539</span>
+<span class="normal">1540</span>
+<span class="normal">1541</span>
+<span class="normal">1542</span>
+<span class="normal">1543</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prescribed_dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">init_case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">hg_t</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -20647,18 +20689,7 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1534</span>
-<span class="normal">1535</span>
-<span class="normal">1536</span>
-<span class="normal">1537</span>
-<span class="normal">1538</span>
-<span class="normal">1539</span>
-<span class="normal">1540</span>
-<span class="normal">1541</span>
-<span class="normal">1542</span>
-<span class="normal">1543</span>
-<span class="normal">1544</span>
-<span class="normal">1545</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1545</span>
 <span class="normal">1546</span>
 <span class="normal">1547</span>
 <span class="normal">1548</span>
@@ -20692,7 +20723,18 @@ TODO: add free wake</p>
 <span class="normal">1576</span>
 <span class="normal">1577</span>
 <span class="normal">1578</span>
-<span class="normal">1579</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
+<span class="normal">1579</span>
+<span class="normal">1580</span>
+<span class="normal">1581</span>
+<span class="normal">1582</span>
+<span class="normal">1583</span>
+<span class="normal">1584</span>
+<span class="normal">1585</span>
+<span class="normal">1586</span>
+<span class="normal">1587</span>
+<span class="normal">1588</span>
+<span class="normal">1589</span>
+<span class="normal">1590</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Get the reference (initial) snapshot of the aerodynamic case. This will set the timestep as -1.</span>
 <span class="sd">    :return: StaticAero object at initial time step.</span>
@@ -20811,17 +20853,17 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1581</span>
-<span class="normal">1582</span>
-<span class="normal">1583</span>
-<span class="normal">1584</span>
-<span class="normal">1585</span>
-<span class="normal">1586</span>
-<span class="normal">1587</span>
-<span class="normal">1588</span>
-<span class="normal">1589</span>
-<span class="normal">1590</span>
-<span class="normal">1591</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_reference</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1592</span>
+<span class="normal">1593</span>
+<span class="normal">1594</span>
+<span class="normal">1595</span>
+<span class="normal">1596</span>
+<span class="normal">1597</span>
+<span class="normal">1598</span>
+<span class="normal">1599</span>
+<span class="normal">1600</span>
+<span class="normal">1601</span>
+<span class="normal">1602</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_reference</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">plot_wake</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
@@ -21069,18 +21111,7 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1668</span>
-<span class="normal">1669</span>
-<span class="normal">1670</span>
-<span class="normal">1671</span>
-<span class="normal">1672</span>
-<span class="normal">1673</span>
-<span class="normal">1674</span>
-<span class="normal">1675</span>
-<span class="normal">1676</span>
-<span class="normal">1677</span>
-<span class="normal">1678</span>
-<span class="normal">1679</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1679</span>
 <span class="normal">1680</span>
 <span class="normal">1681</span>
 <span class="normal">1682</span>
@@ -21201,7 +21232,18 @@ requested.</p>
 <span class="normal">1797</span>
 <span class="normal">1798</span>
 <span class="normal">1799</span>
-<span class="normal">1800</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_res_func</span><span class="p">(</span>
+<span class="normal">1800</span>
+<span class="normal">1801</span>
+<span class="normal">1802</span>
+<span class="normal">1803</span>
+<span class="normal">1804</span>
+<span class="normal">1805</span>
+<span class="normal">1806</span>
+<span class="normal">1807</span>
+<span class="normal">1808</span>
+<span class="normal">1809</span>
+<span class="normal">1810</span>
+<span class="normal">1811</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -21601,18 +21643,7 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1802</span>
-<span class="normal">1803</span>
-<span class="normal">1804</span>
-<span class="normal">1805</span>
-<span class="normal">1806</span>
-<span class="normal">1807</span>
-<span class="normal">1808</span>
-<span class="normal">1809</span>
-<span class="normal">1810</span>
-<span class="normal">1811</span>
-<span class="normal">1812</span>
-<span class="normal">1813</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1813</span>
 <span class="normal">1814</span>
 <span class="normal">1815</span>
 <span class="normal">1816</span>
@@ -21710,7 +21741,18 @@ requested.</p>
 <span class="normal">1908</span>
 <span class="normal">1909</span>
 <span class="normal">1910</span>
-<span class="normal">1911</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wake_prop_res_func</span><span class="p">(</span>
+<span class="normal">1911</span>
+<span class="normal">1912</span>
+<span class="normal">1913</span>
+<span class="normal">1914</span>
+<span class="normal">1915</span>
+<span class="normal">1916</span>
+<span class="normal">1917</span>
+<span class="normal">1918</span>
+<span class="normal">1919</span>
+<span class="normal">1920</span>
+<span class="normal">1921</span>
+<span class="normal">1922</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wake_prop_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -21971,18 +22013,7 @@ the residual design gradient.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1913</span>
-<span class="normal">1914</span>
-<span class="normal">1915</span>
-<span class="normal">1916</span>
-<span class="normal">1917</span>
-<span class="normal">1918</span>
-<span class="normal">1919</span>
-<span class="normal">1920</span>
-<span class="normal">1921</span>
-<span class="normal">1922</span>
-<span class="normal">1923</span>
-<span class="normal">1924</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1924</span>
 <span class="normal">1925</span>
 <span class="normal">1926</span>
 <span class="normal">1927</span>
@@ -22019,7 +22050,18 @@ the residual design gradient.</p>
 <span class="normal">1958</span>
 <span class="normal">1959</span>
 <span class="normal">1960</span>
-<span class="normal">1961</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_dot_res_func</span><span class="p">(</span>
+<span class="normal">1961</span>
+<span class="normal">1962</span>
+<span class="normal">1963</span>
+<span class="normal">1964</span>
+<span class="normal">1965</span>
+<span class="normal">1966</span>
+<span class="normal">1967</span>
+<span class="normal">1968</span>
+<span class="normal">1969</span>
+<span class="normal">1970</span>
+<span class="normal">1971</span>
+<span class="normal">1972</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_dot_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">gamma_b_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">gamma_b_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -22350,18 +22392,7 @@ forcing on the bound grid.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1963</span>
-<span class="normal">1964</span>
-<span class="normal">1965</span>
-<span class="normal">1966</span>
-<span class="normal">1967</span>
-<span class="normal">1968</span>
-<span class="normal">1969</span>
-<span class="normal">1970</span>
-<span class="normal">1971</span>
-<span class="normal">1972</span>
-<span class="normal">1973</span>
-<span class="normal">1974</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1974</span>
 <span class="normal">1975</span>
 <span class="normal">1976</span>
 <span class="normal">1977</span>
@@ -22499,7 +22530,18 @@ forcing on the bound grid.</p>
 <span class="normal">2109</span>
 <span class="normal">2110</span>
 <span class="normal">2111</span>
-<span class="normal">2112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">f_aero_res_func</span><span class="p">(</span>
+<span class="normal">2112</span>
+<span class="normal">2113</span>
+<span class="normal">2114</span>
+<span class="normal">2115</span>
+<span class="normal">2116</span>
+<span class="normal">2117</span>
+<span class="normal">2118</span>
+<span class="normal">2119</span>
+<span class="normal">2120</span>
+<span class="normal">2121</span>
+<span class="normal">2122</span>
+<span class="normal">2123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">f_aero_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -22928,18 +22970,7 @@ forcing on the bound grid.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2114</span>
-<span class="normal">2115</span>
-<span class="normal">2116</span>
-<span class="normal">2117</span>
-<span class="normal">2118</span>
-<span class="normal">2119</span>
-<span class="normal">2120</span>
-<span class="normal">2121</span>
-<span class="normal">2122</span>
-<span class="normal">2123</span>
-<span class="normal">2124</span>
-<span class="normal">2125</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2125</span>
 <span class="normal">2126</span>
 <span class="normal">2127</span>
 <span class="normal">2128</span>
@@ -23033,7 +23064,18 @@ forcing on the bound grid.</p>
 <span class="normal">2216</span>
 <span class="normal">2217</span>
 <span class="normal">2218</span>
-<span class="normal">2219</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
+<span class="normal">2219</span>
+<span class="normal">2220</span>
+<span class="normal">2221</span>
+<span class="normal">2222</span>
+<span class="normal">2223</span>
+<span class="normal">2224</span>
+<span class="normal">2225</span>
+<span class="normal">2226</span>
+<span class="normal">2227</span>
+<span class="normal">2228</span>
+<span class="normal">2229</span>
+<span class="normal">2230</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">varphi_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -23324,18 +23366,7 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2221</span>
-<span class="normal">2222</span>
-<span class="normal">2223</span>
-<span class="normal">2224</span>
-<span class="normal">2225</span>
-<span class="normal">2226</span>
-<span class="normal">2227</span>
-<span class="normal">2228</span>
-<span class="normal">2229</span>
-<span class="normal">2230</span>
-<span class="normal">2231</span>
-<span class="normal">2232</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2232</span>
 <span class="normal">2233</span>
 <span class="normal">2234</span>
 <span class="normal">2235</span>
@@ -23456,7 +23487,18 @@ requested.</p>
 <span class="normal">2350</span>
 <span class="normal">2351</span>
 <span class="normal">2352</span>
-<span class="normal">2353</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
+<span class="normal">2353</span>
+<span class="normal">2354</span>
+<span class="normal">2355</span>
+<span class="normal">2356</span>
+<span class="normal">2357</span>
+<span class="normal">2358</span>
+<span class="normal">2359</span>
+<span class="normal">2360</span>
+<span class="normal">2361</span>
+<span class="normal">2362</span>
+<span class="normal">2363</span>
+<span class="normal">2364</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">aero_sol</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">structure_sol</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
@@ -23969,18 +24011,7 @@ displacement and velocity, and profiling times for compilation and run time.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2355</span>
-<span class="normal">2356</span>
-<span class="normal">2357</span>
-<span class="normal">2358</span>
-<span class="normal">2359</span>
-<span class="normal">2360</span>
-<span class="normal">2361</span>
-<span class="normal">2362</span>
-<span class="normal">2363</span>
-<span class="normal">2364</span>
-<span class="normal">2365</span>
-<span class="normal">2366</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2366</span>
 <span class="normal">2367</span>
 <span class="normal">2368</span>
 <span class="normal">2369</span>
@@ -24276,7 +24307,18 @@ displacement and velocity, and profiling times for compilation and run time.</p>
 <span class="normal">2659</span>
 <span class="normal">2660</span>
 <span class="normal">2661</span>
-<span class="normal">2662</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
+<span class="normal">2662</span>
+<span class="normal">2663</span>
+<span class="normal">2664</span>
+<span class="normal">2665</span>
+<span class="normal">2666</span>
+<span class="normal">2667</span>
+<span class="normal">2668</span>
+<span class="normal">2669</span>
+<span class="normal">2670</span>
+<span class="normal">2671</span>
+<span class="normal">2672</span>
+<span class="normal">2673</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">varphi_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -47110,7 +47152,9 @@ variables are obtained.</p>
 
 <a href="#flapjax.aero.uvlm.UVLM.hg_to_zeta_b" class="headerlink" title="Permanent link">&para;</a></h5>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">hg_to_zeta_b</span><span class="p">(</span>
-    <span class="n">hg_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">cs_ang_n</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span>
+    <span class="n">hg_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">cs_ang_n</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">zeta_b0_cs</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span>
 </code></pre></div>
 
@@ -47151,15 +47195,33 @@ variables are obtained.</p>
                 <code>cs_ang_n</code>
             </td>
             <td>
-                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="jax.Array">Array</span>]</code>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="jax.Array">Array</span>] | None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Control surface angles as {surface_name: angle} pairs at time step n.</p>
+                <p>Control surface angles as {surface_name: angle} pairs at time step n. Ignored if
+<code>zeta_b0_cs</code> is provided.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>zeta_b0_cs</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="ArrayList (flapjax.algebra.array_utils.ArrayList)" href="../algebra/#flapjax.algebra.array_utils.ArrayList">ArrayList</a> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Precomputed local aerodynamic grid for control surface deflections to reuse across repeated
+calls with an unchanged <code>cs_ang_n</code>. If None, computed from <code>cs_ang_n</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
       </tbody>
@@ -47221,17 +47283,39 @@ variables are obtained.</p>
 <span class="normal">607</span>
 <span class="normal">608</span>
 <span class="normal">609</span>
-<span class="normal">610</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hg_to_zeta_b</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hg_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">cs_ang_n</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hg_to_zeta_b</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">hg_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">cs_ang_n</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">zeta_b0_cs</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Convert beam global grid coordinates to aerodynamic global grid coordinates.</span>
 <span class="sd">    :param hg_n: Beam global grid coordinates at time step n, ``(n_nodes, 4, 4)``.</span>
-<span class="sd">    :param cs_ang_n: Control surface angles as {surface_name: angle} pairs at time step n.</span>
+<span class="sd">    :param cs_ang_n: Control surface angles as {surface_name: angle} pairs at time step n. Ignored if</span>
+<span class="sd">    ``zeta_b0_cs`` is provided.</span>
+<span class="sd">    :param zeta_b0_cs: Precomputed local aerodynamic grid for control surface deflections to reuse across repeated</span>
+<span class="sd">    calls with an unchanged ``cs_ang_n``. If None, computed from ``cs_ang_n``.</span>
 <span class="sd">    :return: Full aerodynamic global grid coordinates for each surface, ``(n_surf, )(zeta_m, zeta_n, 3)``.</span>
 <span class="sd">    """</span>
 
-    <span class="n">zeta_b0_cs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_func</span><span class="p">(</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="o">**</span><span class="n">cs_ang_n</span>
-    <span class="p">)</span>  <span class="c1"># get local aerodynamic grid for control surface deflections.</span>
+    <span class="k">if</span> <span class="n">zeta_b0_cs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cs_ang_n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Either cs_ang_n or zeta_b0_cs must be provided."</span><span class="p">)</span>
+        <span class="n">zeta_b0_cs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_func</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zeta_b0</span><span class="p">,</span> <span class="o">**</span><span class="n">cs_ang_n</span>
+        <span class="p">)</span>  <span class="c1"># get local aerodynamic grid for control surface deflections.</span>
 
     <span class="n">zetas</span> <span class="o">=</span> <span class="n">ArrayList</span><span class="p">([])</span>
     <span class="k">for</span> <span class="n">i_surf</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_surf</span><span class="p">):</span>
@@ -47383,18 +47467,7 @@ variables are obtained.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">612</span>
-<span class="normal">613</span>
-<span class="normal">614</span>
-<span class="normal">615</span>
-<span class="normal">616</span>
-<span class="normal">617</span>
-<span class="normal">618</span>
-<span class="normal">619</span>
-<span class="normal">620</span>
-<span class="normal">621</span>
-<span class="normal">622</span>
-<span class="normal">623</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">623</span>
 <span class="normal">624</span>
 <span class="normal">625</span>
 <span class="normal">626</span>
@@ -47453,7 +47526,18 @@ variables are obtained.</p>
 <span class="normal">679</span>
 <span class="normal">680</span>
 <span class="normal">681</span>
-<span class="normal">682</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hg_dot_to_zeta_b_dot</span><span class="p">(</span>
+<span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hg_dot_to_zeta_b_dot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">hg_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">hg_dot_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -47605,18 +47689,7 @@ initialised bound grid coordinates based on hg0.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">737</span>
-<span class="normal">738</span>
-<span class="normal">739</span>
-<span class="normal">740</span>
-<span class="normal">741</span>
-<span class="normal">742</span>
-<span class="normal">743</span>
-<span class="normal">744</span>
-<span class="normal">745</span>
-<span class="normal">746</span>
-<span class="normal">747</span>
-<span class="normal">748</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">748</span>
 <span class="normal">749</span>
 <span class="normal">750</span>
 <span class="normal">751</span>
@@ -47632,7 +47705,18 @@ initialised bound grid coordinates based on hg0.</p>
 <span class="normal">761</span>
 <span class="normal">762</span>
 <span class="normal">763</span>
-<span class="normal">764</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_wake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zeta_b</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
+<span class="normal">764</span>
+<span class="normal">765</span>
+<span class="normal">766</span>
+<span class="normal">767</span>
+<span class="normal">768</span>
+<span class="normal">769</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span>
+<span class="normal">773</span>
+<span class="normal">774</span>
+<span class="normal">775</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_wake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zeta_b</span><span class="p">:</span> <span class="n">ArrayList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayList</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Generate initial wake grid coordinates, based on the bound grid coordinates and the freestream conditions.</span>
 <span class="sd">    :param zeta_b: Initial wake grid coordinates, ``(n_surf, )(zeta_m, zeta_n, 3)``. If None, this will use the</span>
@@ -47789,18 +47873,7 @@ initialised bound grid coordinates based on hg0.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">766</span>
-<span class="normal">767</span>
-<span class="normal">768</span>
-<span class="normal">769</span>
-<span class="normal">770</span>
-<span class="normal">771</span>
-<span class="normal">772</span>
-<span class="normal">773</span>
-<span class="normal">774</span>
-<span class="normal">775</span>
-<span class="normal">776</span>
-<span class="normal">777</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">777</span>
 <span class="normal">778</span>
 <span class="normal">779</span>
 <span class="normal">780</span>
@@ -47812,7 +47885,18 @@ initialised bound grid coordinates based on hg0.</p>
 <span class="normal">786</span>
 <span class="normal">787</span>
 <span class="normal">788</span>
-<span class="normal">789</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span>
+<span class="normal">792</span>
+<span class="normal">793</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span>
+<span class="normal">798</span>
+<span class="normal">799</span>
+<span class="normal">800</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_gamma_dot</span><span class="p">(</span>
     <span class="n">gamma_b_n</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
     <span class="n">gamma_b_nm1</span><span class="p">:</span> <span class="n">ArrayList</span><span class="p">,</span>
@@ -47926,25 +48010,25 @@ full vector of strengths, or a sequence of strengths per surface.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">791</span>
-<span class="normal">792</span>
-<span class="normal">793</span>
-<span class="normal">794</span>
-<span class="normal">795</span>
-<span class="normal">796</span>
-<span class="normal">797</span>
-<span class="normal">798</span>
-<span class="normal">799</span>
-<span class="normal">800</span>
-<span class="normal">801</span>
-<span class="normal">802</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">802</span>
 <span class="normal">803</span>
 <span class="normal">804</span>
 <span class="normal">805</span>
 <span class="normal">806</span>
 <span class="normal">807</span>
 <span class="normal">808</span>
-<span class="normal">809</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@singledispatchmethod</span>
+<span class="normal">809</span>
+<span class="normal">810</span>
+<span class="normal">811</span>
+<span class="normal">812</span>
+<span class="normal">813</span>
+<span class="normal">814</span>
+<span class="normal">815</span>
+<span class="normal">816</span>
+<span class="normal">817</span>
+<span class="normal">818</span>
+<span class="normal">819</span>
+<span class="normal">820</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@singledispatchmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_gamma_w</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gamma_vec</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span> <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Set wake circulation strengths from total circulation strengths at specified time step. Can be passed either a</span>
@@ -48215,18 +48299,7 @@ effective angle of attack, and per-strip lift, drag and moment coefficients.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">820</span>
-<span class="normal">821</span>
-<span class="normal">822</span>
-<span class="normal">823</span>
-<span class="normal">824</span>
-<span class="normal">825</span>
-<span class="normal">826</span>
-<span class="normal">827</span>
-<span class="normal">828</span>
-<span class="normal">829</span>
-<span class="normal">830</span>
-<span class="normal">831</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">831</span>
 <span class="normal">832</span>
 <span class="normal">833</span>
 <span class="normal">834</span>
@@ -48289,7 +48362,18 @@ effective angle of attack, and per-strip lift, drag and moment coefficients.</p>
 <span class="normal">891</span>
 <span class="normal">892</span>
 <span class="normal">893</span>
-<span class="normal">894</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve</span><span class="p">(</span>
+<span class="normal">894</span>
+<span class="normal">895</span>
+<span class="normal">896</span>
+<span class="normal">897</span>
+<span class="normal">898</span>
+<span class="normal">899</span>
+<span class="normal">900</span>
+<span class="normal">901</span>
+<span class="normal">902</span>
+<span class="normal">903</span>
+<span class="normal">904</span>
+<span class="normal">905</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">AeroFullStates</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -48619,18 +48703,7 @@ angle of attack, and per-strip lift, drag and moment coefficients sampled from t
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 896</span>
-<span class="normal"> 897</span>
-<span class="normal"> 898</span>
-<span class="normal"> 899</span>
-<span class="normal"> 900</span>
-<span class="normal"> 901</span>
-<span class="normal"> 902</span>
-<span class="normal"> 903</span>
-<span class="normal"> 904</span>
-<span class="normal"> 905</span>
-<span class="normal"> 906</span>
-<span class="normal"> 907</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 907</span>
 <span class="normal"> 908</span>
 <span class="normal"> 909</span>
 <span class="normal"> 910</span>
@@ -48953,7 +49026,18 @@ angle of attack, and per-strip lift, drag and moment coefficients sampled from t
 <span class="normal">1227</span>
 <span class="normal">1228</span>
 <span class="normal">1229</span>
-<span class="normal">1230</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve_from_grid</span><span class="p">(</span>
+<span class="normal">1230</span>
+<span class="normal">1231</span>
+<span class="normal">1232</span>
+<span class="normal">1233</span>
+<span class="normal">1234</span>
+<span class="normal">1235</span>
+<span class="normal">1236</span>
+<span class="normal">1237</span>
+<span class="normal">1238</span>
+<span class="normal">1239</span>
+<span class="normal">1240</span>
+<span class="normal">1241</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_solve_from_grid</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">AeroFullStates</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -49523,18 +49607,7 @@ distance.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1232</span>
-<span class="normal">1233</span>
-<span class="normal">1234</span>
-<span class="normal">1235</span>
-<span class="normal">1236</span>
-<span class="normal">1237</span>
-<span class="normal">1238</span>
-<span class="normal">1239</span>
-<span class="normal">1240</span>
-<span class="normal">1241</span>
-<span class="normal">1242</span>
-<span class="normal">1243</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1243</span>
 <span class="normal">1244</span>
 <span class="normal">1245</span>
 <span class="normal">1246</span>
@@ -49625,7 +49698,18 @@ distance.</p>
 <span class="normal">1331</span>
 <span class="normal">1332</span>
 <span class="normal">1333</span>
-<span class="normal">1334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">case_solve</span><span class="p">(</span>
+<span class="normal">1334</span>
+<span class="normal">1335</span>
+<span class="normal">1336</span>
+<span class="normal">1337</span>
+<span class="normal">1338</span>
+<span class="normal">1339</span>
+<span class="normal">1340</span>
+<span class="normal">1341</span>
+<span class="normal">1342</span>
+<span class="normal">1343</span>
+<span class="normal">1344</span>
+<span class="normal">1345</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">case_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -49894,18 +49978,7 @@ steps. All solution data is initialised to zero.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1336</span>
-<span class="normal">1337</span>
-<span class="normal">1338</span>
-<span class="normal">1339</span>
-<span class="normal">1340</span>
-<span class="normal">1341</span>
-<span class="normal">1342</span>
-<span class="normal">1343</span>
-<span class="normal">1344</span>
-<span class="normal">1345</span>
-<span class="normal">1346</span>
-<span class="normal">1347</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1347</span>
 <span class="normal">1348</span>
 <span class="normal">1349</span>
 <span class="normal">1350</span>
@@ -49968,7 +50041,18 @@ steps. All solution data is initialised to zero.</p>
 <span class="normal">1407</span>
 <span class="normal">1408</span>
 <span class="normal">1409</span>
-<span class="normal">1410</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_case_object</span><span class="p">(</span>
+<span class="normal">1410</span>
+<span class="normal">1411</span>
+<span class="normal">1412</span>
+<span class="normal">1413</span>
+<span class="normal">1414</span>
+<span class="normal">1415</span>
+<span class="normal">1416</span>
+<span class="normal">1417</span>
+<span class="normal">1418</span>
+<span class="normal">1419</span>
+<span class="normal">1420</span>
+<span class="normal">1421</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_case_object</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">n_tstep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">static_horseshoe</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -50175,18 +50259,7 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1412</span>
-<span class="normal">1413</span>
-<span class="normal">1414</span>
-<span class="normal">1415</span>
-<span class="normal">1416</span>
-<span class="normal">1417</span>
-<span class="normal">1418</span>
-<span class="normal">1419</span>
-<span class="normal">1420</span>
-<span class="normal">1421</span>
-<span class="normal">1422</span>
-<span class="normal">1423</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1423</span>
 <span class="normal">1424</span>
 <span class="normal">1425</span>
 <span class="normal">1426</span>
@@ -50222,7 +50295,18 @@ TODO: add free wake</p>
 <span class="normal">1456</span>
 <span class="normal">1457</span>
 <span class="normal">1458</span>
-<span class="normal">1459</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
+<span class="normal">1459</span>
+<span class="normal">1460</span>
+<span class="normal">1461</span>
+<span class="normal">1462</span>
+<span class="normal">1463</span>
+<span class="normal">1464</span>
+<span class="normal">1465</span>
+<span class="normal">1466</span>
+<span class="normal">1467</span>
+<span class="normal">1468</span>
+<span class="normal">1469</span>
+<span class="normal">1470</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">static_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">hg</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -50418,18 +50502,7 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1461</span>
-<span class="normal">1462</span>
-<span class="normal">1463</span>
-<span class="normal">1464</span>
-<span class="normal">1465</span>
-<span class="normal">1466</span>
-<span class="normal">1467</span>
-<span class="normal">1468</span>
-<span class="normal">1469</span>
-<span class="normal">1470</span>
-<span class="normal">1471</span>
-<span class="normal">1472</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1472</span>
 <span class="normal">1473</span>
 <span class="normal">1474</span>
 <span class="normal">1475</span>
@@ -50489,7 +50562,18 @@ TODO: add free wake</p>
 <span class="normal">1529</span>
 <span class="normal">1530</span>
 <span class="normal">1531</span>
-<span class="normal">1532</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prescribed_dynamic_solve</span><span class="p">(</span>
+<span class="normal">1532</span>
+<span class="normal">1533</span>
+<span class="normal">1534</span>
+<span class="normal">1535</span>
+<span class="normal">1536</span>
+<span class="normal">1537</span>
+<span class="normal">1538</span>
+<span class="normal">1539</span>
+<span class="normal">1540</span>
+<span class="normal">1541</span>
+<span class="normal">1542</span>
+<span class="normal">1543</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prescribed_dynamic_solve</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">init_case</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">hg_t</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -50608,18 +50692,7 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1534</span>
-<span class="normal">1535</span>
-<span class="normal">1536</span>
-<span class="normal">1537</span>
-<span class="normal">1538</span>
-<span class="normal">1539</span>
-<span class="normal">1540</span>
-<span class="normal">1541</span>
-<span class="normal">1542</span>
-<span class="normal">1543</span>
-<span class="normal">1544</span>
-<span class="normal">1545</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1545</span>
 <span class="normal">1546</span>
 <span class="normal">1547</span>
 <span class="normal">1548</span>
@@ -50653,7 +50726,18 @@ TODO: add free wake</p>
 <span class="normal">1576</span>
 <span class="normal">1577</span>
 <span class="normal">1578</span>
-<span class="normal">1579</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
+<span class="normal">1579</span>
+<span class="normal">1580</span>
+<span class="normal">1581</span>
+<span class="normal">1582</span>
+<span class="normal">1583</span>
+<span class="normal">1584</span>
+<span class="normal">1585</span>
+<span class="normal">1586</span>
+<span class="normal">1587</span>
+<span class="normal">1588</span>
+<span class="normal">1589</span>
+<span class="normal">1590</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reference_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Get the reference (initial) snapshot of the aerodynamic case. This will set the timestep as -1.</span>
 <span class="sd">    :return: StaticAero object at initial time step.</span>
@@ -50772,17 +50856,17 @@ TODO: add free wake</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1581</span>
-<span class="normal">1582</span>
-<span class="normal">1583</span>
-<span class="normal">1584</span>
-<span class="normal">1585</span>
-<span class="normal">1586</span>
-<span class="normal">1587</span>
-<span class="normal">1588</span>
-<span class="normal">1589</span>
-<span class="normal">1590</span>
-<span class="normal">1591</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_reference</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1592</span>
+<span class="normal">1593</span>
+<span class="normal">1594</span>
+<span class="normal">1595</span>
+<span class="normal">1596</span>
+<span class="normal">1597</span>
+<span class="normal">1598</span>
+<span class="normal">1599</span>
+<span class="normal">1600</span>
+<span class="normal">1601</span>
+<span class="normal">1602</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_reference</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">plot_wake</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
@@ -51030,18 +51114,7 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1668</span>
-<span class="normal">1669</span>
-<span class="normal">1670</span>
-<span class="normal">1671</span>
-<span class="normal">1672</span>
-<span class="normal">1673</span>
-<span class="normal">1674</span>
-<span class="normal">1675</span>
-<span class="normal">1676</span>
-<span class="normal">1677</span>
-<span class="normal">1678</span>
-<span class="normal">1679</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1679</span>
 <span class="normal">1680</span>
 <span class="normal">1681</span>
 <span class="normal">1682</span>
@@ -51162,7 +51235,18 @@ requested.</p>
 <span class="normal">1797</span>
 <span class="normal">1798</span>
 <span class="normal">1799</span>
-<span class="normal">1800</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_res_func</span><span class="p">(</span>
+<span class="normal">1800</span>
+<span class="normal">1801</span>
+<span class="normal">1802</span>
+<span class="normal">1803</span>
+<span class="normal">1804</span>
+<span class="normal">1805</span>
+<span class="normal">1806</span>
+<span class="normal">1807</span>
+<span class="normal">1808</span>
+<span class="normal">1809</span>
+<span class="normal">1810</span>
+<span class="normal">1811</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -51562,18 +51646,7 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1802</span>
-<span class="normal">1803</span>
-<span class="normal">1804</span>
-<span class="normal">1805</span>
-<span class="normal">1806</span>
-<span class="normal">1807</span>
-<span class="normal">1808</span>
-<span class="normal">1809</span>
-<span class="normal">1810</span>
-<span class="normal">1811</span>
-<span class="normal">1812</span>
-<span class="normal">1813</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1813</span>
 <span class="normal">1814</span>
 <span class="normal">1815</span>
 <span class="normal">1816</span>
@@ -51671,7 +51744,18 @@ requested.</p>
 <span class="normal">1908</span>
 <span class="normal">1909</span>
 <span class="normal">1910</span>
-<span class="normal">1911</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wake_prop_res_func</span><span class="p">(</span>
+<span class="normal">1911</span>
+<span class="normal">1912</span>
+<span class="normal">1913</span>
+<span class="normal">1914</span>
+<span class="normal">1915</span>
+<span class="normal">1916</span>
+<span class="normal">1917</span>
+<span class="normal">1918</span>
+<span class="normal">1919</span>
+<span class="normal">1920</span>
+<span class="normal">1921</span>
+<span class="normal">1922</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wake_prop_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -51932,18 +52016,7 @@ the residual design gradient.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1913</span>
-<span class="normal">1914</span>
-<span class="normal">1915</span>
-<span class="normal">1916</span>
-<span class="normal">1917</span>
-<span class="normal">1918</span>
-<span class="normal">1919</span>
-<span class="normal">1920</span>
-<span class="normal">1921</span>
-<span class="normal">1922</span>
-<span class="normal">1923</span>
-<span class="normal">1924</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1924</span>
 <span class="normal">1925</span>
 <span class="normal">1926</span>
 <span class="normal">1927</span>
@@ -51980,7 +52053,18 @@ the residual design gradient.</p>
 <span class="normal">1958</span>
 <span class="normal">1959</span>
 <span class="normal">1960</span>
-<span class="normal">1961</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_dot_res_func</span><span class="p">(</span>
+<span class="normal">1961</span>
+<span class="normal">1962</span>
+<span class="normal">1963</span>
+<span class="normal">1964</span>
+<span class="normal">1965</span>
+<span class="normal">1966</span>
+<span class="normal">1967</span>
+<span class="normal">1968</span>
+<span class="normal">1969</span>
+<span class="normal">1970</span>
+<span class="normal">1971</span>
+<span class="normal">1972</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gamma_b_dot_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">gamma_b_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">gamma_b_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -52311,18 +52395,7 @@ forcing on the bound grid.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1963</span>
-<span class="normal">1964</span>
-<span class="normal">1965</span>
-<span class="normal">1966</span>
-<span class="normal">1967</span>
-<span class="normal">1968</span>
-<span class="normal">1969</span>
-<span class="normal">1970</span>
-<span class="normal">1971</span>
-<span class="normal">1972</span>
-<span class="normal">1973</span>
-<span class="normal">1974</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1974</span>
 <span class="normal">1975</span>
 <span class="normal">1976</span>
 <span class="normal">1977</span>
@@ -52460,7 +52533,18 @@ forcing on the bound grid.</p>
 <span class="normal">2109</span>
 <span class="normal">2110</span>
 <span class="normal">2111</span>
-<span class="normal">2112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">f_aero_res_func</span><span class="p">(</span>
+<span class="normal">2112</span>
+<span class="normal">2113</span>
+<span class="normal">2114</span>
+<span class="normal">2115</span>
+<span class="normal">2116</span>
+<span class="normal">2117</span>
+<span class="normal">2118</span>
+<span class="normal">2119</span>
+<span class="normal">2120</span>
+<span class="normal">2121</span>
+<span class="normal">2122</span>
+<span class="normal">2123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">f_aero_res_func</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">t_n</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -52889,18 +52973,7 @@ forcing on the bound grid.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2114</span>
-<span class="normal">2115</span>
-<span class="normal">2116</span>
-<span class="normal">2117</span>
-<span class="normal">2118</span>
-<span class="normal">2119</span>
-<span class="normal">2120</span>
-<span class="normal">2121</span>
-<span class="normal">2122</span>
-<span class="normal">2123</span>
-<span class="normal">2124</span>
-<span class="normal">2125</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2125</span>
 <span class="normal">2126</span>
 <span class="normal">2127</span>
 <span class="normal">2128</span>
@@ -52994,7 +53067,18 @@ forcing on the bound grid.</p>
 <span class="normal">2216</span>
 <span class="normal">2217</span>
 <span class="normal">2218</span>
-<span class="normal">2219</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
+<span class="normal">2219</span>
+<span class="normal">2220</span>
+<span class="normal">2221</span>
+<span class="normal">2222</span>
+<span class="normal">2223</span>
+<span class="normal">2224</span>
+<span class="normal">2225</span>
+<span class="normal">2226</span>
+<span class="normal">2227</span>
+<span class="normal">2228</span>
+<span class="normal">2229</span>
+<span class="normal">2230</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">varphi_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -53285,18 +53369,7 @@ requested.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2221</span>
-<span class="normal">2222</span>
-<span class="normal">2223</span>
-<span class="normal">2224</span>
-<span class="normal">2225</span>
-<span class="normal">2226</span>
-<span class="normal">2227</span>
-<span class="normal">2228</span>
-<span class="normal">2229</span>
-<span class="normal">2230</span>
-<span class="normal">2231</span>
-<span class="normal">2232</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2232</span>
 <span class="normal">2233</span>
 <span class="normal">2234</span>
 <span class="normal">2235</span>
@@ -53417,7 +53490,18 @@ requested.</p>
 <span class="normal">2350</span>
 <span class="normal">2351</span>
 <span class="normal">2352</span>
-<span class="normal">2353</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
+<span class="normal">2353</span>
+<span class="normal">2354</span>
+<span class="normal">2355</span>
+<span class="normal">2356</span>
+<span class="normal">2357</span>
+<span class="normal">2358</span>
+<span class="normal">2359</span>
+<span class="normal">2360</span>
+<span class="normal">2361</span>
+<span class="normal">2362</span>
+<span class="normal">2363</span>
+<span class="normal">2364</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">aero_sol</span><span class="p">:</span> <span class="n">AeroCase</span><span class="p">,</span>
     <span class="n">structure_sol</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
@@ -53930,18 +54014,7 @@ displacement and velocity, and profiling times for compilation and run time.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/aero/uvlm.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2355</span>
-<span class="normal">2356</span>
-<span class="normal">2357</span>
-<span class="normal">2358</span>
-<span class="normal">2359</span>
-<span class="normal">2360</span>
-<span class="normal">2361</span>
-<span class="normal">2362</span>
-<span class="normal">2363</span>
-<span class="normal">2364</span>
-<span class="normal">2365</span>
-<span class="normal">2366</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2366</span>
 <span class="normal">2367</span>
 <span class="normal">2368</span>
 <span class="normal">2369</span>
@@ -54237,7 +54310,18 @@ displacement and velocity, and profiling times for compilation and run time.</p>
 <span class="normal">2659</span>
 <span class="normal">2660</span>
 <span class="normal">2661</span>
-<span class="normal">2662</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
+<span class="normal">2662</span>
+<span class="normal">2663</span>
+<span class="normal">2664</span>
+<span class="normal">2665</span>
+<span class="normal">2666</span>
+<span class="normal">2667</span>
+<span class="normal">2668</span>
+<span class="normal">2669</span>
+<span class="normal">2670</span>
+<span class="normal">2671</span>
+<span class="normal">2672</span>
+<span class="normal">2673</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">varphi_nm1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>

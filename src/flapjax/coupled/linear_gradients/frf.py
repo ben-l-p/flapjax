@@ -53,10 +53,14 @@ def _compute_gust_frf_base(
     omega: Array,
     frf_flowfield: FrequencyFlowField | None = None,
     batch_size: int | None = 4,
+    n_struct_modes: int | None = None,
 ) -> Array:
     ref, inner = build_reference_case(system, dv, varphi, case)
     linear = inner.linearise(
-        reference=ref, skip_checks=True, batch_size=batch_size, n_struct_modes=None
+        reference=ref,
+        skip_checks=True,
+        batch_size=batch_size,
+        n_struct_modes=n_struct_modes,
     )
     return linear.frf_base(omega=omega, flowfield=frf_flowfield)
 
@@ -69,6 +73,7 @@ def compute_gust_frf(
     omega: Array,
     frf_flowfield: FrequencyFlowField | None = None,
     batch_size: int | None = 4,
+    n_struct_modes: int | None = None,
 ) -> AeroelasticOutputUnflattened:
     r"""
     Compute the gust frequency response function using JVP through the coupled step.
@@ -85,11 +90,16 @@ def compute_gust_frf(
     :param frf_flowfield: Frequency-domain turbulence spectrum. If ``None``,
         the raw transfer function is returned.
     :param batch_size: Batch size for Jacobian materialisation of the A matrix.
+    :param n_struct_modes: Number of structural modes to retain in the linearised system.
+        ``None`` (the default) keeps the full nodal DOFs.
     :return: Gust FRF with ``q`` and ``q_dot`` fields.
     """
     ref, inner = build_reference_case(system, dv, varphi, case)
     linear = inner.linearise(
-        reference=ref, skip_checks=True, batch_size=batch_size, n_struct_modes=None
+        reference=ref,
+        skip_checks=True,
+        batch_size=batch_size,
+        n_struct_modes=n_struct_modes,
     )
     return linear.frf(omega=omega, flowfield=frf_flowfield)
 

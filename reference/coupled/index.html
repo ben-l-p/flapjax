@@ -17876,6 +17876,7 @@ the aero linearisation reference state.</p>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">frf_flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">n_struct_modes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticOutputUnflattened</span>
 </code></pre></div>
 
@@ -18011,6 +18012,23 @@ the raw transfer function is returned.</p>
                   <code>4</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>n_struct_modes</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of structural modes to retain in the linearised system.
+<code>None</code> (the default) keeps the full nodal DOFs.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -18040,37 +18058,43 @@ the raw transfer function is returned.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear_gradients/frf.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_gust_frf</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_gust_frf</span><span class="p">(</span>
     <span class="n">system</span><span class="p">:</span> <span class="n">CoupledAeroelastic</span><span class="p">,</span>
     <span class="n">dv</span><span class="p">:</span> <span class="n">AeroelasticDesignVariables</span><span class="p">,</span>
     <span class="n">varphi</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -18078,6 +18102,7 @@ the raw transfer function is returned.</p>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">frf_flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">n_struct_modes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticOutputUnflattened</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the gust frequency response function using JVP through the coupled step.</span>
@@ -18094,11 +18119,16 @@ the raw transfer function is returned.</p>
 <span class="sd">    :param frf_flowfield: Frequency-domain turbulence spectrum. If ``None``,</span>
 <span class="sd">        the raw transfer function is returned.</span>
 <span class="sd">    :param batch_size: Batch size for Jacobian materialisation of the A matrix.</span>
+<span class="sd">    :param n_struct_modes: Number of structural modes to retain in the linearised system.</span>
+<span class="sd">        ``None`` (the default) keeps the full nodal DOFs.</span>
 <span class="sd">    :return: Gust FRF with ``q`` and ``q_dot`` fields.</span>
 <span class="sd">    """</span>
     <span class="n">ref</span><span class="p">,</span> <span class="n">inner</span> <span class="o">=</span> <span class="n">build_reference_case</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">dv</span><span class="p">,</span> <span class="n">varphi</span><span class="p">,</span> <span class="n">case</span><span class="p">)</span>
     <span class="n">linear</span> <span class="o">=</span> <span class="n">inner</span><span class="o">.</span><span class="n">linearise</span><span class="p">(</span>
-        <span class="n">reference</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">skip_checks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">n_struct_modes</span><span class="o">=</span><span class="kc">None</span>
+        <span class="n">reference</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span>
+        <span class="n">skip_checks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">n_struct_modes</span><span class="o">=</span><span class="n">n_struct_modes</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">linear</span><span class="o">.</span><span class="n">frf</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="n">omega</span><span class="p">,</span> <span class="n">flowfield</span><span class="o">=</span><span class="n">frf_flowfield</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -18287,17 +18317,7 @@ the raw transfer function is passed to the objective.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear_gradients/frf.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
 <span class="normal">110</span>
@@ -18423,7 +18443,17 @@ the raw transfer function is passed to the objective.</p>
 <span class="normal">230</span>
 <span class="normal">231</span>
 <span class="normal">232</span>
-<span class="normal">233</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gust_frf_adjoint</span><span class="p">(</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gust_frf_adjoint</span><span class="p">(</span>
     <span class="n">system</span><span class="p">:</span> <span class="n">CoupledAeroelastic</span><span class="p">,</span>
     <span class="n">case</span><span class="p">:</span> <span class="n">AeroelasticCase</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -32992,6 +33022,7 @@ the aero linearisation reference state.</p>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">frf_flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">n_struct_modes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticOutputUnflattened</span>
 </code></pre></div>
 
@@ -33127,6 +33158,23 @@ the raw transfer function is returned.</p>
                   <code>4</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>n_struct_modes</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of structural modes to retain in the linearised system.
+<code>None</code> (the default) keeps the full nodal DOFs.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -33156,37 +33204,43 @@ the raw transfer function is returned.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear_gradients/frf.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_gust_frf</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_gust_frf</span><span class="p">(</span>
     <span class="n">system</span><span class="p">:</span> <span class="n">CoupledAeroelastic</span><span class="p">,</span>
     <span class="n">dv</span><span class="p">:</span> <span class="n">AeroelasticDesignVariables</span><span class="p">,</span>
     <span class="n">varphi</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
@@ -33194,6 +33248,7 @@ the raw transfer function is returned.</p>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">frf_flowfield</span><span class="p">:</span> <span class="n">FrequencyFlowField</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">n_struct_modes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AeroelasticOutputUnflattened</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Compute the gust frequency response function using JVP through the coupled step.</span>
@@ -33210,11 +33265,16 @@ the raw transfer function is returned.</p>
 <span class="sd">    :param frf_flowfield: Frequency-domain turbulence spectrum. If ``None``,</span>
 <span class="sd">        the raw transfer function is returned.</span>
 <span class="sd">    :param batch_size: Batch size for Jacobian materialisation of the A matrix.</span>
+<span class="sd">    :param n_struct_modes: Number of structural modes to retain in the linearised system.</span>
+<span class="sd">        ``None`` (the default) keeps the full nodal DOFs.</span>
 <span class="sd">    :return: Gust FRF with ``q`` and ``q_dot`` fields.</span>
 <span class="sd">    """</span>
     <span class="n">ref</span><span class="p">,</span> <span class="n">inner</span> <span class="o">=</span> <span class="n">build_reference_case</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">dv</span><span class="p">,</span> <span class="n">varphi</span><span class="p">,</span> <span class="n">case</span><span class="p">)</span>
     <span class="n">linear</span> <span class="o">=</span> <span class="n">inner</span><span class="o">.</span><span class="n">linearise</span><span class="p">(</span>
-        <span class="n">reference</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">skip_checks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">n_struct_modes</span><span class="o">=</span><span class="kc">None</span>
+        <span class="n">reference</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span>
+        <span class="n">skip_checks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">n_struct_modes</span><span class="o">=</span><span class="n">n_struct_modes</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">linear</span><span class="o">.</span><span class="n">frf</span><span class="p">(</span><span class="n">omega</span><span class="o">=</span><span class="n">omega</span><span class="p">,</span> <span class="n">flowfield</span><span class="o">=</span><span class="n">frf_flowfield</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -33403,17 +33463,7 @@ the raw transfer function is passed to the objective.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/coupled/linear_gradients/frf.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
 <span class="normal">110</span>
@@ -33539,7 +33589,17 @@ the raw transfer function is passed to the objective.</p>
 <span class="normal">230</span>
 <span class="normal">231</span>
 <span class="normal">232</span>
-<span class="normal">233</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gust_frf_adjoint</span><span class="p">(</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gust_frf_adjoint</span><span class="p">(</span>
     <span class="n">system</span><span class="p">:</span> <span class="n">CoupledAeroelastic</span><span class="p">,</span>
     <span class="n">case</span><span class="p">:</span> <span class="n">AeroelasticCase</span><span class="p">,</span>
     <span class="n">omega</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>

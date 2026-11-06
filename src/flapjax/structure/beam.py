@@ -1118,23 +1118,22 @@ class BaseBeamStructure:
                 .set(modes[:n_plot_vtu, :])
             )
 
-            for _i_mode in range(n_plot_vtu):
-                plot_modes_vtu(
-                    reference=case,
-                    directory=vtu_directory,
-                    q_full=q_full.reshape(n_plot_vtu, self.n_nodes, 6),
-                    freqs=freqs,
-                    dampings=damping,
-                    gamma_b_full=None,
-                    gamma_w_full=None,
-                    zeta_w_full=None,
-                    uvlm=aero,
-                    n_interp=n_interp,
-                    n_phase=n_phase,
-                    max_disp=max_disp,
-                    max_ang=max_ang,
-                    max_gamma=1e6,
-                )
+            plot_modes_vtu(
+                reference=case,
+                directory=vtu_directory,
+                q_full=q_full.reshape(n_plot_vtu, self.n_nodes, 6),
+                freqs=freqs,
+                dampings=damping,
+                gamma_b_full=None,
+                gamma_w_full=None,
+                zeta_w_full=None,
+                uvlm=aero,
+                n_interp=n_interp,
+                n_phase=n_phase,
+                max_disp=max_disp,
+                max_ang=max_ang,
+                max_gamma=1e6,
+            )
 
         return freqs, damping, modes
 

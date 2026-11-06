@@ -166,6 +166,10 @@ class GridVTSSeries:
         configure_fast_writer(self.writer)
         self.writer.SetInputData(self.sg)
 
+    def set_base_filename(self, base_filename: str | os.PathLike) -> None:
+        """Change output path without rebuilding grid topology."""
+        self._base = Path(base_filename)
+
     def write(
         self,
         grid_arr: Array,

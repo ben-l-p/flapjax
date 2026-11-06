@@ -308,6 +308,10 @@ class BeamVTUSeries:
         configure_fast_writer(self._writer)
         self._writer.SetInputData(self._ug)
 
+    def set_base_filename(self, base_filename: str | os.PathLike) -> None:
+        """Change output path without rebuilding mesh topology."""
+        self._base = Path(base_filename)
+
     def _refresh_points(self, hg: Array) -> None:
         if self._n_interp > 0:
             interp_hg = _interpolate_all_elements(

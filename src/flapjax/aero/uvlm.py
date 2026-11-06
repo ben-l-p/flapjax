@@ -577,17 +577,28 @@ class UVLM:
                 f_shape=(),
             )
 
-    def hg_to_zeta_b(self, hg_n: Array, cs_ang_n: dict[str, Array]) -> ArrayList:
+    def hg_to_zeta_b(
+        self,
+        hg_n: Array,
+        cs_ang_n: dict[str, Array] | None = None,
+        zeta_b0_cs: ArrayList | None = None,
+    ) -> ArrayList:
         r"""
         Convert beam global grid coordinates to aerodynamic global grid coordinates.
         :param hg_n: Beam global grid coordinates at time step n, ``(n_nodes, 4, 4)``.
-        :param cs_ang_n: Control surface angles as {surface_name: angle} pairs at time step n.
+        :param cs_ang_n: Control surface angles as {surface_name: angle} pairs at time step n. Ignored if
+        ``zeta_b0_cs`` is provided.
+        :param zeta_b0_cs: Precomputed local aerodynamic grid for control surface deflections to reuse across repeated
+        calls with an unchanged ``cs_ang_n``. If None, computed from ``cs_ang_n``.
         :return: Full aerodynamic global grid coordinates for each surface, ``(n_surf, )(zeta_m, zeta_n, 3)``.
         """
 
-        zeta_b0_cs = self.grid_func(
-            self.zeta_b0, **cs_ang_n
-        )  # get local aerodynamic grid for control surface deflections.
+        if zeta_b0_cs is None:
+            if cs_ang_n is None:
+                raise ValueError("Either cs_ang_n or zeta_b0_cs must be provided.")
+            zeta_b0_cs = self.grid_func(
+                self.zeta_b0, **cs_ang_n
+            )  # get local aerodynamic grid for control surface deflections.
 
         zetas = ArrayList([])
         for i_surf in range(self.n_surf):

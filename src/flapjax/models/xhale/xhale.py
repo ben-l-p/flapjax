@@ -18,12 +18,6 @@ r"""
 X-HALE aircraft model, ported version from SHARPy's ``sharpy_cases/XHALE/generate_xhale.py``
 """
 
-FLOWFIELD_DEFAULT = ConstantFlowField(
-    rho=1.225,
-    u_inf=jnp.array((14.0, 0.0, 0.0)),
-    relative_motion=True,
-)
-
 X_AXIS = jnp.array((1.0, 0.0, 0.0))
 Y_AXIS = jnp.array((0.0, 1.0, 0.0))
 Z_AXIS = jnp.array((0.0, 0.0, 1.0))
@@ -284,7 +278,7 @@ def _pod_lumped_masses(
 def generate_xhale(
     sigma: float = 1.0,
     ga_mult: float = 0.1,
-    flowfield: FlowField = FLOWFIELD_DEFAULT,
+    flowfield: FlowField | None = None,
     half_model: bool = False,
     variable_disc_wake: bool = True,
     m_wing: int = 8,
@@ -315,7 +309,7 @@ def generate_xhale(
 
     :param sigma: Stiffness multiplier applied to all cross-sectional stiffness matrices.
     :param ga_mult: Shear stiffness multiplier.
-    :param flowfield: FlowField object.
+    :param flowfield: FlowField object. If None, a fresh default ``ConstantFlowField`` is constructed.
     :param half_model: If True, build a right-half-span model only.
     :param variable_disc_wake: If True, use a variable discretisation for the wake panels, to reduce comutational cost
     when combined with a lower m_star value.
@@ -343,6 +337,13 @@ def generate_xhale(
     :param gamma_dot_relaxation: Filtering parameter for the aerodynamic circulation time derivative.
     :return: X-HALE aircraft object.
     """
+    if flowfield is None:
+        flowfield = ConstantFlowField(
+            rho=1.225,
+            u_inf=jnp.array((14.0, 0.0, 0.0)),
+            relative_motion=True,
+        )
+
     # geometric parameters
     span_section = 1.0
     dihedral = 10.0 / 180.0 * jnp.pi

@@ -15,9 +15,6 @@ from flapjax.models.pazy.straight.data.technion_pazy_properties import (
     TECHNION_PAZY_WITH_SKIN,
 )
 
-FLOWFIELD_DEFAULT = ConstantFlowField(
-    u_inf=jnp.array((40.0, 0.0, 0.0)), rho=1.225, relative_motion=True
-)
 AOA_DEFAULT = jnp.deg2rad(3.0)
 
 
@@ -28,7 +25,7 @@ def generate_pazy_wing(
     model: Literal["prepazy", "pazy"] = "pazy",
     node_multiplier: int = 1,
     gravity: bool | Array = False,
-    flowfield: FlowField = FLOWFIELD_DEFAULT,
+    flowfield: FlowField | None = None,
     aoa: float | Array = AOA_DEFAULT,
     sweep: float | Array | None = None,
     variable_disc_wake: bool = False,
@@ -43,7 +40,8 @@ def generate_pazy_wing(
     :param model: Determine which Pazy variant to use, "Pazy" or "Prepazy" available.
     :param node_multiplier: Integer multiplier for the number of nodes in the structural model.
     :param gravity: Optional gravity vector. If None, no gravity is used.
-    :param flowfield: Flowfield object to set the freestream.
+    :param flowfield: Flowfield object to set the freestream. If None, default
+    ``ConstantFlowField`` is constructed.
     :param aoa: Angle of attack of the wing in radians. Defaults to 3 degrees.
     :param sweep: Sweep of the wing in radians. This just rotates the structure, and does not impact its properties
     otherwise.
@@ -54,6 +52,10 @@ def generate_pazy_wing(
     model.
     :return: CoupledAeroelastic Pazy wing model.
     """
+    if flowfield is None:
+        flowfield = ConstantFlowField(
+            u_inf=jnp.array((40.0, 0.0, 0.0)), rho=1.225, relative_motion=True
+        )
 
     match model:
         case "prepazy":

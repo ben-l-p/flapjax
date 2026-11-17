@@ -12,7 +12,7 @@ def generate_double_pendulum(
     length: float = 1.0,
     n_nodes_per_segment: int = 4,
     hinge_axis: Array | Sequence[float] = (0.0, 1.0, 0.0),
-    gravity: Array | Sequence[float] = (0.0, 0.0, -9.81),
+    gravity: Array | Sequence[float] | None = (0.0, 0.0, -9.81),
     k_axial: float = 1e6,
     k_bending: float = 1e4,
     k_torsional: float = 1e4,
@@ -25,7 +25,7 @@ def generate_double_pendulum(
     :param length: Length of each pendulum segment.
     :param n_nodes_per_segment: Nodes per segment (minimum 2).
     :param hinge_axis: Hinge rotation axis, ``(3, )``.
-    :param gravity: Gravity vector, ``(3, )``.
+    :param gravity: Gravity vector, ``(3, )`` or None.
     :param k_axial: Axial and shear stiffness of each segment.
     :param k_bending: Bending stiffness of each segment.
     :param k_torsional: Torsional stiffness of each segment.
@@ -51,7 +51,7 @@ def generate_double_pendulum(
         connectivity=conn,
         y_vector=jnp.array((0.0, 0.0, 1.0)),
         constraints={"root_hinge": root_hinge, "mid_hinge": mid_hinge},
-        gravity=jnp.array(gravity),
+        gravity=jnp.array(gravity) if gravity is not None else None,
         spectral_radius=0.9,
     )
 

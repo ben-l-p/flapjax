@@ -533,7 +533,7 @@ class UVLM:
             else self.cs_ang0
         )
         inner_case.set_design_variables(
-            dt=self.dt,
+            dt=dv_or(dv.dt, self.dt),
             flowfield=flowfield,
             delta_w=self.delta_w,
             zeta_b0=dv_or(dv.zeta_b0, self.zeta_b0),
@@ -566,6 +566,7 @@ class UVLM:
                 else None,
                 cs_ang_t=cs_ang_t if grads_to_compute.cs_ang_t else None,
                 cs_vel_t=cs_vel_t if grads_to_compute.cs_vel_t else None,
+                dt=self.dt if grads_to_compute.dt else None,
                 f_shape=(),
             )
         else:  # grads_to_compute is None
@@ -574,6 +575,7 @@ class UVLM:
                 flowfield=self.flowfield.to_design_variables(),
                 cs_ang_t=cs_ang_t,
                 cs_vel_t=cs_vel_t,
+                dt=self.dt,
                 f_shape=(),
             )
 

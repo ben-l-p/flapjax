@@ -387,6 +387,8 @@ class BeamStructure(BaseBeamStructure):
         thrust_t: dict[str, Array],
         solve_dofs: tuple[int, ...],
         approx_grads: bool,
+        f_ext_dead_full: Array | None = None,
+        f_ext_follower_full: Array | None = None,
     ) -> Array:
         varphi_nm1, varphi_n, v_nm1, v_n, v_dot_nm1, v_dot_n = (
             a.reshape(-1, 6)
@@ -415,20 +417,26 @@ class BeamStructure(BaseBeamStructure):
 
         hg_alpha = inner_case.compute_hg_from_varphi(varphi_alpha)
 
-        # obtain forces at alpha
+        # obtain forces at alpha, fall back to the externally-passed full force arrays when gradient not requested
+        f_ext_dead_: Array | None = (
+            dv.f_ext_dead if dv.f_ext_dead is not None else f_ext_dead_full
+        )
         f_ext_dead_alpha = (
             inner_case.time_integrator.compute_f_alpha(
-                f_nm1=dv.f_ext_dead[i_ts - 1, ...], f_n=dv.f_ext_dead[i_ts, ...]
+                f_nm1=f_ext_dead_[i_ts - 1, ...], f_n=f_ext_dead_[i_ts, ...]
             )
-            if dv.f_ext_dead is not None
+            if f_ext_dead_ is not None
             else None
+        )
+        f_ext_follower_: Array | None = (
+            dv.f_ext_follower if dv.f_ext_follower is not None else f_ext_follower_full
         )
         f_ext_follower_alpha = (
             inner_case.time_integrator.compute_f_alpha(
-                f_nm1=dv.f_ext_follower[i_ts - 1, ...],
-                f_n=dv.f_ext_follower[i_ts, ...],
+                f_nm1=f_ext_follower_[i_ts - 1, ...],
+                f_n=f_ext_follower_[i_ts, ...],
             )
-            if dv.f_ext_follower is not None
+            if f_ext_follower_ is not None
             else None
         )
 
@@ -517,12 +525,22 @@ class BeamStructure(BaseBeamStructure):
                 hg_alpha, solve_dofs, phi=None
             )
             g_val = inner_case._compute_holonomic_violation(hg_alpha)
+            g_dot_val = jac_h @ v_alpha.ravel()[solve_dofs]
             gram = jac_h @ jac_h.T
             range_component = jac_h.T @ jnp.linalg.solve(gram, jac_h @ v_dot_res)
+            # Baumgarte stabilization: feed back the constraint's velocity-level
+            # violation (g_dot) alongside its position-level violation (g)
+            baumgarte_gain = 3.0
             v_dot_res = (
                 v_dot_res
                 - range_component
-                + jac_h.T @ g_val / self.time_integrator.beta_prime
+                + jac_h.T
+                @ jnp.linalg.solve(gram, g_val)
+                / self.time_integrator.beta_prime
+                + baumgarte_gain
+                * jac_h.T
+                @ jnp.linalg.solve(gram, g_dot_val)
+                / self.time_integrator.gamma_prime
             )
 
         return v_dot_res
@@ -536,6 +554,8 @@ class BeamStructure(BaseBeamStructure):
         thrust_t: dict[str, Array],
         solve_dofs: tuple[int, ...],
         approx_grads: bool,
+        f_ext_dead_full: Array | None = None,
+        f_ext_follower_full: Array | None = None,
     ) -> Array:
         r"""
         Routine to compute the full residual for the structural dynamic problem.
@@ -546,6 +566,8 @@ class BeamStructure(BaseBeamStructure):
         :param thrust_t: Thrust time history, ``{key, (n_tstep, )}``.
         :param solve_dofs: Solve degrees of freedom.
         :param approx_grads: If true, block gradients from some parts of the solution.
+        :param f_ext_dead_full: Full dead-force time history, used when ``dv_.f_ext_dead`` is ``None``.
+        :param f_ext_follower_full: Full follower-force time history, used when ``dv_.f_ext_follower`` is ``None``.
         :return: Residual vector, ``(4 * n_solve_dof,)``.
         """
         return jnp.stack(
@@ -579,6 +601,8 @@ class BeamStructure(BaseBeamStructure):
                     thrust_t=thrust_t,
                     dv=dv_,
                     solve_dofs=solve_dofs,
+                    f_ext_dead_full=f_ext_dead_full,
+                    f_ext_follower_full=f_ext_follower_full,
                 ),
                 self.a_res_func(
                     v_dot_nm1=q_nm1.v_dot,
@@ -605,6 +629,8 @@ class BeamStructure(BaseBeamStructure):
         n_profile_loops: int | None,
         jac_options: dict[str, dict[str, Callable[..., Any] | None]],
         mode: ADMode = "reverse",
+        f_ext_dead_full: Array | None = None,
+        f_ext_follower_full: Array | None = None,
     ) -> tuple[
         Array,
         Array,
@@ -629,6 +655,8 @@ class BeamStructure(BaseBeamStructure):
         :param jac_options: Input which passes functions which can be used to approximate the Jacobians. If entries are
         None, AD is used.
         :param mode: AD mode used for Jacobian construction.
+        :param f_ext_dead_full: Full dead-force time history, used when we aren't obtaining its gradient.
+        :param f_ext_follower_full: Full follower-force time history, used when we aren't obtaining its gradient.
         :return: Jacobians with respect to previous state and current state, gradients with respect to design variables,
         previous, and current aerodynamic forces respectively, and profiling times for compilation and run time.
         """
@@ -695,6 +723,8 @@ class BeamStructure(BaseBeamStructure):
             thrust_t=thrust_t,
             solve_dofs=solve_dofs,
             approx_grads=approx_grads,
+            f_ext_dead_full=f_ext_dead_full,
+            f_ext_follower_full=f_ext_follower_full,
         )
 
         if not compute_f_aero_grads:
@@ -892,6 +922,8 @@ class BeamStructure(BaseBeamStructure):
                     thrust_t=thrust_t,
                     solve_dofs=solve_dofs,
                     approx_grads=approx_grads,
+                    f_ext_dead_full=dv_full.f_ext_dead,
+                    f_ext_follower_full=dv_full.f_ext_follower,
                 )
 
             # Linearise the timestep residual around (q_n, q_nm1). This single VJP returns:
@@ -943,6 +975,8 @@ class BeamStructure(BaseBeamStructure):
                     thrust_t=thrust_t,
                     solve_dofs=solve_dofs,
                     approx_grads=approx_grads,
+                    f_ext_dead_full=dv_full.f_ext_dead,
+                    f_ext_follower_full=dv_full.f_ext_follower,
                 )
 
             _, pull_dv = jax.vjp(_residual_dv, dv)
@@ -975,6 +1009,8 @@ class BeamStructure(BaseBeamStructure):
                     thrust_t=thrust_t,
                     n_profile_loops=None,
                     jac_options=jac_options,
+                    f_ext_dead_full=dv_full.f_ext_dead,
+                    f_ext_follower_full=dv_full.f_ext_follower,
                 )
             )
 
@@ -1359,6 +1395,9 @@ class BeamStructure(BaseBeamStructure):
             sol=sol, jacobian_approximations=jacobian_approximations
         )
 
+        dv_full = self.get_design_variables(
+            struct_case=sol, thrust_t=sol.thrust, grads_to_compute=None
+        )
         common_kwargs = {
             "i_ts": i_ts,
             "q_nm1": sol.get_minimal_states(i_ts - 1),
@@ -1366,6 +1405,8 @@ class BeamStructure(BaseBeamStructure):
             "dv": self.get_design_variables(
                 struct_case=sol, thrust_t=sol.thrust, grads_to_compute=grads_to_compute
             ),
+            "f_ext_dead_full": dv_full.f_ext_dead,
+            "f_ext_follower_full": dv_full.f_ext_follower,
             "thrust_t": sol.thrust,
             "solve_dofs": tuple(
                 get_solve_dofs(n_dof=self.n_dof, prescribed_dofs=sol.prescribed_dofs)

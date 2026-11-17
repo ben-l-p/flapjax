@@ -29,6 +29,7 @@ Y_20 = jnp.array(
 SWEEP_20 = PazyParameters(
     n_keypoints=N_KEYPOINT,
     coords=Y_20,
+    ea=0.4729,
     mass=jnp.array(
         (
             0.0,

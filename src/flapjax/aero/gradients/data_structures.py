@@ -29,12 +29,14 @@ class AeroGradsToCompute:
     :param flowfield: Flow field parameters.
     :param cs_ang_t: Control surface deflection angle time history.
     :param cs_vel_t: Control surface velocity time history.
+    :param dt: Aerodynamic time step.
     """
 
     zeta_b0: bool = True
     flowfield: bool = False
     cs_ang_t: bool = False
     cs_vel_t: bool = False
+    dt: bool = False
 
 
 # Pycharm typing checking bug
@@ -208,6 +210,7 @@ class AeroDesignVariables(DesignVariables):
         cs_ang_t: dict[str, Array] | None,
         cs_vel_t: dict[str, Array] | None,
         f_shape: tuple[int, ...],
+        dt: Array | None = None,
     ):
         r"""
         :param zeta_b0: Bound aerodynamic grid local reference coordinates. ``(n_surf, )(m+1, n+1, 3)``
@@ -217,12 +220,14 @@ class AeroDesignVariables(DesignVariables):
         :param f_shape: Shape of objective. As this class can hold both the primal design variables and the gradient of
         the objective with respect to design variables, the latter case results in arrays which have a shape which
         depends on the objective shape. In this case, all data has (*f_shape, *dv.shape) dimensionality.
+        :param dt: Aerodynamic time step.
         """
         super().__init__()
         self.zeta_b0: ArrayList | None = zeta_b0
         self.flowfield: dict[str, Array] | None = flowfield
         self.cs_ang_t: dict[str, Array] | None = cs_ang_t
         self.cs_vel_t: dict[str, Array] | None = cs_vel_t
+        self.dt: Array | None = dt
 
         self.f_shape: tuple[int, ...] = f_shape
         self.f_size: int = prod(f_shape)
@@ -259,6 +264,9 @@ class AeroDesignVariables(DesignVariables):
             assert other.cs_vel_t is not None
             for k in self.cs_vel_t:
                 self.cs_vel_t[k] += other.cs_vel_t[k]
+        if self.dt is not None:
+            assert other.dt is not None
+            self.dt += other.dt
         return self
 
     def get_cs_n(
@@ -323,6 +331,9 @@ class AeroDesignVariables(DesignVariables):
             }
             if self.cs_vel_t is not None
             else None,
+            dt=jnp.einsum("ij,j...->i...", adj, self.dt)
+            if self.dt is not None
+            else None,
             f_shape=(adj.shape[1],),
         )
 
@@ -336,6 +347,7 @@ class AeroDesignVariables(DesignVariables):
             "flowfield": self.flowfield,
             "cs_ang_t": self.cs_ang_t,
             "cs_vel_t": self.cs_vel_t,
+            "dt": self.dt,
         }
 
     def plot(

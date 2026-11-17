@@ -19,6 +19,7 @@ from flapjax.utils.print_utils import warn
 @dataclass
 class PazyParameters:
     n_keypoints: int
+    ea: float
     coords: Array
     mass: Array
     cg_x: Array
@@ -193,7 +194,7 @@ def generate_generic_pazy_wing(
 
     # aerodynamic model
     c_ref = 0.1
-    ea = 0.441
+    ea = data.ea
     aero_grid = make_rectangular_grid(m=m, n=n_nodes - 1, chord=c_ref, ea=ea)
 
     # make wing

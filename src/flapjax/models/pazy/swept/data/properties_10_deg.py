@@ -12,6 +12,7 @@ Mass model from Cristina Riso - https://github.com/cristinariso/AePW-Swept-Pazy/
 """
 
 N_KEYPOINT = 16
+EA = 0.4129
 
 Y_10 = (
     jnp.array(
@@ -34,12 +35,13 @@ Y_10 = (
             (1.3769e-01, 5.4673e-01, 0.0),
         )
     )
-    - jnp.array((4.1290e-02, 0.0, 0.0))[None, :]
+    - jnp.array((0.1 * EA, 0.0, 0.0))[None, :]
 )  # offset data to have root at 0
 
 SWEEP_10_LE = PazyParameters(
     n_keypoints=N_KEYPOINT,
     coords=Y_10,
+    ea=EA,
     mass=jnp.array(
         (
             1.86119647400900e-02,
@@ -376,7 +378,7 @@ SWEEP_10_TE.i_yz = SWEEP_10_TE.i_yz.at[-2:].set(
 # use the beam model from the 10 degree leading edge mass case, but change the tip inertia to reduce the first torsion
 # mode frequency whilst aiming to have a minimal impact on the first two bending modes
 SWEEP_10_LE_CORRECTED = replace(SWEEP_10_LE)
-SWEEP_10_LE_CORRECTED.i_yy = SWEEP_10_LE_CORRECTED.i_yy.at[-2:].multiply(1.25)
+SWEEP_10_LE_CORRECTED.i_yy = SWEEP_10_LE_CORRECTED.i_yy.at[-2:].multiply(1.325)
 
 # use the beam model from the 10 degree trailing edge mass case, but change the inertia to reduce the second bending
 # mode frequency whilst aiming to have a minimal impact on the first bending and torsion modes

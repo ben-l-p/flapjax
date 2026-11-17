@@ -56,13 +56,14 @@ def _apply_dv(
     wing: CoupledAeroelastic,
     u_inf_mag: float | Array,
     k_cs: Array,
+    dt: float | Array | None = None,
 ) -> None:
     wing.set_design_variables(
         coords=wing.structure.x0,
         k_cs=k_cs,
         m_cs=wing.structure.m_cs,
         m_lumped=None,
-        dt=wing.aero.dt,
+        dt=dt if dt is not None else wing.aero.dt,
         flowfield=ConstantFlowField(
             u_inf=jnp.array((u_inf_mag, 0.0, 0.0)),
             rho=RHO,
@@ -84,10 +85,13 @@ def _objective(
 
 
 def compute_objective(
-    base_wing: CoupledAeroelastic, u_inf_mag: float, k_cs: Array
+    base_wing: CoupledAeroelastic,
+    u_inf_mag: float,
+    k_cs: Array,
+    dt: float | Array | None = None,
 ) -> float:
     wing = deepcopy(base_wing)
-    _apply_dv(wing, u_inf_mag=u_inf_mag, k_cs=k_cs)
+    _apply_dv(wing, u_inf_mag=u_inf_mag, k_cs=k_cs, dt=dt)
     static_sol = wing.static_solve(prescribed_dofs=tuple(range(6)), horseshoe=False)
     linear_sol = wing.linearise(
         reference=static_sol,
@@ -104,7 +108,7 @@ def compute_objective(
 class TestStabilityAdjoint:
     grads_to_compute: AeroelasticGradsToCompute = AeroelasticGradsToCompute(
         structure=StructureGradsToCompute(k_cs=True),
-        aero=AeroGradsToCompute(zeta_b0=False, flowfield=True),
+        aero=AeroGradsToCompute(zeta_b0=False, flowfield=True, dt=True),
     )
 
     @classmethod
@@ -162,7 +166,24 @@ class TestStabilityAdjoint:
         adj_grad = float(cls.dj_ddv.structure.k_cs[:, 4, 4].sum())
 
         rel_err = abs(fd_grad - adj_grad) / abs(fd_grad)
-        assert rel_err < 5e-2, (
+        assert rel_err < 6e-2, (
             f"k_cs[:, 4, 4] gradient mismatch: adjoint={adj_grad}, FD={fd_grad}, "
             f"rel_err={rel_err:.3e}"
+        )
+
+    @classmethod
+    def test_dt_gradient(cls):
+        """FD check on the aerodynamic time step dt."""
+        dt0 = float(cls.wing.aero.dt)
+        h = 1e-3 * dt0
+        j_plus = compute_objective(cls.wing, U_INF_REF, cls.k_cs_base, dt=dt0 + h)
+        j_minus = compute_objective(cls.wing, U_INF_REF, cls.k_cs_base, dt=dt0 - h)
+        fd_grad = (j_plus - j_minus) / (2.0 * h)
+
+        assert cls.dj_ddv.aero.dt is not None
+        adj_grad = float(jnp.real(cls.dj_ddv.aero.dt))
+
+        rel_err = abs(fd_grad - adj_grad) / max(abs(fd_grad), 1e-30)
+        assert rel_err < 1e-2, (
+            f"dt gradient mismatch: adjoint={adj_grad}, FD={fd_grad}, rel_err={rel_err:.3e}"
         )

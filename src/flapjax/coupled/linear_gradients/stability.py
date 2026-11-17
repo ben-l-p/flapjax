@@ -160,7 +160,7 @@ def stability_adjoint(
     # extract base parameters
     varphi_eq = case.structure.varphi
     dv_ref = system.get_design_variables(case=case, grads_to_compute=grads_to_compute)
-    dt = system.aero.dt
+    dt = dv_ref.aero.dt if dv_ref.aero.dt is not None else system.aero.dt
     n_dof = system.structure.n_dof
     solve_dofs = jnp.array(
         get_solve_dofs(
@@ -178,7 +178,12 @@ def stability_adjoint(
         n_struct_modes=n_struct_modes,
     )
     lam_d, phi_r, phi_l = eig_left_right(a_matrix)
-    lam_c = jnp.log(lam_d) / dt  # continuous time eigenvalues
+
+    # continuous time eigenvalues
+    def _lam_c_of_dt(dt_: Array) -> Array:
+        return jnp.log(lam_d) / dt_
+
+    lam_c, vjp_lam_c_dt = jax.vjp(_lam_c_of_dt, dt)
 
     def _objective_of_dv_lam_varphi(
         dv_: AeroelasticDesignVariables, lam_c_: Array, varphi_flat_: Array
@@ -228,6 +233,11 @@ def stability_adjoint(
 
     _, vjp_a = jax.vjp(_a_fn, dv_ref, varphi_eq)
     dv_bar_a_b, varphi_bar_a_b = jax.vmap(vjp_a)(a_bar_b)  # leading (n_f,)
+
+    # direct dependence of lam_c on dt
+    if dv_bar_a_b.aero.dt is not None:
+        (d_j_d_dt_direct_b,) = jax.vmap(vjp_lam_c_dt)(d_j_d_lambda_c_b)
+        dv_bar_a_b.aero.dt += jnp.real(d_j_d_dt_direct_b)
 
     # static residual Jacobian
     def _residual_of_varphi(varphi_vec: Array) -> Array:

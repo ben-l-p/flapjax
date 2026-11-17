@@ -8,6 +8,7 @@ from flapjax.models.pazy.straight.data.prepazy_properties import N_KEYPOINT, Y
 TECHNION_PAZY_NO_SKIN = PazyParameters(
     n_keypoints=N_KEYPOINT,
     coords=Y,
+    ea=0.44,
     mass=jnp.array(
         (
             0.015952605,
@@ -402,6 +403,7 @@ TECHNION_PAZY_NO_SKIN = PazyParameters(
 
 TECHNION_PAZY_WITH_SKIN = PazyParameters(
     n_keypoints=N_KEYPOINT,
+    ea=0.44,
     coords=Y,
     mass=jnp.array(
         (

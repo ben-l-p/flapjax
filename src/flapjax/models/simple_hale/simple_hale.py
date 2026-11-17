@@ -1,3 +1,5 @@
+from collections.abc import Sequence
+
 from jax import Array
 from jax import numpy as jnp
 
@@ -12,18 +14,12 @@ from flapjax.structure import BeamStructure
 from flapjax.structure.constraints import MultibodyHinge
 from flapjax.structure.data_structures import OptionalJacobians
 
-FLOWFIELD_DEFAULT = ConstantFlowField(
-    rho=1.225,
-    u_inf=jnp.array((10.0, 0.0, 0.0)),
-    relative_motion=True,
-)
-
 
 def generate_simple_hale(
     sigma_wing: float = 1.5,
     sigma_fuselage: float = 10.0,
     sigma_tail: float = 100.0,
-    flowfield: FlowField = FLOWFIELD_DEFAULT,
+    flowfield: FlowField | None = None,
     m_wing: int = 4,
     m_tail: int = 4,
     n_half_wing: int = 16,
@@ -38,13 +34,14 @@ def generate_simple_hale(
     hinge_spring_stiffness: float = 0.0,
     hinge_damping: float = 0.0,
     dihedral_ang: Array | float = 20.0 / 180.0 * jnp.pi,
+    gravity: Array | Sequence[float] | None = (0.0, 0.0, -9.81),
 ) -> CoupledAeroelastic:
     r"""
     Generate the simple HALE aircraft. Reference parameters are derived from the SHARPy case.
     :param sigma_wing: Stiffness multiplier for the wing structure.
     :param sigma_fuselage: Stiffness multiplier for the fuselage structure.
     :param sigma_tail: Stiffness multiplier for the tail structure.
-    :param flowfield: FlowField object.
+    :param flowfield: FlowField object. If None, a fresh default ``ConstantFlowField`` is constructed.
     :param m_wing: Number of chordwise aerodynamic panels for the wing.
     :param m_tail: Number of chordwise aerodynamic panels for the tail.
     :param n_half_wing: Number of spanwise panels for each wing.
@@ -60,8 +57,16 @@ def generate_simple_hale(
     :param hinge_spring_stiffness: Rotational spring stiffness for the hinge joints (N·m/rad).
     :param hinge_damping: Rotational damping for the hinge joints (N·m·s/rad).
     :param dihedral_ang: Dihedral angle of the outer wing segment.
+    :param gravity: Gravity vector in the global reference frame, or None to disable gravity.
     :return: HALE aircraft object.
     """
+    if flowfield is None:
+        flowfield = ConstantFlowField(
+            rho=1.225,
+            u_inf=jnp.array((10.0, 0.0, 0.0)),
+            relative_motion=True,
+        )
+
     # geometry
     c_wing: float = 1.0
     c_tail: float = 0.5
@@ -292,12 +297,12 @@ def generate_simple_hale(
         m_cs_index=elem_type_index,
         k_cs_index=elem_type_index,
         m_lumped_index=jnp.array(0, dtype=int),
-        gravity=jnp.array((0.0, 0.0, -9.81)),
         thrust_nodes={"thrust": 0},
         thrust_direction={"thrust": jnp.array((-1.0, 0.0, 0.0))},
         relaxation_factor=0.7,
         spectral_radius=0.5,
         constraints=constraints,
+        gravity=gravity,
         optional_jacobians=OptionalJacobians(
             d_f_ext_dead_d_n=multibody,
             d_f_grav_d_n=multibody,

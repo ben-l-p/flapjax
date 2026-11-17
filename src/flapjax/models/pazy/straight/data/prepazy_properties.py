@@ -29,6 +29,7 @@ Y = jnp.array(
 
 PREPAZY_NO_SKIN = PazyParameters(
     n_keypoints=N_KEYPOINT,
+    ea=0.441,
     coords=Y,
     mass=jnp.array(
         (
@@ -425,6 +426,7 @@ PREPAZY_NO_SKIN = PazyParameters(
 
 PREPAZY_WITH_SKIN = PazyParameters(
     n_keypoints=N_KEYPOINT,
+    ea=0.441,
     coords=Y,
     mass=jnp.array(
         (

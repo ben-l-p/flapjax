@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -19441,6 +19441,8 @@ the structure's parameters.</p>
     <span class="n">thrust_t</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
     <span class="n">solve_dofs</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="n">approx_grads</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">f_ext_dead_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">f_ext_follower_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span>
 </code></pre></div>
 
@@ -19572,6 +19574,38 @@ the structure's parameters.</p>
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>f_ext_dead_full</code>
+            </td>
+            <td>
+                  <code><span title="jax.Array">Array</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Full dead-force time history, used when <code>dv_.f_ext_dead</code> is <code>None</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>f_ext_follower_full</code>
+            </td>
+            <td>
+                  <code><span title="jax.Array">Array</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Full follower-force time history, used when <code>dv_.f_ext_follower</code> is <code>None</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -19601,25 +19635,7 @@ the structure's parameters.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">530</span>
-<span class="normal">531</span>
-<span class="normal">532</span>
-<span class="normal">533</span>
-<span class="normal">534</span>
-<span class="normal">535</span>
-<span class="normal">536</span>
-<span class="normal">537</span>
-<span class="normal">538</span>
-<span class="normal">539</span>
-<span class="normal">540</span>
-<span class="normal">541</span>
-<span class="normal">542</span>
-<span class="normal">543</span>
-<span class="normal">544</span>
-<span class="normal">545</span>
-<span class="normal">546</span>
-<span class="normal">547</span>
-<span class="normal">548</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">548</span>
 <span class="normal">549</span>
 <span class="normal">550</span>
 <span class="normal">551</span>
@@ -19663,7 +19679,31 @@ the structure's parameters.</p>
 <span class="normal">589</span>
 <span class="normal">590</span>
 <span class="normal">591</span>
-<span class="normal">592</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">StructureMinimalStates</span><span class="p">,</span>
@@ -19672,6 +19712,8 @@ the structure's parameters.</p>
     <span class="n">thrust_t</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
     <span class="n">solve_dofs</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="n">approx_grads</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">f_ext_dead_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">f_ext_follower_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Routine to compute the full residual for the structural dynamic problem.</span>
@@ -19682,6 +19724,8 @@ the structure's parameters.</p>
 <span class="sd">    :param thrust_t: Thrust time history, ``{key, (n_tstep, )}``.</span>
 <span class="sd">    :param solve_dofs: Solve degrees of freedom.</span>
 <span class="sd">    :param approx_grads: If true, block gradients from some parts of the solution.</span>
+<span class="sd">    :param f_ext_dead_full: Full dead-force time history, used when ``dv_.f_ext_dead`` is ``None``.</span>
+<span class="sd">    :param f_ext_follower_full: Full follower-force time history, used when ``dv_.f_ext_follower`` is ``None``.</span>
 <span class="sd">    :return: Residual vector, ``(4 * n_solve_dof,)``.</span>
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
@@ -19715,6 +19759,8 @@ the structure's parameters.</p>
                 <span class="n">thrust_t</span><span class="o">=</span><span class="n">thrust_t</span><span class="p">,</span>
                 <span class="n">dv</span><span class="o">=</span><span class="n">dv_</span><span class="p">,</span>
                 <span class="n">solve_dofs</span><span class="o">=</span><span class="n">solve_dofs</span><span class="p">,</span>
+                <span class="n">f_ext_dead_full</span><span class="o">=</span><span class="n">f_ext_dead_full</span><span class="p">,</span>
+                <span class="n">f_ext_follower_full</span><span class="o">=</span><span class="n">f_ext_follower_full</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">a_res_func</span><span class="p">(</span>
                 <span class="n">v_dot_nm1</span><span class="o">=</span><span class="n">q_nm1</span><span class="o">.</span><span class="n">v_dot</span><span class="p">,</span>
@@ -19755,6 +19801,8 @@ the structure's parameters.</p>
         <span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span>
     <span class="p">],</span>
     <span class="n">mode</span><span class="p">:</span> <span class="n">ADMode</span> <span class="o">=</span> <span class="s2">"reverse"</span><span class="p">,</span>
+    <span class="n">f_ext_dead_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">f_ext_follower_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
     <span class="n">Array</span><span class="p">,</span>
     <span class="n">Array</span><span class="p">,</span>
@@ -19975,6 +20023,38 @@ None, AD is used.</p>
                   <code>&#39;reverse&#39;</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>f_ext_dead_full</code>
+            </td>
+            <td>
+                  <code><span title="jax.Array">Array</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Full dead-force time history, used when we aren't obtaining its gradient.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>f_ext_follower_full</code>
+            </td>
+            <td>
+                  <code><span title="jax.Array">Array</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Full follower-force time history, used when we aren't obtaining its gradient.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -20005,31 +20085,7 @@ previous, and current aerodynamic forces respectively, and profiling times for c
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">594</span>
-<span class="normal">595</span>
-<span class="normal">596</span>
-<span class="normal">597</span>
-<span class="normal">598</span>
-<span class="normal">599</span>
-<span class="normal">600</span>
-<span class="normal">601</span>
-<span class="normal">602</span>
-<span class="normal">603</span>
-<span class="normal">604</span>
-<span class="normal">605</span>
-<span class="normal">606</span>
-<span class="normal">607</span>
-<span class="normal">608</span>
-<span class="normal">609</span>
-<span class="normal">610</span>
-<span class="normal">611</span>
-<span class="normal">612</span>
-<span class="normal">613</span>
-<span class="normal">614</span>
-<span class="normal">615</span>
-<span class="normal">616</span>
-<span class="normal">617</span>
-<span class="normal">618</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">618</span>
 <span class="normal">619</span>
 <span class="normal">620</span>
 <span class="normal">621</span>
@@ -20172,7 +20228,37 @@ previous, and current aerodynamic forces respectively, and profiling times for c
 <span class="normal">758</span>
 <span class="normal">759</span>
 <span class="normal">760</span>
-<span class="normal">761</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
+<span class="normal">761</span>
+<span class="normal">762</span>
+<span class="normal">763</span>
+<span class="normal">764</span>
+<span class="normal">765</span>
+<span class="normal">766</span>
+<span class="normal">767</span>
+<span class="normal">768</span>
+<span class="normal">769</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span>
+<span class="normal">773</span>
+<span class="normal">774</span>
+<span class="normal">775</span>
+<span class="normal">776</span>
+<span class="normal">777</span>
+<span class="normal">778</span>
+<span class="normal">779</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span>
+<span class="normal">783</span>
+<span class="normal">784</span>
+<span class="normal">785</span>
+<span class="normal">786</span>
+<span class="normal">787</span>
+<span class="normal">788</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">StructureMinimalStates</span><span class="p">,</span>
@@ -20186,6 +20272,8 @@ previous, and current aerodynamic forces respectively, and profiling times for c
     <span class="n">n_profile_loops</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">jac_options</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]],</span>
     <span class="n">mode</span><span class="p">:</span> <span class="n">ADMode</span> <span class="o">=</span> <span class="s2">"reverse"</span><span class="p">,</span>
+    <span class="n">f_ext_dead_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">f_ext_follower_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
     <span class="n">Array</span><span class="p">,</span>
     <span class="n">Array</span><span class="p">,</span>
@@ -20210,6 +20298,8 @@ previous, and current aerodynamic forces respectively, and profiling times for c
 <span class="sd">    :param jac_options: Input which passes functions which can be used to approximate the Jacobians. If entries are</span>
 <span class="sd">    None, AD is used.</span>
 <span class="sd">    :param mode: AD mode used for Jacobian construction.</span>
+<span class="sd">    :param f_ext_dead_full: Full dead-force time history, used when we aren't obtaining its gradient.</span>
+<span class="sd">    :param f_ext_follower_full: Full follower-force time history, used when we aren't obtaining its gradient.</span>
 <span class="sd">    :return: Jacobians with respect to previous state and current state, gradients with respect to design variables,</span>
 <span class="sd">    previous, and current aerodynamic forces respectively, and profiling times for compilation and run time.</span>
 <span class="sd">    """</span>
@@ -20276,6 +20366,8 @@ previous, and current aerodynamic forces respectively, and profiling times for c
         <span class="n">thrust_t</span><span class="o">=</span><span class="n">thrust_t</span><span class="p">,</span>
         <span class="n">solve_dofs</span><span class="o">=</span><span class="n">solve_dofs</span><span class="p">,</span>
         <span class="n">approx_grads</span><span class="o">=</span><span class="n">approx_grads</span><span class="p">,</span>
+        <span class="n">f_ext_dead_full</span><span class="o">=</span><span class="n">f_ext_dead_full</span><span class="p">,</span>
+        <span class="n">f_ext_follower_full</span><span class="o">=</span><span class="n">f_ext_follower_full</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">compute_f_aero_grads</span><span class="p">:</span>
@@ -20488,30 +20580,30 @@ previous, and current aerodynamic forces respectively, and profiling times for c
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">763</span>
-<span class="normal">764</span>
-<span class="normal">765</span>
-<span class="normal">766</span>
-<span class="normal">767</span>
-<span class="normal">768</span>
-<span class="normal">769</span>
-<span class="normal">770</span>
-<span class="normal">771</span>
-<span class="normal">772</span>
-<span class="normal">773</span>
-<span class="normal">774</span>
-<span class="normal">775</span>
-<span class="normal">776</span>
-<span class="normal">777</span>
-<span class="normal">778</span>
-<span class="normal">779</span>
-<span class="normal">780</span>
-<span class="normal">781</span>
-<span class="normal">782</span>
-<span class="normal">783</span>
-<span class="normal">784</span>
-<span class="normal">785</span>
-<span class="normal">786</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">j_from_q_x</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">793</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span>
+<span class="normal">798</span>
+<span class="normal">799</span>
+<span class="normal">800</span>
+<span class="normal">801</span>
+<span class="normal">802</span>
+<span class="normal">803</span>
+<span class="normal">804</span>
+<span class="normal">805</span>
+<span class="normal">806</span>
+<span class="normal">807</span>
+<span class="normal">808</span>
+<span class="normal">809</span>
+<span class="normal">810</span>
+<span class="normal">811</span>
+<span class="normal">812</span>
+<span class="normal">813</span>
+<span class="normal">814</span>
+<span class="normal">815</span>
+<span class="normal">816</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">j_from_q_x</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">q_n_mat</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">dv</span><span class="p">:</span> <span class="n">StructureDesignVariables</span><span class="p">,</span>
@@ -20683,35 +20775,35 @@ previous, and current aerodynamic forces respectively, and profiling times for c
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">788</span>
-<span class="normal">789</span>
-<span class="normal">790</span>
-<span class="normal">791</span>
-<span class="normal">792</span>
-<span class="normal">793</span>
-<span class="normal">794</span>
-<span class="normal">795</span>
-<span class="normal">796</span>
-<span class="normal">797</span>
-<span class="normal">798</span>
-<span class="normal">799</span>
-<span class="normal">800</span>
-<span class="normal">801</span>
-<span class="normal">802</span>
-<span class="normal">803</span>
-<span class="normal">804</span>
-<span class="normal">805</span>
-<span class="normal">806</span>
-<span class="normal">807</span>
-<span class="normal">808</span>
-<span class="normal">809</span>
-<span class="normal">810</span>
-<span class="normal">811</span>
-<span class="normal">812</span>
-<span class="normal">813</span>
-<span class="normal">814</span>
-<span class="normal">815</span>
-<span class="normal">816</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">static_argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">818</span>
+<span class="normal">819</span>
+<span class="normal">820</span>
+<span class="normal">821</span>
+<span class="normal">822</span>
+<span class="normal">823</span>
+<span class="normal">824</span>
+<span class="normal">825</span>
+<span class="normal">826</span>
+<span class="normal">827</span>
+<span class="normal">828</span>
+<span class="normal">829</span>
+<span class="normal">830</span>
+<span class="normal">831</span>
+<span class="normal">832</span>
+<span class="normal">833</span>
+<span class="normal">834</span>
+<span class="normal">835</span>
+<span class="normal">836</span>
+<span class="normal">837</span>
+<span class="normal">838</span>
+<span class="normal">839</span>
+<span class="normal">840</span>
+<span class="normal">841</span>
+<span class="normal">842</span>
+<span class="normal">843</span>
+<span class="normal">844</span>
+<span class="normal">845</span>
+<span class="normal">846</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">static_argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">p_j</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">objective</span><span class="p">:</span> <span class="n">StructureObjectiveFunction</span><span class="p">,</span>
@@ -21121,37 +21213,7 @@ None, AD is used.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 818</span>
-<span class="normal"> 819</span>
-<span class="normal"> 820</span>
-<span class="normal"> 821</span>
-<span class="normal"> 822</span>
-<span class="normal"> 823</span>
-<span class="normal"> 824</span>
-<span class="normal"> 825</span>
-<span class="normal"> 826</span>
-<span class="normal"> 827</span>
-<span class="normal"> 828</span>
-<span class="normal"> 829</span>
-<span class="normal"> 830</span>
-<span class="normal"> 831</span>
-<span class="normal"> 832</span>
-<span class="normal"> 833</span>
-<span class="normal"> 834</span>
-<span class="normal"> 835</span>
-<span class="normal"> 836</span>
-<span class="normal"> 837</span>
-<span class="normal"> 838</span>
-<span class="normal"> 839</span>
-<span class="normal"> 840</span>
-<span class="normal"> 841</span>
-<span class="normal"> 842</span>
-<span class="normal"> 843</span>
-<span class="normal"> 844</span>
-<span class="normal"> 845</span>
-<span class="normal"> 846</span>
-<span class="normal"> 847</span>
-<span class="normal"> 848</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 848</span>
 <span class="normal"> 849</span>
 <span class="normal"> 850</span>
 <span class="normal"> 851</span>
@@ -21315,7 +21377,43 @@ None, AD is used.</p>
 <span class="normal">1009</span>
 <span class="normal">1010</span>
 <span class="normal">1011</span>
-<span class="normal">1012</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">adjoint_time_loop</span><span class="p">(</span>
+<span class="normal">1012</span>
+<span class="normal">1013</span>
+<span class="normal">1014</span>
+<span class="normal">1015</span>
+<span class="normal">1016</span>
+<span class="normal">1017</span>
+<span class="normal">1018</span>
+<span class="normal">1019</span>
+<span class="normal">1020</span>
+<span class="normal">1021</span>
+<span class="normal">1022</span>
+<span class="normal">1023</span>
+<span class="normal">1024</span>
+<span class="normal">1025</span>
+<span class="normal">1026</span>
+<span class="normal">1027</span>
+<span class="normal">1028</span>
+<span class="normal">1029</span>
+<span class="normal">1030</span>
+<span class="normal">1031</span>
+<span class="normal">1032</span>
+<span class="normal">1033</span>
+<span class="normal">1034</span>
+<span class="normal">1035</span>
+<span class="normal">1036</span>
+<span class="normal">1037</span>
+<span class="normal">1038</span>
+<span class="normal">1039</span>
+<span class="normal">1040</span>
+<span class="normal">1041</span>
+<span class="normal">1042</span>
+<span class="normal">1043</span>
+<span class="normal">1044</span>
+<span class="normal">1045</span>
+<span class="normal">1046</span>
+<span class="normal">1047</span>
+<span class="normal">1048</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">adjoint_time_loop</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">rev_i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">d_j_d_x_</span><span class="p">:</span> <span class="n">StructureDesignVariables</span><span class="p">,</span>
@@ -21392,6 +21490,8 @@ None, AD is used.</p>
                 <span class="n">thrust_t</span><span class="o">=</span><span class="n">thrust_t</span><span class="p">,</span>
                 <span class="n">solve_dofs</span><span class="o">=</span><span class="n">solve_dofs</span><span class="p">,</span>
                 <span class="n">approx_grads</span><span class="o">=</span><span class="n">approx_grads</span><span class="p">,</span>
+                <span class="n">f_ext_dead_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_dead</span><span class="p">,</span>
+                <span class="n">f_ext_follower_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_follower</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="c1"># Linearise the timestep residual around (q_n, q_nm1). This single VJP returns:</span>
@@ -21443,6 +21543,8 @@ None, AD is used.</p>
                 <span class="n">thrust_t</span><span class="o">=</span><span class="n">thrust_t</span><span class="p">,</span>
                 <span class="n">solve_dofs</span><span class="o">=</span><span class="n">solve_dofs</span><span class="p">,</span>
                 <span class="n">approx_grads</span><span class="o">=</span><span class="n">approx_grads</span><span class="p">,</span>
+                <span class="n">f_ext_dead_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_dead</span><span class="p">,</span>
+                <span class="n">f_ext_follower_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_follower</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="n">_</span><span class="p">,</span> <span class="n">pull_dv</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vjp</span><span class="p">(</span><span class="n">_residual_dv</span><span class="p">,</span> <span class="n">dv</span><span class="p">)</span>
@@ -21475,6 +21577,8 @@ None, AD is used.</p>
                 <span class="n">thrust_t</span><span class="o">=</span><span class="n">thrust_t</span><span class="p">,</span>
                 <span class="n">n_profile_loops</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">jac_options</span><span class="o">=</span><span class="n">jac_options</span><span class="p">,</span>
+                <span class="n">f_ext_dead_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_dead</span><span class="p">,</span>
+                <span class="n">f_ext_follower_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_follower</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
@@ -21607,43 +21711,7 @@ None, AD is used.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1014</span>
-<span class="normal">1015</span>
-<span class="normal">1016</span>
-<span class="normal">1017</span>
-<span class="normal">1018</span>
-<span class="normal">1019</span>
-<span class="normal">1020</span>
-<span class="normal">1021</span>
-<span class="normal">1022</span>
-<span class="normal">1023</span>
-<span class="normal">1024</span>
-<span class="normal">1025</span>
-<span class="normal">1026</span>
-<span class="normal">1027</span>
-<span class="normal">1028</span>
-<span class="normal">1029</span>
-<span class="normal">1030</span>
-<span class="normal">1031</span>
-<span class="normal">1032</span>
-<span class="normal">1033</span>
-<span class="normal">1034</span>
-<span class="normal">1035</span>
-<span class="normal">1036</span>
-<span class="normal">1037</span>
-<span class="normal">1038</span>
-<span class="normal">1039</span>
-<span class="normal">1040</span>
-<span class="normal">1041</span>
-<span class="normal">1042</span>
-<span class="normal">1043</span>
-<span class="normal">1044</span>
-<span class="normal">1045</span>
-<span class="normal">1046</span>
-<span class="normal">1047</span>
-<span class="normal">1048</span>
-<span class="normal">1049</span>
-<span class="normal">1050</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1050</span>
 <span class="normal">1051</span>
 <span class="normal">1052</span>
 <span class="normal">1053</span>
@@ -21696,7 +21764,43 @@ None, AD is used.</p>
 <span class="normal">1100</span>
 <span class="normal">1101</span>
 <span class="normal">1102</span>
-<span class="normal">1103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
+<span class="normal">1103</span>
+<span class="normal">1104</span>
+<span class="normal">1105</span>
+<span class="normal">1106</span>
+<span class="normal">1107</span>
+<span class="normal">1108</span>
+<span class="normal">1109</span>
+<span class="normal">1110</span>
+<span class="normal">1111</span>
+<span class="normal">1112</span>
+<span class="normal">1113</span>
+<span class="normal">1114</span>
+<span class="normal">1115</span>
+<span class="normal">1116</span>
+<span class="normal">1117</span>
+<span class="normal">1118</span>
+<span class="normal">1119</span>
+<span class="normal">1120</span>
+<span class="normal">1121</span>
+<span class="normal">1122</span>
+<span class="normal">1123</span>
+<span class="normal">1124</span>
+<span class="normal">1125</span>
+<span class="normal">1126</span>
+<span class="normal">1127</span>
+<span class="normal">1128</span>
+<span class="normal">1129</span>
+<span class="normal">1130</span>
+<span class="normal">1131</span>
+<span class="normal">1132</span>
+<span class="normal">1133</span>
+<span class="normal">1134</span>
+<span class="normal">1135</span>
+<span class="normal">1136</span>
+<span class="normal">1137</span>
+<span class="normal">1138</span>
+<span class="normal">1139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">sol</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">jacobian_approximations</span><span class="p">:</span> <span class="n">StructureJacobianApproximations</span><span class="p">,</span>
@@ -22018,43 +22122,7 @@ time step that is nonzero will  skip the initial state adjoint contribution.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1115</span>
-<span class="normal">1116</span>
-<span class="normal">1117</span>
-<span class="normal">1118</span>
-<span class="normal">1119</span>
-<span class="normal">1120</span>
-<span class="normal">1121</span>
-<span class="normal">1122</span>
-<span class="normal">1123</span>
-<span class="normal">1124</span>
-<span class="normal">1125</span>
-<span class="normal">1126</span>
-<span class="normal">1127</span>
-<span class="normal">1128</span>
-<span class="normal">1129</span>
-<span class="normal">1130</span>
-<span class="normal">1131</span>
-<span class="normal">1132</span>
-<span class="normal">1133</span>
-<span class="normal">1134</span>
-<span class="normal">1135</span>
-<span class="normal">1136</span>
-<span class="normal">1137</span>
-<span class="normal">1138</span>
-<span class="normal">1139</span>
-<span class="normal">1140</span>
-<span class="normal">1141</span>
-<span class="normal">1142</span>
-<span class="normal">1143</span>
-<span class="normal">1144</span>
-<span class="normal">1145</span>
-<span class="normal">1146</span>
-<span class="normal">1147</span>
-<span class="normal">1148</span>
-<span class="normal">1149</span>
-<span class="normal">1150</span>
-<span class="normal">1151</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1151</span>
 <span class="normal">1152</span>
 <span class="normal">1153</span>
 <span class="normal">1154</span>
@@ -22227,7 +22295,43 @@ time step that is nonzero will  skip the initial state adjoint contribution.</p>
 <span class="normal">1321</span>
 <span class="normal">1322</span>
 <span class="normal">1323</span>
-<span class="normal">1324</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_adjoint</span><span class="p">(</span>
+<span class="normal">1324</span>
+<span class="normal">1325</span>
+<span class="normal">1326</span>
+<span class="normal">1327</span>
+<span class="normal">1328</span>
+<span class="normal">1329</span>
+<span class="normal">1330</span>
+<span class="normal">1331</span>
+<span class="normal">1332</span>
+<span class="normal">1333</span>
+<span class="normal">1334</span>
+<span class="normal">1335</span>
+<span class="normal">1336</span>
+<span class="normal">1337</span>
+<span class="normal">1338</span>
+<span class="normal">1339</span>
+<span class="normal">1340</span>
+<span class="normal">1341</span>
+<span class="normal">1342</span>
+<span class="normal">1343</span>
+<span class="normal">1344</span>
+<span class="normal">1345</span>
+<span class="normal">1346</span>
+<span class="normal">1347</span>
+<span class="normal">1348</span>
+<span class="normal">1349</span>
+<span class="normal">1350</span>
+<span class="normal">1351</span>
+<span class="normal">1352</span>
+<span class="normal">1353</span>
+<span class="normal">1354</span>
+<span class="normal">1355</span>
+<span class="normal">1356</span>
+<span class="normal">1357</span>
+<span class="normal">1358</span>
+<span class="normal">1359</span>
+<span class="normal">1360</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_adjoint</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">structure</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">objective</span><span class="p">:</span> <span class="n">StructureObjectiveFunction</span><span class="p">,</span>
@@ -22642,43 +22746,7 @@ aerodynamic force gradients will be computed.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1326</span>
-<span class="normal">1327</span>
-<span class="normal">1328</span>
-<span class="normal">1329</span>
-<span class="normal">1330</span>
-<span class="normal">1331</span>
-<span class="normal">1332</span>
-<span class="normal">1333</span>
-<span class="normal">1334</span>
-<span class="normal">1335</span>
-<span class="normal">1336</span>
-<span class="normal">1337</span>
-<span class="normal">1338</span>
-<span class="normal">1339</span>
-<span class="normal">1340</span>
-<span class="normal">1341</span>
-<span class="normal">1342</span>
-<span class="normal">1343</span>
-<span class="normal">1344</span>
-<span class="normal">1345</span>
-<span class="normal">1346</span>
-<span class="normal">1347</span>
-<span class="normal">1348</span>
-<span class="normal">1349</span>
-<span class="normal">1350</span>
-<span class="normal">1351</span>
-<span class="normal">1352</span>
-<span class="normal">1353</span>
-<span class="normal">1354</span>
-<span class="normal">1355</span>
-<span class="normal">1356</span>
-<span class="normal">1357</span>
-<span class="normal">1358</span>
-<span class="normal">1359</span>
-<span class="normal">1360</span>
-<span class="normal">1361</span>
-<span class="normal">1362</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1362</span>
 <span class="normal">1363</span>
 <span class="normal">1364</span>
 <span class="normal">1365</span>
@@ -22714,7 +22782,48 @@ aerodynamic force gradients will be computed.</p>
 <span class="normal">1395</span>
 <span class="normal">1396</span>
 <span class="normal">1397</span>
-<span class="normal">1398</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_adjoint_jacobian_profile</span><span class="p">(</span>
+<span class="normal">1398</span>
+<span class="normal">1399</span>
+<span class="normal">1400</span>
+<span class="normal">1401</span>
+<span class="normal">1402</span>
+<span class="normal">1403</span>
+<span class="normal">1404</span>
+<span class="normal">1405</span>
+<span class="normal">1406</span>
+<span class="normal">1407</span>
+<span class="normal">1408</span>
+<span class="normal">1409</span>
+<span class="normal">1410</span>
+<span class="normal">1411</span>
+<span class="normal">1412</span>
+<span class="normal">1413</span>
+<span class="normal">1414</span>
+<span class="normal">1415</span>
+<span class="normal">1416</span>
+<span class="normal">1417</span>
+<span class="normal">1418</span>
+<span class="normal">1419</span>
+<span class="normal">1420</span>
+<span class="normal">1421</span>
+<span class="normal">1422</span>
+<span class="normal">1423</span>
+<span class="normal">1424</span>
+<span class="normal">1425</span>
+<span class="normal">1426</span>
+<span class="normal">1427</span>
+<span class="normal">1428</span>
+<span class="normal">1429</span>
+<span class="normal">1430</span>
+<span class="normal">1431</span>
+<span class="normal">1432</span>
+<span class="normal">1433</span>
+<span class="normal">1434</span>
+<span class="normal">1435</span>
+<span class="normal">1436</span>
+<span class="normal">1437</span>
+<span class="normal">1438</span>
+<span class="normal">1439</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_adjoint_jacobian_profile</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">sol</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">approx_grads</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -22750,6 +22859,9 @@ aerodynamic force gradients will be computed.</p>
         <span class="n">sol</span><span class="o">=</span><span class="n">sol</span><span class="p">,</span> <span class="n">jacobian_approximations</span><span class="o">=</span><span class="n">jacobian_approximations</span>
     <span class="p">)</span>
 
+    <span class="n">dv_full</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_design_variables</span><span class="p">(</span>
+        <span class="n">struct_case</span><span class="o">=</span><span class="n">sol</span><span class="p">,</span> <span class="n">thrust_t</span><span class="o">=</span><span class="n">sol</span><span class="o">.</span><span class="n">thrust</span><span class="p">,</span> <span class="n">grads_to_compute</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span>
     <span class="n">common_kwargs</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">"i_ts"</span><span class="p">:</span> <span class="n">i_ts</span><span class="p">,</span>
         <span class="s2">"q_nm1"</span><span class="p">:</span> <span class="n">sol</span><span class="o">.</span><span class="n">get_minimal_states</span><span class="p">(</span><span class="n">i_ts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
@@ -22757,6 +22869,8 @@ aerodynamic force gradients will be computed.</p>
         <span class="s2">"dv"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_design_variables</span><span class="p">(</span>
             <span class="n">struct_case</span><span class="o">=</span><span class="n">sol</span><span class="p">,</span> <span class="n">thrust_t</span><span class="o">=</span><span class="n">sol</span><span class="o">.</span><span class="n">thrust</span><span class="p">,</span> <span class="n">grads_to_compute</span><span class="o">=</span><span class="n">grads_to_compute</span>
         <span class="p">),</span>
+        <span class="s2">"f_ext_dead_full"</span><span class="p">:</span> <span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_dead</span><span class="p">,</span>
+        <span class="s2">"f_ext_follower_full"</span><span class="p">:</span> <span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_follower</span><span class="p">,</span>
         <span class="s2">"thrust_t"</span><span class="p">:</span> <span class="n">sol</span><span class="o">.</span><span class="n">thrust</span><span class="p">,</span>
         <span class="s2">"solve_dofs"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span>
             <span class="n">get_solve_dofs</span><span class="p">(</span><span class="n">n_dof</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dof</span><span class="p">,</span> <span class="n">prescribed_dofs</span><span class="o">=</span><span class="n">sol</span><span class="o">.</span><span class="n">prescribed_dofs</span><span class="p">)</span>
@@ -43161,6 +43275,8 @@ the structure's parameters.</p>
     <span class="n">thrust_t</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
     <span class="n">solve_dofs</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="n">approx_grads</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">f_ext_dead_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">f_ext_follower_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span>
 </code></pre></div>
 
@@ -43292,6 +43408,38 @@ the structure's parameters.</p>
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>f_ext_dead_full</code>
+            </td>
+            <td>
+                  <code><span title="jax.Array">Array</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Full dead-force time history, used when <code>dv_.f_ext_dead</code> is <code>None</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>f_ext_follower_full</code>
+            </td>
+            <td>
+                  <code><span title="jax.Array">Array</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Full follower-force time history, used when <code>dv_.f_ext_follower</code> is <code>None</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -43321,25 +43469,7 @@ the structure's parameters.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">530</span>
-<span class="normal">531</span>
-<span class="normal">532</span>
-<span class="normal">533</span>
-<span class="normal">534</span>
-<span class="normal">535</span>
-<span class="normal">536</span>
-<span class="normal">537</span>
-<span class="normal">538</span>
-<span class="normal">539</span>
-<span class="normal">540</span>
-<span class="normal">541</span>
-<span class="normal">542</span>
-<span class="normal">543</span>
-<span class="normal">544</span>
-<span class="normal">545</span>
-<span class="normal">546</span>
-<span class="normal">547</span>
-<span class="normal">548</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">548</span>
 <span class="normal">549</span>
 <span class="normal">550</span>
 <span class="normal">551</span>
@@ -43383,7 +43513,31 @@ the structure's parameters.</p>
 <span class="normal">589</span>
 <span class="normal">590</span>
 <span class="normal">591</span>
-<span class="normal">592</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">StructureMinimalStates</span><span class="p">,</span>
@@ -43392,6 +43546,8 @@ the structure's parameters.</p>
     <span class="n">thrust_t</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
     <span class="n">solve_dofs</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="n">approx_grads</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">f_ext_dead_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">f_ext_follower_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Routine to compute the full residual for the structural dynamic problem.</span>
@@ -43402,6 +43558,8 @@ the structure's parameters.</p>
 <span class="sd">    :param thrust_t: Thrust time history, ``{key, (n_tstep, )}``.</span>
 <span class="sd">    :param solve_dofs: Solve degrees of freedom.</span>
 <span class="sd">    :param approx_grads: If true, block gradients from some parts of the solution.</span>
+<span class="sd">    :param f_ext_dead_full: Full dead-force time history, used when ``dv_.f_ext_dead`` is ``None``.</span>
+<span class="sd">    :param f_ext_follower_full: Full follower-force time history, used when ``dv_.f_ext_follower`` is ``None``.</span>
 <span class="sd">    :return: Residual vector, ``(4 * n_solve_dof,)``.</span>
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
@@ -43435,6 +43593,8 @@ the structure's parameters.</p>
                 <span class="n">thrust_t</span><span class="o">=</span><span class="n">thrust_t</span><span class="p">,</span>
                 <span class="n">dv</span><span class="o">=</span><span class="n">dv_</span><span class="p">,</span>
                 <span class="n">solve_dofs</span><span class="o">=</span><span class="n">solve_dofs</span><span class="p">,</span>
+                <span class="n">f_ext_dead_full</span><span class="o">=</span><span class="n">f_ext_dead_full</span><span class="p">,</span>
+                <span class="n">f_ext_follower_full</span><span class="o">=</span><span class="n">f_ext_follower_full</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">a_res_func</span><span class="p">(</span>
                 <span class="n">v_dot_nm1</span><span class="o">=</span><span class="n">q_nm1</span><span class="o">.</span><span class="n">v_dot</span><span class="p">,</span>
@@ -43475,6 +43635,8 @@ the structure's parameters.</p>
         <span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span>
     <span class="p">],</span>
     <span class="n">mode</span><span class="p">:</span> <span class="n">ADMode</span> <span class="o">=</span> <span class="s2">"reverse"</span><span class="p">,</span>
+    <span class="n">f_ext_dead_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">f_ext_follower_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
     <span class="n">Array</span><span class="p">,</span>
     <span class="n">Array</span><span class="p">,</span>
@@ -43695,6 +43857,38 @@ None, AD is used.</p>
                   <code>&#39;reverse&#39;</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>f_ext_dead_full</code>
+            </td>
+            <td>
+                  <code><span title="jax.Array">Array</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Full dead-force time history, used when we aren't obtaining its gradient.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>f_ext_follower_full</code>
+            </td>
+            <td>
+                  <code><span title="jax.Array">Array</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Full follower-force time history, used when we aren't obtaining its gradient.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -43725,31 +43919,7 @@ previous, and current aerodynamic forces respectively, and profiling times for c
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">594</span>
-<span class="normal">595</span>
-<span class="normal">596</span>
-<span class="normal">597</span>
-<span class="normal">598</span>
-<span class="normal">599</span>
-<span class="normal">600</span>
-<span class="normal">601</span>
-<span class="normal">602</span>
-<span class="normal">603</span>
-<span class="normal">604</span>
-<span class="normal">605</span>
-<span class="normal">606</span>
-<span class="normal">607</span>
-<span class="normal">608</span>
-<span class="normal">609</span>
-<span class="normal">610</span>
-<span class="normal">611</span>
-<span class="normal">612</span>
-<span class="normal">613</span>
-<span class="normal">614</span>
-<span class="normal">615</span>
-<span class="normal">616</span>
-<span class="normal">617</span>
-<span class="normal">618</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">618</span>
 <span class="normal">619</span>
 <span class="normal">620</span>
 <span class="normal">621</span>
@@ -43892,7 +44062,37 @@ previous, and current aerodynamic forces respectively, and profiling times for c
 <span class="normal">758</span>
 <span class="normal">759</span>
 <span class="normal">760</span>
-<span class="normal">761</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
+<span class="normal">761</span>
+<span class="normal">762</span>
+<span class="normal">763</span>
+<span class="normal">764</span>
+<span class="normal">765</span>
+<span class="normal">766</span>
+<span class="normal">767</span>
+<span class="normal">768</span>
+<span class="normal">769</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span>
+<span class="normal">773</span>
+<span class="normal">774</span>
+<span class="normal">775</span>
+<span class="normal">776</span>
+<span class="normal">777</span>
+<span class="normal">778</span>
+<span class="normal">779</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span>
+<span class="normal">783</span>
+<span class="normal">784</span>
+<span class="normal">785</span>
+<span class="normal">786</span>
+<span class="normal">787</span>
+<span class="normal">788</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">timestep_residual_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">i_ts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">q_nm1</span><span class="p">:</span> <span class="n">StructureMinimalStates</span><span class="p">,</span>
@@ -43906,6 +44106,8 @@ previous, and current aerodynamic forces respectively, and profiling times for c
     <span class="n">n_profile_loops</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">jac_options</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]],</span>
     <span class="n">mode</span><span class="p">:</span> <span class="n">ADMode</span> <span class="o">=</span> <span class="s2">"reverse"</span><span class="p">,</span>
+    <span class="n">f_ext_dead_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">f_ext_follower_full</span><span class="p">:</span> <span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
     <span class="n">Array</span><span class="p">,</span>
     <span class="n">Array</span><span class="p">,</span>
@@ -43930,6 +44132,8 @@ previous, and current aerodynamic forces respectively, and profiling times for c
 <span class="sd">    :param jac_options: Input which passes functions which can be used to approximate the Jacobians. If entries are</span>
 <span class="sd">    None, AD is used.</span>
 <span class="sd">    :param mode: AD mode used for Jacobian construction.</span>
+<span class="sd">    :param f_ext_dead_full: Full dead-force time history, used when we aren't obtaining its gradient.</span>
+<span class="sd">    :param f_ext_follower_full: Full follower-force time history, used when we aren't obtaining its gradient.</span>
 <span class="sd">    :return: Jacobians with respect to previous state and current state, gradients with respect to design variables,</span>
 <span class="sd">    previous, and current aerodynamic forces respectively, and profiling times for compilation and run time.</span>
 <span class="sd">    """</span>
@@ -43996,6 +44200,8 @@ previous, and current aerodynamic forces respectively, and profiling times for c
         <span class="n">thrust_t</span><span class="o">=</span><span class="n">thrust_t</span><span class="p">,</span>
         <span class="n">solve_dofs</span><span class="o">=</span><span class="n">solve_dofs</span><span class="p">,</span>
         <span class="n">approx_grads</span><span class="o">=</span><span class="n">approx_grads</span><span class="p">,</span>
+        <span class="n">f_ext_dead_full</span><span class="o">=</span><span class="n">f_ext_dead_full</span><span class="p">,</span>
+        <span class="n">f_ext_follower_full</span><span class="o">=</span><span class="n">f_ext_follower_full</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">compute_f_aero_grads</span><span class="p">:</span>
@@ -44208,30 +44414,30 @@ previous, and current aerodynamic forces respectively, and profiling times for c
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">763</span>
-<span class="normal">764</span>
-<span class="normal">765</span>
-<span class="normal">766</span>
-<span class="normal">767</span>
-<span class="normal">768</span>
-<span class="normal">769</span>
-<span class="normal">770</span>
-<span class="normal">771</span>
-<span class="normal">772</span>
-<span class="normal">773</span>
-<span class="normal">774</span>
-<span class="normal">775</span>
-<span class="normal">776</span>
-<span class="normal">777</span>
-<span class="normal">778</span>
-<span class="normal">779</span>
-<span class="normal">780</span>
-<span class="normal">781</span>
-<span class="normal">782</span>
-<span class="normal">783</span>
-<span class="normal">784</span>
-<span class="normal">785</span>
-<span class="normal">786</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">j_from_q_x</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">793</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span>
+<span class="normal">798</span>
+<span class="normal">799</span>
+<span class="normal">800</span>
+<span class="normal">801</span>
+<span class="normal">802</span>
+<span class="normal">803</span>
+<span class="normal">804</span>
+<span class="normal">805</span>
+<span class="normal">806</span>
+<span class="normal">807</span>
+<span class="normal">808</span>
+<span class="normal">809</span>
+<span class="normal">810</span>
+<span class="normal">811</span>
+<span class="normal">812</span>
+<span class="normal">813</span>
+<span class="normal">814</span>
+<span class="normal">815</span>
+<span class="normal">816</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">j_from_q_x</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">q_n_mat</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
     <span class="n">dv</span><span class="p">:</span> <span class="n">StructureDesignVariables</span><span class="p">,</span>
@@ -44403,35 +44609,35 @@ previous, and current aerodynamic forces respectively, and profiling times for c
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">788</span>
-<span class="normal">789</span>
-<span class="normal">790</span>
-<span class="normal">791</span>
-<span class="normal">792</span>
-<span class="normal">793</span>
-<span class="normal">794</span>
-<span class="normal">795</span>
-<span class="normal">796</span>
-<span class="normal">797</span>
-<span class="normal">798</span>
-<span class="normal">799</span>
-<span class="normal">800</span>
-<span class="normal">801</span>
-<span class="normal">802</span>
-<span class="normal">803</span>
-<span class="normal">804</span>
-<span class="normal">805</span>
-<span class="normal">806</span>
-<span class="normal">807</span>
-<span class="normal">808</span>
-<span class="normal">809</span>
-<span class="normal">810</span>
-<span class="normal">811</span>
-<span class="normal">812</span>
-<span class="normal">813</span>
-<span class="normal">814</span>
-<span class="normal">815</span>
-<span class="normal">816</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">static_argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">818</span>
+<span class="normal">819</span>
+<span class="normal">820</span>
+<span class="normal">821</span>
+<span class="normal">822</span>
+<span class="normal">823</span>
+<span class="normal">824</span>
+<span class="normal">825</span>
+<span class="normal">826</span>
+<span class="normal">827</span>
+<span class="normal">828</span>
+<span class="normal">829</span>
+<span class="normal">830</span>
+<span class="normal">831</span>
+<span class="normal">832</span>
+<span class="normal">833</span>
+<span class="normal">834</span>
+<span class="normal">835</span>
+<span class="normal">836</span>
+<span class="normal">837</span>
+<span class="normal">838</span>
+<span class="normal">839</span>
+<span class="normal">840</span>
+<span class="normal">841</span>
+<span class="normal">842</span>
+<span class="normal">843</span>
+<span class="normal">844</span>
+<span class="normal">845</span>
+<span class="normal">846</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">static_argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">p_j</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">objective</span><span class="p">:</span> <span class="n">StructureObjectiveFunction</span><span class="p">,</span>
@@ -44841,37 +45047,7 @@ None, AD is used.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 818</span>
-<span class="normal"> 819</span>
-<span class="normal"> 820</span>
-<span class="normal"> 821</span>
-<span class="normal"> 822</span>
-<span class="normal"> 823</span>
-<span class="normal"> 824</span>
-<span class="normal"> 825</span>
-<span class="normal"> 826</span>
-<span class="normal"> 827</span>
-<span class="normal"> 828</span>
-<span class="normal"> 829</span>
-<span class="normal"> 830</span>
-<span class="normal"> 831</span>
-<span class="normal"> 832</span>
-<span class="normal"> 833</span>
-<span class="normal"> 834</span>
-<span class="normal"> 835</span>
-<span class="normal"> 836</span>
-<span class="normal"> 837</span>
-<span class="normal"> 838</span>
-<span class="normal"> 839</span>
-<span class="normal"> 840</span>
-<span class="normal"> 841</span>
-<span class="normal"> 842</span>
-<span class="normal"> 843</span>
-<span class="normal"> 844</span>
-<span class="normal"> 845</span>
-<span class="normal"> 846</span>
-<span class="normal"> 847</span>
-<span class="normal"> 848</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 848</span>
 <span class="normal"> 849</span>
 <span class="normal"> 850</span>
 <span class="normal"> 851</span>
@@ -45035,7 +45211,43 @@ None, AD is used.</p>
 <span class="normal">1009</span>
 <span class="normal">1010</span>
 <span class="normal">1011</span>
-<span class="normal">1012</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">adjoint_time_loop</span><span class="p">(</span>
+<span class="normal">1012</span>
+<span class="normal">1013</span>
+<span class="normal">1014</span>
+<span class="normal">1015</span>
+<span class="normal">1016</span>
+<span class="normal">1017</span>
+<span class="normal">1018</span>
+<span class="normal">1019</span>
+<span class="normal">1020</span>
+<span class="normal">1021</span>
+<span class="normal">1022</span>
+<span class="normal">1023</span>
+<span class="normal">1024</span>
+<span class="normal">1025</span>
+<span class="normal">1026</span>
+<span class="normal">1027</span>
+<span class="normal">1028</span>
+<span class="normal">1029</span>
+<span class="normal">1030</span>
+<span class="normal">1031</span>
+<span class="normal">1032</span>
+<span class="normal">1033</span>
+<span class="normal">1034</span>
+<span class="normal">1035</span>
+<span class="normal">1036</span>
+<span class="normal">1037</span>
+<span class="normal">1038</span>
+<span class="normal">1039</span>
+<span class="normal">1040</span>
+<span class="normal">1041</span>
+<span class="normal">1042</span>
+<span class="normal">1043</span>
+<span class="normal">1044</span>
+<span class="normal">1045</span>
+<span class="normal">1046</span>
+<span class="normal">1047</span>
+<span class="normal">1048</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">adjoint_time_loop</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">rev_i_ts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">d_j_d_x_</span><span class="p">:</span> <span class="n">StructureDesignVariables</span><span class="p">,</span>
@@ -45112,6 +45324,8 @@ None, AD is used.</p>
                 <span class="n">thrust_t</span><span class="o">=</span><span class="n">thrust_t</span><span class="p">,</span>
                 <span class="n">solve_dofs</span><span class="o">=</span><span class="n">solve_dofs</span><span class="p">,</span>
                 <span class="n">approx_grads</span><span class="o">=</span><span class="n">approx_grads</span><span class="p">,</span>
+                <span class="n">f_ext_dead_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_dead</span><span class="p">,</span>
+                <span class="n">f_ext_follower_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_follower</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="c1"># Linearise the timestep residual around (q_n, q_nm1). This single VJP returns:</span>
@@ -45163,6 +45377,8 @@ None, AD is used.</p>
                 <span class="n">thrust_t</span><span class="o">=</span><span class="n">thrust_t</span><span class="p">,</span>
                 <span class="n">solve_dofs</span><span class="o">=</span><span class="n">solve_dofs</span><span class="p">,</span>
                 <span class="n">approx_grads</span><span class="o">=</span><span class="n">approx_grads</span><span class="p">,</span>
+                <span class="n">f_ext_dead_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_dead</span><span class="p">,</span>
+                <span class="n">f_ext_follower_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_follower</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="n">_</span><span class="p">,</span> <span class="n">pull_dv</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vjp</span><span class="p">(</span><span class="n">_residual_dv</span><span class="p">,</span> <span class="n">dv</span><span class="p">)</span>
@@ -45195,6 +45411,8 @@ None, AD is used.</p>
                 <span class="n">thrust_t</span><span class="o">=</span><span class="n">thrust_t</span><span class="p">,</span>
                 <span class="n">n_profile_loops</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">jac_options</span><span class="o">=</span><span class="n">jac_options</span><span class="p">,</span>
+                <span class="n">f_ext_dead_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_dead</span><span class="p">,</span>
+                <span class="n">f_ext_follower_full</span><span class="o">=</span><span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_follower</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
@@ -45327,43 +45545,7 @@ None, AD is used.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1014</span>
-<span class="normal">1015</span>
-<span class="normal">1016</span>
-<span class="normal">1017</span>
-<span class="normal">1018</span>
-<span class="normal">1019</span>
-<span class="normal">1020</span>
-<span class="normal">1021</span>
-<span class="normal">1022</span>
-<span class="normal">1023</span>
-<span class="normal">1024</span>
-<span class="normal">1025</span>
-<span class="normal">1026</span>
-<span class="normal">1027</span>
-<span class="normal">1028</span>
-<span class="normal">1029</span>
-<span class="normal">1030</span>
-<span class="normal">1031</span>
-<span class="normal">1032</span>
-<span class="normal">1033</span>
-<span class="normal">1034</span>
-<span class="normal">1035</span>
-<span class="normal">1036</span>
-<span class="normal">1037</span>
-<span class="normal">1038</span>
-<span class="normal">1039</span>
-<span class="normal">1040</span>
-<span class="normal">1041</span>
-<span class="normal">1042</span>
-<span class="normal">1043</span>
-<span class="normal">1044</span>
-<span class="normal">1045</span>
-<span class="normal">1046</span>
-<span class="normal">1047</span>
-<span class="normal">1048</span>
-<span class="normal">1049</span>
-<span class="normal">1050</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1050</span>
 <span class="normal">1051</span>
 <span class="normal">1052</span>
 <span class="normal">1053</span>
@@ -45416,7 +45598,43 @@ None, AD is used.</p>
 <span class="normal">1100</span>
 <span class="normal">1101</span>
 <span class="normal">1102</span>
-<span class="normal">1103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
+<span class="normal">1103</span>
+<span class="normal">1104</span>
+<span class="normal">1105</span>
+<span class="normal">1106</span>
+<span class="normal">1107</span>
+<span class="normal">1108</span>
+<span class="normal">1109</span>
+<span class="normal">1110</span>
+<span class="normal">1111</span>
+<span class="normal">1112</span>
+<span class="normal">1113</span>
+<span class="normal">1114</span>
+<span class="normal">1115</span>
+<span class="normal">1116</span>
+<span class="normal">1117</span>
+<span class="normal">1118</span>
+<span class="normal">1119</span>
+<span class="normal">1120</span>
+<span class="normal">1121</span>
+<span class="normal">1122</span>
+<span class="normal">1123</span>
+<span class="normal">1124</span>
+<span class="normal">1125</span>
+<span class="normal">1126</span>
+<span class="normal">1127</span>
+<span class="normal">1128</span>
+<span class="normal">1129</span>
+<span class="normal">1130</span>
+<span class="normal">1131</span>
+<span class="normal">1132</span>
+<span class="normal">1133</span>
+<span class="normal">1134</span>
+<span class="normal">1135</span>
+<span class="normal">1136</span>
+<span class="normal">1137</span>
+<span class="normal">1138</span>
+<span class="normal">1139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_approximate_jacobians</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">sol</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">jacobian_approximations</span><span class="p">:</span> <span class="n">StructureJacobianApproximations</span><span class="p">,</span>
@@ -45738,43 +45956,7 @@ time step that is nonzero will  skip the initial state adjoint contribution.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1115</span>
-<span class="normal">1116</span>
-<span class="normal">1117</span>
-<span class="normal">1118</span>
-<span class="normal">1119</span>
-<span class="normal">1120</span>
-<span class="normal">1121</span>
-<span class="normal">1122</span>
-<span class="normal">1123</span>
-<span class="normal">1124</span>
-<span class="normal">1125</span>
-<span class="normal">1126</span>
-<span class="normal">1127</span>
-<span class="normal">1128</span>
-<span class="normal">1129</span>
-<span class="normal">1130</span>
-<span class="normal">1131</span>
-<span class="normal">1132</span>
-<span class="normal">1133</span>
-<span class="normal">1134</span>
-<span class="normal">1135</span>
-<span class="normal">1136</span>
-<span class="normal">1137</span>
-<span class="normal">1138</span>
-<span class="normal">1139</span>
-<span class="normal">1140</span>
-<span class="normal">1141</span>
-<span class="normal">1142</span>
-<span class="normal">1143</span>
-<span class="normal">1144</span>
-<span class="normal">1145</span>
-<span class="normal">1146</span>
-<span class="normal">1147</span>
-<span class="normal">1148</span>
-<span class="normal">1149</span>
-<span class="normal">1150</span>
-<span class="normal">1151</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1151</span>
 <span class="normal">1152</span>
 <span class="normal">1153</span>
 <span class="normal">1154</span>
@@ -45947,7 +46129,43 @@ time step that is nonzero will  skip the initial state adjoint contribution.</p>
 <span class="normal">1321</span>
 <span class="normal">1322</span>
 <span class="normal">1323</span>
-<span class="normal">1324</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_adjoint</span><span class="p">(</span>
+<span class="normal">1324</span>
+<span class="normal">1325</span>
+<span class="normal">1326</span>
+<span class="normal">1327</span>
+<span class="normal">1328</span>
+<span class="normal">1329</span>
+<span class="normal">1330</span>
+<span class="normal">1331</span>
+<span class="normal">1332</span>
+<span class="normal">1333</span>
+<span class="normal">1334</span>
+<span class="normal">1335</span>
+<span class="normal">1336</span>
+<span class="normal">1337</span>
+<span class="normal">1338</span>
+<span class="normal">1339</span>
+<span class="normal">1340</span>
+<span class="normal">1341</span>
+<span class="normal">1342</span>
+<span class="normal">1343</span>
+<span class="normal">1344</span>
+<span class="normal">1345</span>
+<span class="normal">1346</span>
+<span class="normal">1347</span>
+<span class="normal">1348</span>
+<span class="normal">1349</span>
+<span class="normal">1350</span>
+<span class="normal">1351</span>
+<span class="normal">1352</span>
+<span class="normal">1353</span>
+<span class="normal">1354</span>
+<span class="normal">1355</span>
+<span class="normal">1356</span>
+<span class="normal">1357</span>
+<span class="normal">1358</span>
+<span class="normal">1359</span>
+<span class="normal">1360</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_adjoint</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">structure</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">objective</span><span class="p">:</span> <span class="n">StructureObjectiveFunction</span><span class="p">,</span>
@@ -46362,43 +46580,7 @@ aerodynamic force gradients will be computed.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/flapjax/structure/gradients/beam.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1326</span>
-<span class="normal">1327</span>
-<span class="normal">1328</span>
-<span class="normal">1329</span>
-<span class="normal">1330</span>
-<span class="normal">1331</span>
-<span class="normal">1332</span>
-<span class="normal">1333</span>
-<span class="normal">1334</span>
-<span class="normal">1335</span>
-<span class="normal">1336</span>
-<span class="normal">1337</span>
-<span class="normal">1338</span>
-<span class="normal">1339</span>
-<span class="normal">1340</span>
-<span class="normal">1341</span>
-<span class="normal">1342</span>
-<span class="normal">1343</span>
-<span class="normal">1344</span>
-<span class="normal">1345</span>
-<span class="normal">1346</span>
-<span class="normal">1347</span>
-<span class="normal">1348</span>
-<span class="normal">1349</span>
-<span class="normal">1350</span>
-<span class="normal">1351</span>
-<span class="normal">1352</span>
-<span class="normal">1353</span>
-<span class="normal">1354</span>
-<span class="normal">1355</span>
-<span class="normal">1356</span>
-<span class="normal">1357</span>
-<span class="normal">1358</span>
-<span class="normal">1359</span>
-<span class="normal">1360</span>
-<span class="normal">1361</span>
-<span class="normal">1362</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1362</span>
 <span class="normal">1363</span>
 <span class="normal">1364</span>
 <span class="normal">1365</span>
@@ -46434,7 +46616,48 @@ aerodynamic force gradients will be computed.</p>
 <span class="normal">1395</span>
 <span class="normal">1396</span>
 <span class="normal">1397</span>
-<span class="normal">1398</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_adjoint_jacobian_profile</span><span class="p">(</span>
+<span class="normal">1398</span>
+<span class="normal">1399</span>
+<span class="normal">1400</span>
+<span class="normal">1401</span>
+<span class="normal">1402</span>
+<span class="normal">1403</span>
+<span class="normal">1404</span>
+<span class="normal">1405</span>
+<span class="normal">1406</span>
+<span class="normal">1407</span>
+<span class="normal">1408</span>
+<span class="normal">1409</span>
+<span class="normal">1410</span>
+<span class="normal">1411</span>
+<span class="normal">1412</span>
+<span class="normal">1413</span>
+<span class="normal">1414</span>
+<span class="normal">1415</span>
+<span class="normal">1416</span>
+<span class="normal">1417</span>
+<span class="normal">1418</span>
+<span class="normal">1419</span>
+<span class="normal">1420</span>
+<span class="normal">1421</span>
+<span class="normal">1422</span>
+<span class="normal">1423</span>
+<span class="normal">1424</span>
+<span class="normal">1425</span>
+<span class="normal">1426</span>
+<span class="normal">1427</span>
+<span class="normal">1428</span>
+<span class="normal">1429</span>
+<span class="normal">1430</span>
+<span class="normal">1431</span>
+<span class="normal">1432</span>
+<span class="normal">1433</span>
+<span class="normal">1434</span>
+<span class="normal">1435</span>
+<span class="normal">1436</span>
+<span class="normal">1437</span>
+<span class="normal">1438</span>
+<span class="normal">1439</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_adjoint_jacobian_profile</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">sol</span><span class="p">:</span> <span class="n">StructureCase</span><span class="p">,</span>
     <span class="n">approx_grads</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -46470,6 +46693,9 @@ aerodynamic force gradients will be computed.</p>
         <span class="n">sol</span><span class="o">=</span><span class="n">sol</span><span class="p">,</span> <span class="n">jacobian_approximations</span><span class="o">=</span><span class="n">jacobian_approximations</span>
     <span class="p">)</span>
 
+    <span class="n">dv_full</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_design_variables</span><span class="p">(</span>
+        <span class="n">struct_case</span><span class="o">=</span><span class="n">sol</span><span class="p">,</span> <span class="n">thrust_t</span><span class="o">=</span><span class="n">sol</span><span class="o">.</span><span class="n">thrust</span><span class="p">,</span> <span class="n">grads_to_compute</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span>
     <span class="n">common_kwargs</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">"i_ts"</span><span class="p">:</span> <span class="n">i_ts</span><span class="p">,</span>
         <span class="s2">"q_nm1"</span><span class="p">:</span> <span class="n">sol</span><span class="o">.</span><span class="n">get_minimal_states</span><span class="p">(</span><span class="n">i_ts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
@@ -46477,6 +46703,8 @@ aerodynamic force gradients will be computed.</p>
         <span class="s2">"dv"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_design_variables</span><span class="p">(</span>
             <span class="n">struct_case</span><span class="o">=</span><span class="n">sol</span><span class="p">,</span> <span class="n">thrust_t</span><span class="o">=</span><span class="n">sol</span><span class="o">.</span><span class="n">thrust</span><span class="p">,</span> <span class="n">grads_to_compute</span><span class="o">=</span><span class="n">grads_to_compute</span>
         <span class="p">),</span>
+        <span class="s2">"f_ext_dead_full"</span><span class="p">:</span> <span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_dead</span><span class="p">,</span>
+        <span class="s2">"f_ext_follower_full"</span><span class="p">:</span> <span class="n">dv_full</span><span class="o">.</span><span class="n">f_ext_follower</span><span class="p">,</span>
         <span class="s2">"thrust_t"</span><span class="p">:</span> <span class="n">sol</span><span class="o">.</span><span class="n">thrust</span><span class="p">,</span>
         <span class="s2">"solve_dofs"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span>
             <span class="n">get_solve_dofs</span><span class="p">(</span><span class="n">n_dof</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_dof</span><span class="p">,</span> <span class="n">prescribed_dofs</span><span class="o">=</span><span class="n">sol</span><span class="o">.</span><span class="n">prescribed_dofs</span><span class="p">)</span>
@@ -59046,7 +59274,7 @@ global frame, <code>(..., n_node, 6)</code>.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "navigation.top", "content.code.copy", "content.action.edit", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/mathjax.js"></script>
       

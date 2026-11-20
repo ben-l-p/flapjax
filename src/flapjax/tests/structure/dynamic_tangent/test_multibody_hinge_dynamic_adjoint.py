@@ -66,6 +66,7 @@ class TestMultibodyHingeDynamicAdjoint:
             objective=objective,
             matrix_free=matrix_free,
             p_q0_p_x=None,
+            approx_grads=False,
             grads_to_compute=StructureGradsToCompute(k_cs=True, m_cs=True),
         )
         adj_grad_k = float(cast(Array, grads.k_cs)[0, 0, 4, 4])
@@ -95,8 +96,7 @@ class TestMultibodyHingeDynamicAdjoint:
             "Bending-stiffness gradient propagated across the multibody hinge does not "
             "match finite differences"
         )
-        # initial state dependence on m_cs is omitted
-        assert abs(fd_m - adj_m) / abs(adj_m) < 5e-2, (
+        assert abs(fd_m - adj_m) / abs(adj_m) < 1e-2, (
             "Mass gradient propagated across the multibody hinge does not match finite "
             "differences"
         )
@@ -104,13 +104,11 @@ class TestMultibodyHingeDynamicAdjoint:
     def test_adjoint_matrix_free(self):
         adj_k, adj_m, fd_k, fd_m = self._run(matrix_free=True)
 
-        # slightly raised tolerance
-        assert abs(fd_k - adj_k) / abs(adj_k) < 3e-2, (
+        assert abs(fd_k - adj_k) / abs(adj_k) < 1e-4, (
             "Bending-stiffness gradient propagated across the multibody hinge does not "
             "match finite differences"
         )
-        # initial state dependence on m_cs is omitted
-        assert abs(fd_m - adj_m) / abs(adj_m) < 5e-2, (
+        assert abs(fd_m - adj_m) / abs(adj_m) < 1e-2, (
             "Mass gradient propagated across the multibody hinge does not match finite "
             "differences"
         )

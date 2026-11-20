@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 from collections.abc import Callable, Sequence
 from copy import deepcopy
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Final, Literal
 
 import jax
@@ -67,6 +68,17 @@ DEFAULT_GRADS_TO_COMPUTE: Final[AeroelasticGradsToCompute] = AeroelasticGradsToC
 DEFAULT_OPTIONAL_JACOBIANS: Final[OptionalJacobians] = OptionalJacobians(
     True, True, True, True
 )
+
+
+@dataclass(frozen=True)
+class TrimSensitivity:
+    r"""
+    Sensitivity of each converged trim unknown with respect to design variables.
+    """
+
+    cs_ang: dict[str, AeroelasticDesignVariables]
+    thrust: dict[str, AeroelasticDesignVariables]
+    trim_angles: dict[str, AeroelasticDesignVariables]
 
 
 @make_pytree
@@ -260,6 +272,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             objective=objective,
             grads_to_compute=grads_to_compute,
             horseshoe=static_horseshoe,
+            force_relative_motion=True,
         )
 
         cot_j0 = jnp.eye(n_f).reshape(n_f, *j0_shape)  # seed for backpropogation
@@ -361,6 +374,8 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         grads_to_compute: AeroelasticGradsToCompute | None,
         horseshoe: bool = False,
         include_q0: bool = False,
+        release_velocity: bool = False,
+        force_relative_motion: bool = False,
     ) -> Callable[
         ...,
         tuple[Array, AeroelasticDesignVariables],
@@ -373,6 +388,12 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         :param grads_to_compute: Grads to compute when computing design gradient.
         :param horseshoe: Flag for using horseshoe wake.
         :param include_q0: If True, the returned VJP also propagates a cotangent through ``q0``.
+        :param release_velocity: Set this if ``case`` was produced by releasing a clamped trim via
+        ``initialise_dynamic``. When True, the internal re-solve uses ``relative_motion=True``, and captures the
+        sensitivity of initial velocity with respect to design variables.
+        :param force_relative_motion: Force the internal re-solve's ``relative_motion=True`` without assuming a
+        non-zero release velocity. Set this when ``case`` is a static/clamped case that might be evaluated after
+        ``self.aero.flowfield`` has already been mutated to ``relative_motion=False``.
         :return: VJP for cotangents of the design variables, and optionally the initial states.
         """
 
@@ -391,6 +412,8 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             dv_: AeroelasticDesignVariables,
         ) -> Array | tuple[Array, Array]:
             inner_case = self.case_from_dv(dv=dv_)
+            if release_velocity or force_relative_motion:
+                inner_case.aero.flowfield.relative_motion = True
 
             assert (
                 dv_full.aero.cs_ang_t is not None and dv_full.aero.cs_vel_t is not None
@@ -457,10 +480,22 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 gamma_b_dot=ArrayList.zeros_like(gamma_b),
             )
 
-            # assume initial velocities and accelerations are zero
+            # assume initial velocities and accelerations are zero, unless this case was released
+            # from a clamped trim via `initialise_dynamic`
+            v0 = (
+                jnp.zeros_like(varphi_)
+                .at[:, :3]
+                .set(
+                    jnp.einsum(
+                        "ijk,j->ik", hg[:, :3, :3], -inner_case.aero.flowfield.u_inf
+                    )
+                )
+                if release_velocity
+                else jnp.zeros_like(varphi_)
+            )
             q_structure = StructureMinimalStates(
                 varphi=varphi_,
-                v=jnp.zeros_like(varphi_),
+                v=v0,
                 v_dot=jnp.zeros_like(varphi_),
                 a=jnp.zeros_like(varphi_),
                 f_ext_aero=f_aero_beam_local,
@@ -494,6 +529,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         solve_dofs: Array,
         adj_t_p_r1_p_q0: Array,
         horseshoe: bool = False,
+        release_velocity: bool = False,
     ) -> AeroelasticDesignVariables:
         r"""
         Assemble the initial-timestep contribution to ``d_j_d_x``.
@@ -505,6 +541,8 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         :param adj_t_p_r1_p_q0: Initial adjoint-Jacobian product adj^T @ p_r1_p_q0, which is returned from the time
         domain adjoint propagation.
         :param horseshoe: Whether to use horseshoe or not for the VLM.
+        :param release_velocity: See :meth:`compute_p_j0_p_x`. Set this if ``case`` was produced by releasing a
+        clamped trim via ``initialise_dynamic``.
         :return: Assembled initial timestep contribution.
         """
         dv = self.get_design_variables(case=case, grads_to_compute=grads_to_compute)
@@ -514,6 +552,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             grads_to_compute=grads_to_compute,
             horseshoe=horseshoe,
             include_q0=True,
+            release_velocity=release_velocity,
         )
 
         n_j = adj_t_p_r1_p_q0.shape[0]
@@ -1003,7 +1042,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
 
         return apply_precond
 
-    @jax.jit(static_argnums=(0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15))
+    @jax.jit(static_argnums=(0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16))
     def dynamic_adjoint(
         self,
         case: AeroelasticCase,
@@ -1021,6 +1060,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         gmres_precond: bool = True,
         gmres_restart: int = 50,
         preconditioner: Callable[[Array], Array] | None = None,
+        release_velocity: bool | None = None,
     ) -> tuple[AeroelasticDesignVariables, Array, Array | None]:
         r"""
         Compute the adjoint of a coupled dynamic aeroelastic system.
@@ -1037,6 +1077,8 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         :param p_varphi_p_x: Gradient of initial twists with respect to design variables. In practice, this is found
         from the static solve.
         :param save_adjoint: Whether to save the adjoint of the dynamic aeroelastic system.
+        :param release_velocity: Set this if ``case`` was produced by releasing a clamped trim via
+        ``initialise_dynamic`` (free-flying initial condition derived from a clamped static solve).
         :param approx_grads: Whether to use gradient approximation or not. This removes some negligible contributions
         in the structural dynamic system.
         :param i_ts_adjoint_range: Optional ``(start, end)`` window of time steps for which to compute the adjoint.
@@ -1059,6 +1101,12 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
 
         case = deepcopy(case)
         p_varphi_p_x = deepcopy(p_varphi_p_x)
+
+        release_velocity = (
+            case.released_from_relative_motion
+            if release_velocity is None
+            else release_velocity
+        )
 
         solve_dofs: tuple[int, ...] = get_solve_dofs(
             n_dof=self.structure.n_dof,
@@ -1525,6 +1573,7 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
                 solve_dofs=solve_dofs_arr,
                 adj_t_p_r1_p_q0=future_cot_q0_full,
                 horseshoe=static_horseshoe,
+                release_velocity=release_velocity,
             )
 
         adj = (
@@ -1869,6 +1918,333 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
         for k, v in trim_angles.items():
             orientation_euler = orientation_euler.at[ORIENTATION_DICT[k]].set(v)
         return orientation_euler
+
+    def trim_sensitivity(
+        self,
+        case: AeroelasticCase,
+        trim_variables: TrimVariables,
+        zero_force_dofs: Sequence[int] | Array | slice | int,
+        trim_cs: Sequence[str | Sequence[str]] | str | None,
+        thrust_nodes: Sequence[str | Sequence[str]] | str | None,
+        trim_orientation: str | Sequence[str] | None = "x",
+        grads_to_compute: AeroelasticGradsToCompute = DEFAULT_GRADS_TO_COMPUTE,
+    ) -> TrimSensitivity:
+        r"""
+        Sensitivity of the converged trim unknowns (control-surface deflections, thrust, and trim
+        orientation angles) with respect to design variables.
+
+        Only supports the ``trim_cs``/``thrust_nodes``/``trim_orientation`` trim unknowns; does not yet
+        support ``trim_hinges`` (``trim_variables.hinge_angle``).
+        :param case: Converged trimmed ``AeroelasticCase``, as returned by :meth:`trim`.
+        :param trim_variables: Converged trim unknowns, as returned by :meth:`trim`.
+        :param zero_force_dofs: Degrees of freedom at the clamp whose force residual was driven to zero
+        during trim. Must match the value passed to :meth:`trim`.
+        :param trim_cs: Control-surface trim groups, as passed to :meth:`trim`.
+        :param thrust_nodes: Thrust trim groups, as passed to :meth:`trim`.
+        :param trim_orientation: Trim orientation axes, as passed to :meth:`trim`.
+        :param grads_to_compute: Which design variables to compute sensitivities for.
+        :return: :class:`TrimSensitivity` holding d(trim unknown)/d(design variable) for each trim
+        unknown.
+        """
+        if trim_variables.hinge_angle:
+            raise NotImplementedError(
+                "trim_sensitivity does not yet support trim_hinges (hinge_angle is not a "
+                "differentiable design variable)."
+            )
+
+        cs_groups: list[tuple[str, ...]] = parse_groups(trim_cs, "trim_cs")
+        thrust_groups: list[tuple[str, ...]] = parse_groups(
+            thrust_nodes, "thrust_nodes"
+        )
+        check_unique_members(cs_groups, "trim_cs")
+        check_unique_members(thrust_groups, "thrust_nodes")
+
+        trim_orientation_: Sequence[str] = (
+            [trim_orientation]
+            if isinstance(trim_orientation, str)
+            else trim_orientation
+            if trim_orientation is not None
+            else []
+        )
+
+        zero_force_dofs_: tuple[int, ...] = self.structure.make_prescribed_dofs_tuple(
+            zero_force_dofs
+        )
+        n_zero_force = len(zero_force_dofs_)
+
+        def objective(states: AeroelasticFullStates, *_: Any) -> Array:
+            return states.structure.f_res.ravel()[
+                jnp.array(zero_force_dofs_, dtype=int)
+            ]
+
+        # force the trim-unknown gradients on
+        ift_grads_to_compute = AeroelasticGradsToCompute(
+            structure=StructureGradsToCompute(
+                x0=grads_to_compute.structure.x0,
+                orientation_euler=True,
+                k_cs=grads_to_compute.structure.k_cs,
+                m_cs=grads_to_compute.structure.m_cs,
+                m_lumped=grads_to_compute.structure.m_lumped,
+                f_ext_follower=grads_to_compute.structure.f_ext_follower,
+                f_ext_dead=grads_to_compute.structure.f_ext_dead,
+                thrust_t=True,
+            ),
+            aero=AeroGradsToCompute(
+                zeta_b0=grads_to_compute.aero.zeta_b0,
+                flowfield=grads_to_compute.aero.flowfield,
+                cs_ang_t=True,
+                cs_vel_t=grads_to_compute.aero.cs_vel_t,
+                dt=grads_to_compute.aero.dt,
+            ),
+        )
+
+        d_f_clamp_d_x: AeroelasticDesignVariables
+        d_f_clamp_d_x, _ = self.static_adjoint(
+            case=case, objective=objective, grads_to_compute=ift_grads_to_compute
+        )
+
+        assert (
+            d_f_clamp_d_x.aero.cs_ang_t is not None
+            and d_f_clamp_d_x.structure.thrust_t is not None
+            and d_f_clamp_d_x.structure.orientation_euler is not None
+        )
+        d_f_clamp_d_cs_ang = (
+            jnp.concatenate(
+                [
+                    sum(
+                        d_f_clamp_d_x.aero.cs_ang_t[k].reshape(n_zero_force, -1)
+                        for k in group
+                    )
+                    for group in cs_groups
+                ],
+                axis=1,
+            )
+            if cs_groups
+            else jnp.zeros((n_zero_force, 0))
+        )
+        d_f_clamp_d_thrust = (
+            jnp.concatenate(
+                [
+                    sum(
+                        d_f_clamp_d_x.structure.thrust_t[k].reshape(n_zero_force, -1)
+                        for k in group
+                    )
+                    for group in thrust_groups
+                ],
+                axis=1,
+            )
+            if thrust_groups
+            else jnp.zeros((n_zero_force, 0))
+        )
+        d_f_clamp_d_trim_angles = (
+            jnp.concatenate(
+                [
+                    d_f_clamp_d_x.structure.orientation_euler[:, [ORIENTATION_DICT[k]]]
+                    for k in trim_orientation_
+                ],
+                axis=1,
+            )
+            if trim_orientation_
+            else jnp.zeros((n_zero_force, 0))
+        )
+
+        # d f_clamp / d y
+        d_f_clamp_d_y = jnp.concatenate(
+            [d_f_clamp_d_cs_ang, d_f_clamp_d_thrust, d_f_clamp_d_trim_angles], axis=1
+        )
+
+        if not grads_to_compute.structure.orientation_euler:
+            d_f_clamp_d_x.structure.orientation_euler = None
+        if not grads_to_compute.structure.thrust_t:
+            d_f_clamp_d_x.structure.thrust_t = None
+        if not grads_to_compute.aero.cs_ang_t:
+            d_f_clamp_d_x.aero.cs_ang_t = None
+
+        # dy/dx = -(d f_clamp/d y)^-1 @ (d f_clamp/d x)
+        d_y_d_f_clamp = jnp.linalg.pinv(
+            d_f_clamp_d_y
+        )  # (n_free_trim_dof, n_zero_force)
+        dy_dx: AeroelasticDesignVariables = d_f_clamp_d_x.premultiply_adj(
+            -d_y_d_f_clamp
+        )
+
+        def _index_row(
+            value: Array | ArrayList | dict[str, Array] | None, i: int
+        ) -> Array | ArrayList | dict[str, Array] | None:
+            if value is None:
+                return None
+            if isinstance(value, dict):
+                return {k: v[i] for k, v in value.items()}
+            if isinstance(value, ArrayList):
+                return ArrayList([v[i] for v in value])
+            return value[i]
+
+        def _row(i: int) -> AeroelasticDesignVariables:
+            flat = {k: _index_row(v, i) for k, v in dy_dx.to_dict().items()}
+            return dy_dx.split_adjoint(d_f_d_x=flat, f_shape=())
+
+        i_trim = 0
+        cs_ang_sensitivity: dict[str, AeroelasticDesignVariables] = {}
+        for group in cs_groups:
+            cs_ang_sensitivity[group_key(group)] = _row(i_trim)
+            i_trim += 1
+        thrust_sensitivity: dict[str, AeroelasticDesignVariables] = {}
+        for group in thrust_groups:
+            thrust_sensitivity[group_key(group)] = _row(i_trim)
+            i_trim += 1
+        trim_angle_sensitivity: dict[str, AeroelasticDesignVariables] = {}
+        for k in trim_orientation_:
+            trim_angle_sensitivity[k] = _row(i_trim)
+            i_trim += 1
+
+        return TrimSensitivity(
+            cs_ang=cs_ang_sensitivity,
+            thrust=thrust_sensitivity,
+            trim_angles=trim_angle_sensitivity,
+        )
+
+    def initial_state_sensitivity(
+        self,
+        case: AeroelasticCase,
+        trim_variables: TrimVariables,
+        zero_force_dofs: Sequence[int] | Array | slice | int,
+        trim_cs: Sequence[str | Sequence[str]] | str | None,
+        thrust_nodes: Sequence[str | Sequence[str]] | str | None,
+        trim_orientation: str | Sequence[str] | None = "x",
+        grads_to_compute: AeroelasticGradsToCompute = DEFAULT_GRADS_TO_COMPUTE,
+    ) -> Array:
+        r"""
+        Sensitivity of the trimmed equilibrium deformation ``varphi`` with respect to design
+        variables, including the trim unknowns' own indirect sensitivity. Only supports the
+        ``trim_cs``/``thrust_nodes``/``trim_orientation`` trim unknowns; does not
+        yet support ``trim_hinges`` (``trim_variables.hinge_angle``), same restriction as
+        :meth:`trim_sensitivity`.
+        :param case: Converged trimmed ``AeroelasticCase``, as returned by :meth:`trim`.
+        :param trim_variables: Converged trim unknowns, as returned by :meth:`trim`.
+        :param zero_force_dofs: Degrees of freedom at the clamp whose force residual was driven to
+        zero during trim. Must match the value passed to :meth:`trim`.
+        :param trim_cs: Control-surface trim groups, as passed to :meth:`trim`.
+        :param thrust_nodes: Thrust trim groups, as passed to :meth:`trim`.
+        :param trim_orientation: Trim orientation axes, as passed to :meth:`trim`.
+        :param grads_to_compute: Which design variables to compute ``d(varphi)/d(x)`` for.
+        :return: ``d(varphi)/d(x)_total``, shape ``(n_solve_dofs, n_x)``.
+        """
+        if trim_variables.hinge_angle:
+            raise NotImplementedError(
+                "initial_state_sensitivity does not yet support trim_hinges (hinge_angle is "
+                "not a differentiable design variable)."
+            )
+
+        cs_groups: list[tuple[str, ...]] = parse_groups(trim_cs, "trim_cs")
+        thrust_groups: list[tuple[str, ...]] = parse_groups(
+            thrust_nodes, "thrust_nodes"
+        )
+        check_unique_members(cs_groups, "trim_cs")
+        check_unique_members(thrust_groups, "thrust_nodes")
+
+        trim_orientation_: Sequence[str] = (
+            [trim_orientation]
+            if isinstance(trim_orientation, str)
+            else trim_orientation
+            if trim_orientation is not None
+            else []
+        )
+
+        def varphi_objective(states: AeroelasticFullStates, *_: Any) -> Array:
+            return states.structure.varphi.ravel()
+
+        # d(varphi)/d(x)
+        _, a_x = self.static_adjoint(
+            case=case,
+            objective=varphi_objective,
+            grads_to_compute=grads_to_compute,
+            ad_mode="forward",
+        )
+
+        n_trim = len(cs_groups) + len(thrust_groups) + len(trim_orientation_)
+        if n_trim == 0:
+            return -a_x
+
+        # d(varphi)/d(y)
+        y_grads_to_compute = AeroelasticGradsToCompute(
+            structure=StructureGradsToCompute(
+                x0=False,
+                orientation_euler=True,
+                k_cs=False,
+                m_cs=False,
+                m_lumped=False,
+                f_ext_follower=False,
+                f_ext_dead=False,
+                thrust_t=True,
+            ),
+            aero=AeroGradsToCompute(
+                zeta_b0=False, flowfield=False, cs_ang_t=True, cs_vel_t=False, dt=False
+            ),
+        )
+        y_dv = self.get_design_variables(case=case, grads_to_compute=y_grads_to_compute)
+        _, a_y_raw = self.static_adjoint(
+            case=case,
+            objective=varphi_objective,
+            grads_to_compute=y_grads_to_compute,
+            ad_mode="forward",
+        )
+
+        assert (
+            y_dv.aero.mapping["cs_ang_t"] is not None
+            and y_dv.structure.mapping["thrust_t"] is not None
+            and y_dv.structure.mapping["orientation_euler"] is not None
+        )
+        y_columns: list[Array] = []
+        for group in cs_groups:
+            idx = (
+                jnp.concatenate(
+                    [
+                        jnp.ravel(jnp.asarray(y_dv.aero.mapping["cs_ang_t"][k]))
+                        for k in group
+                    ]
+                )
+                + y_dv.structure.n_x
+            )
+            y_columns.append(jnp.sum(a_y_raw[:, idx], axis=1))
+        for group in thrust_groups:
+            idx = jnp.concatenate(
+                [
+                    jnp.ravel(jnp.asarray(y_dv.structure.mapping["thrust_t"][k]))
+                    for k in group
+                ]
+            )
+            y_columns.append(jnp.sum(a_y_raw[:, idx], axis=1))
+        for k in trim_orientation_:
+            idx = jnp.ravel(jnp.asarray(y_dv.structure.mapping["orientation_euler"]))[
+                jnp.array([ORIENTATION_DICT[k]])
+            ]
+            y_columns.append(jnp.sum(a_y_raw[:, idx], axis=1))
+        a_y = jnp.stack(y_columns, axis=1)  # (n_solve_dofs, n_y)
+
+        # d(y)/d(x)
+        sensitivity = self.trim_sensitivity(
+            case=case,
+            trim_variables=trim_variables,
+            zero_force_dofs=zero_force_dofs,
+            trim_cs=trim_cs,
+            thrust_nodes=thrust_nodes,
+            trim_orientation=trim_orientation,
+            grads_to_compute=grads_to_compute,
+        )
+        n_x = a_x.shape[1]
+        dy_dx = jnp.concatenate(
+            [
+                d.ravel_jacobian(f_size=1, x_size=n_x)
+                for d in (
+                    *sensitivity.cs_ang.values(),
+                    *sensitivity.thrust.values(),
+                    *sensitivity.trim_angles.values(),
+                )
+            ],
+            axis=0,
+        )  # (n_y, n_x)
+
+        return -(a_x + a_y @ dy_dx)
 
     @staticmethod
     def _rebuild_hinge(

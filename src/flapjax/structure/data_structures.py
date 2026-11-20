@@ -26,8 +26,8 @@ from flapjax.utils.utils import index_to_arr, make_pytree
 
 @dataclass(frozen=True)
 class OptionalJacobians:
-    d_f_ext_dead_d_n: bool = False  # stiffness from dead loads
-    d_f_grav_d_n: bool = False  # stiffness from gravitational loads
+    d_f_ext_dead_d_n: bool = True  # stiffness from dead loads
+    d_f_grav_d_n: bool = True  # stiffness from gravitational loads
     d_f_gyr_d_q_dot: bool = (
         False  # derivative of gyroscopic forces with respect to Q_dot
     )

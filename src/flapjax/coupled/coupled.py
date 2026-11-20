@@ -480,6 +480,7 @@ class BaseCoupledAeroelastic:
         )  # local frame velocity, (n_nodes, 3)
 
         dynamic_case = static_case.to_dynamic(t=None)
+        dynamic_case.released_from_relative_motion = True
         dynamic_case.structure.v = dynamic_case.structure.v.at[:, :3].set(v_local)
         dynamic_case.structure.prescribed_dofs = (
             self.structure.make_prescribed_dofs_tuple(prescribed_dofs)

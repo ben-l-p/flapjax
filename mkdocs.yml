@@ -86,6 +86,7 @@ nav:
           - Flexible double pendulum: tutorials/double_pendulum.ipynb
       - Aeroelastic:
           - Simple HALE gust response: tutorials/simple_hale_gust.ipynb
+          - Simple HALE single-case gust response: tutorials/simple_hale_single_gust.ipynb
           - Simple HALE hinged wingtip gust response: tutorials/simple_hale_hinged_gust.ipynb
           - Cantilever wing adjoint: tutorials/cantilever_wing_adjoint.ipynb
           - Cantilever wing polar corrections: tutorials/cantilever_wing_polar_correction.ipynb
@@ -98,11 +99,17 @@ nav:
               - Flutter analysis: tutorials/straight_pazy_flutter.ipynb
               - Time-domain LCO: tutorials/straight_pazy_lco.ipynb
               - Continuous cosine gust FRF: tutorials/straight_pazy_gust_frf.ipynb
-          - Swept Pazy wing:
+          - Swept Pazy wing (10 degree sweep):
               - Static deflection: tutorials/swept_pazy_static_deflection.ipynb
               - Deformed mode frequencies: tutorials/swept_pazy_deformed_modes.ipynb
               - Flutter analysis: tutorials/swept_pazy_flutter.ipynb
               - Time-domain LCO: tutorials/swept_pazy_lco.ipynb
+              - Flutter sensitivity to structural uncertainty: tutorials/swept_pazy_flutter_uncertainty.ipynb
+              - Continuous turbulence load uncertainty: tutorials/swept_pazy_frf_uncertainty.ipynb
+          - Swept Pazy wing (20 degree sweep):
+              - Static deflection: tutorials/swept_pazy_20deg_static_deflection.ipynb
+              - Deformed mode frequencies: tutorials/swept_pazy_20deg_deformed_modes.ipynb
+              - Flutter analysis: tutorials/swept_pazy_20deg_flutter.ipynb
   - Reference:
       - reference/index.md
       - Aero: reference/aero.md

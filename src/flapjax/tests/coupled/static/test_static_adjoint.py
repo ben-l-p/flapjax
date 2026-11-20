@@ -101,7 +101,7 @@ class TestForwardStaticAeroelasticAdjoint:
     @classmethod
     def test_k_cs_gradient(cls):
         """Adjoint gradient w.r.t. k_cs verified by finite differences."""
-        eps = 1e-1
+        eps = 1e-2
 
         new_wing, new_sol = _solve(u_inf=u_inf_base, k_cs=k_cs_base.at[3, 3].add(eps))
 

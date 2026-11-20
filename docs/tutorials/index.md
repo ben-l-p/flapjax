@@ -20,11 +20,16 @@ write ``.vtu`` and ``.pvd`` files to disk, which can be visualised in ParaView.
       with the root mounted to a hinge. Demonstrates multibody dynamics with ``GroundedHinge`` and ``MultibodyHinge``
       constraints using the ``dynamic_solve()`` routine.
 - Aeroelastic
-    - [Simple HALE gust response](simple_hale_gust.ipynb) - Free-flying high aspect ratio aircraft configuration subject
-      to a one-minus-cosine gust. This first uses the aeroelastic``trim()``
+    - [Simple HALE single-case gust response](simple_hale_single_gust.ipynb) - Free-flying high aspect ratio aircraft
+      configuration subject to a one-minus-cosine gust. This first uses the aeroelastic``trim()``
       routine to find the thrust and elevator deflection that satisfy trim conditions, before using the aeroelastic
-      ``dynamic_solve()`` routine to find the time-domain response of the aircraft. This tutorial demonstrates using
-      batching to efficiently parallelise for multiple gust cases at once.s
+      ``dynamic_solve()`` routine to find the time-domain response of the aircraft.
+    - [Simple HALE gust response](simple_hale_gust.ipynb) - This tutorial demonstrates the same analysis as the single
+      gust response,
+      but utilises batching to efficiently parallelise for multiple gust cases at once.
+    - [Simple HALE gust load sensitivity](simple_hale_gust_sensitivity.ipynb) - Trims the aircraft, flies it through
+      a gust, and uses `trim_sensitivity`, `initial_state_sensitivity`, and `dynamic_adjoint` together to compute the
+      sensitivity of the peak wing-root bending moment to the structural design variables (stiffness, mass, payload).
     - [Simple HALE hinged wingtip gust response](simple_hale_hinged_gust.ipynb) - Variant of the above with
       free-hinging wingtips, using ``MultibodyHinge`` constraints. Demonstrates trimming a multibody aircraft, where
       the trim solver also finds the equilibrium hinge angles, before flying it through the gust as a free-flying
@@ -69,3 +74,16 @@ write ``.vtu`` and ``.pvd`` files to disk, which can be visualised in ParaView.
                 - Continuous cosine gust FRF [straight](straight_pazy_gust_frf.ipynb) — Frequency sweep of the
                   wingtip response to a continuous cosine gust using the ``ContinuousCosineFlowField``, obtained
                   from the coupled ``linearise()`` routine's ``frf()`` method.
+                - Flutter sensitivity to structural uncertainty
+                  [swept](swept_pazy_flutter_uncertainty.ipynb) — Uses the linear system adjoint to compute the
+                  sensitivity of the flutter onset velocity to the mass and stiffness parameters.
+                - Continuous turbulence load uncertainty
+                  [swept](swept_pazy_frf_uncertainty.ipynb) — Propagates the same structural mass and stiffness
+                  uncertainty through to the RMS wing-root bending moment under continuous turbulence, using the
+                  FRF sensitivity from the coupled ``linearise()`` routine.
+                - Sweep angle comparison (20°)
+                  [static deflection](swept_pazy_20deg_static_deflection.ipynb),
+                  [deformed modes](swept_pazy_20deg_deformed_modes.ipynb),
+                  [flutter](swept_pazy_20deg_flutter.ipynb) — Repeats the static deflection, deformed-mode-frequency,
+                  and flutter studies above for a 20° swept variant, comparing the swept structural model against a
+                  straight Pazy wing rotated kinematically by the same angle.

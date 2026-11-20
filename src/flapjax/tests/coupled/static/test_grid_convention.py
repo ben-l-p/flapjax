@@ -18,6 +18,9 @@ N_NODES = 6
 M = 4
 C_REF = 1.0
 
+# wing diverges at the default U_INF
+U_INF_TEST = U_INF_DEFAULT * 0.5
+
 
 def _build_wing(transpose_grid: bool) -> CoupledAeroelastic:
     """The same cantilever wing built either with the standard
@@ -46,8 +49,8 @@ def _build_wing(transpose_grid: bool) -> CoupledAeroelastic:
     wing = CoupledAeroelastic(beam, uvlm)
 
     beam_coords = jnp.zeros((N_NODES, 3)).at[:, 1].set(jnp.linspace(0, 5.0, N_NODES))
-    dt = C_REF / (jnp.linalg.norm(U_INF_DEFAULT) * M)
-    flowfield = ConstantFlowField(u_inf=U_INF_DEFAULT, rho=1.225, relative_motion=True)
+    dt = C_REF / (jnp.linalg.norm(U_INF_TEST) * M)
+    flowfield = ConstantFlowField(u_inf=U_INF_TEST, rho=1.225, relative_motion=True)
 
     wing.set_design_variables(
         coords=beam_coords,

@@ -41,11 +41,18 @@ class AeroelasticCase:
     Use :attr:`is_dynamic` and :attr:`is_batched` to distinguish at runtime.
     """
 
-    _static: ClassVar[tuple[str, ...]] = ()
+    _static: ClassVar[tuple[str, ...]] = ("released_from_relative_motion",)
 
-    def __init__(self, structure: StructureCase, aero: AeroCase):
+    def __init__(
+        self,
+        structure: StructureCase,
+        aero: AeroCase,
+        released_from_relative_motion: bool = False,
+    ):
         self.structure: StructureCase = structure
         self.aero: AeroCase = aero
+        # True if this case's initial velocity was reconstructed by CoupledAeroelastic.initialise_dynamic
+        self.released_from_relative_motion: bool = released_from_relative_motion
 
     @property
     def is_dynamic(self) -> bool:
@@ -73,11 +80,14 @@ class AeroelasticCase:
             return self
         if t is None:
             return AeroelasticCase(
-                structure=self.structure.to_dynamic(), aero=self.aero
+                structure=self.structure.to_dynamic(),
+                aero=self.aero,
+                released_from_relative_motion=self.released_from_relative_motion,
             )
         return AeroelasticCase(
             structure=self.structure.to_dynamic(t),
             aero=self.aero.to_dynamic(i_ts=0, n_tstep=len(t)),
+            released_from_relative_motion=self.released_from_relative_motion,
         )
 
     def to_static(self) -> AeroelasticCase:
@@ -94,13 +104,18 @@ class AeroelasticCase:
         return AeroelasticCase(
             structure=self.structure.to_static(),
             aero=self.aero,
+            released_from_relative_motion=self.released_from_relative_motion,
         )
 
     def __getitem__(self, i_ts: int) -> AeroelasticCase:
         """Extract a snapshot at a specific time index from a batched case."""
         if not self.is_batched:
             raise TypeError("__getitem__ only supported for batched AeroelasticCase")
-        return AeroelasticCase(structure=self.structure[i_ts], aero=self.aero[i_ts])
+        return AeroelasticCase(
+            structure=self.structure[i_ts],
+            aero=self.aero[i_ts],
+            released_from_relative_motion=self.released_from_relative_motion,
+        )
 
     @classmethod
     def initialise(
@@ -152,7 +167,11 @@ class AeroelasticCase:
 
         struct_case.f_ext_aero = struct_case.f_ext_aero.at[0, ...].set(f_aero_local)
 
-        return AeroelasticCase(structure=struct_case, aero=aero_case)
+        return AeroelasticCase(
+            structure=struct_case,
+            aero=aero_case,
+            released_from_relative_motion=initial_snapshot.released_from_relative_motion,
+        )
 
     def get_full_states(self, i_ts: int | Array | None = None) -> AeroelasticFullStates:
         r"""

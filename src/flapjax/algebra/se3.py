@@ -15,7 +15,7 @@ from flapjax.algebra.so3 import (
     t_so3,
     vec_to_skew,
 )
-from flapjax.utils.constants import SMALL_ANG_THRESH
+from flapjax.utils.constants import BASE_SUMMATION_ORDER, SMALL_ANG_THRESH
 
 
 def bracket_se3(a_vec: Array, b_vec: Array) -> Array:
@@ -109,7 +109,7 @@ def t_se3(ha: Array) -> Array:
         return jnp.block([[t_, t_u_omega_plus(ha)], [jnp.zeros((3, 3)), t_]])
 
     def t_se3_small_angle() -> Array:
-        return t_sum(ha_to_ha_hat(ha), 2)
+        return t_sum(ha_to_ha_hat(ha), BASE_SUMMATION_ORDER)
 
     ang_mag2 = jnp.inner(ha[3:], ha[3:])
     return cond(ang_mag2 > SMALL_ANG_THRESH, t_se3_full, t_se3_small_angle)
@@ -128,7 +128,7 @@ def t_inv_se3(ha: Array) -> Array:
         return jnp.block([[t_, t_u_omega_minus(ha)], [jnp.zeros((3, 3)), t_]])
 
     def t_inv_se3_small_angle() -> Array:
-        return t_inv_sum(ha_to_ha_hat(ha), 2)
+        return t_inv_sum(ha_to_ha_hat(ha), BASE_SUMMATION_ORDER)
 
     ang_mag2 = jnp.inner(ha[3:], ha[3:])
     return cond(ang_mag2 > SMALL_ANG_THRESH, t_inv_se3_full, t_inv_se3_small_angle)
@@ -148,7 +148,7 @@ def log_se3(hg: Array) -> Array:
         return jnp.concatenate((t_inv_so3(omega).T @ hg[:3, 3], omega))
 
     def log_se3_small_angle() -> Array:
-        return ha_tilde_to_ha(log_sum(hg, 2))
+        return ha_tilde_to_ha(log_sum(hg, BASE_SUMMATION_ORDER))
 
     ang_mag2 = jnp.inner(omega, omega)
     return cond(ang_mag2 > SMALL_ANG_THRESH, log_se3_full, log_se3_small_angle)
@@ -171,7 +171,7 @@ def exp_se3(ha: Array) -> Array:
         )
 
     def exp_se3_small_angle() -> Array:
-        return exp_sum(ha_to_ha_tilde(ha), 2)
+        return exp_sum(ha_to_ha_tilde(ha), BASE_SUMMATION_ORDER)
 
     ang_mag2 = jnp.inner(ha[3:], ha[3:])
     return cond(ang_mag2 > SMALL_ANG_THRESH, exp_se3_full, exp_se3_small_angle)

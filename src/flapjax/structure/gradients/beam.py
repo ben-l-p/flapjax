@@ -57,6 +57,8 @@ class BeamStructure(BaseBeamStructure):
             k_cs=dv_or(dv.k_cs, self.k_cs),
             m_cs=dv_or(dv.m_cs, self.m_cs),
             m_lumped=dv_or(dv.m_lumped, self._m_lumped),
+            orientation_euler=dv_or(dv.orientation_euler, self.orientation_euler),
+            thrust_reference=dv_or(dv.thrust_t, self.thrust_reference),
             remove_checks=True,
         )
 
@@ -85,12 +87,16 @@ class BeamStructure(BaseBeamStructure):
         eps = struct.make_eps(d=d)
         f_elem = struct.make_f_elem(eps=eps)
 
+        # external forces are either (n_nodes, 6) or (n_tstep, n_nodes, 6)
+        def _maybe_index_ts(f_ext: Array | None) -> Array | None:
+            if f_ext is None:
+                return None
+            return f_ext[i_ts, ...] if f_ext.ndim == 3 else f_ext
+
         f_ext_dead_i = (
-            dv.f_ext_dead[i_ts, ...]
+            _maybe_index_ts(dv.f_ext_dead)
             if dv.f_ext_dead is not None
-            else dv_full.f_ext_dead[i_ts, ...]
-            if dv_full.f_ext_dead is not None
-            else None
+            else _maybe_index_ts(dv_full.f_ext_dead)
         )
         m_t = struct.make_m_t(d=d)
 
@@ -114,11 +120,9 @@ class BeamStructure(BaseBeamStructure):
             p_d=p_d,
             eps=eps,
             hg=hg,
-            f_ext_follower_n=dv.f_ext_follower[i_ts, ...]
+            f_ext_follower_n=_maybe_index_ts(dv.f_ext_follower)
             if dv.f_ext_follower is not None
-            else dv_full.f_ext_follower[i_ts, ...]
-            if dv_full.f_ext_follower is not None
-            else None,
+            else _maybe_index_ts(dv_full.f_ext_follower),
             f_ext_dead_n=f_ext_dead_i,
             thrust_n={k: (v[i_ts] if v.ndim > 0 else v) for k, v in dv.thrust_t.items()}
             if dv.thrust_t is not None
@@ -495,6 +499,9 @@ class BeamStructure(BaseBeamStructure):
 
         # calculate non-inertial forcing residual
         f_res_non_iner = f_int_alpha + f_gyr_alpha
+        f_res_non_iner += inner_case.add_thrust_force(
+            force=jnp.zeros((inner_case.n_nodes, 6)), thrust=thrust_alpha
+        )
         if inner_case.use_gravity:
             f_res_non_iner += f_grav_alpha
         if (
@@ -865,6 +872,7 @@ class BeamStructure(BaseBeamStructure):
         n_j: int,
         jac_options: dict[str, dict[str, Callable[..., Any] | None]],
         i_ts_end: int | None = None,
+        gmres_precond: bool = True,
     ) -> tuple[StructureDesignVariables, Array, Array, StructureMinimalStates]:
         r"""
         Function to obtain the grads states at timestep varphi, which is dependent on the grads at timestep varphi+1.
@@ -891,6 +899,7 @@ class BeamStructure(BaseBeamStructure):
         None, AD is used.
         :param i_ts_end: Largest time step index for which the adjoint is computed. Defaults to
         ``structure.n_tstep - 1`` when ``None``
+        :param gmres_precond: If ``matrix_free``, precondition the GMRES solve.
         :return: Updated grads matrix, gradient of current step with respect to previous state and current state.
         """
 
@@ -907,6 +916,12 @@ class BeamStructure(BaseBeamStructure):
         # Objective sensitivities
         p_j_n_p_q_n, p_j_n_p_x = self.p_j(
             objective=objective, i_ts=i_ts, dv=dv, dv_full=dv_full, q_n=q_n
+        )
+
+        p_j_solve = (
+            p_j_n_p_q_n.reshape(n_j, 4, -1, 6)
+            .reshape(n_j, 4, -1)[..., solve_idx]
+            .reshape(n_j, -1)
         )
 
         if matrix_free:
@@ -939,12 +954,31 @@ class BeamStructure(BaseBeamStructure):
                 # function to compute (p_r_n/p_q_n).T @ v for some vector v
                 return _cot_to_solve_vec(p_r_n_dot_v(v)[0])
 
-            # sensitivity of objective to degrees of freedom, (n_j, n_adj_dof)
-            p_j_solve = (
-                p_j_n_p_q_n.reshape(n_j, 4, -1, 6)
-                .reshape(n_j, 4, -1)[..., solve_idx]
-                .reshape(n_j, -1)
-            )
+            if gmres_precond:
+                # holonomic multibody constraints make (p_r_n/p_q_n) severely ill-conditioned
+                # precondition GMRES with its LU factorisation
+                _, p_r_n_p_q_n_dense, *_ = self.timestep_residual_jacobians(
+                    i_ts=i_ts,
+                    q_n=q_n,
+                    q_nm1=q_nm1,
+                    f_ext_aero_nm1=None,
+                    f_ext_aero_n=None,
+                    dv=dv,
+                    thrust_t=thrust_t,
+                    solve_dofs=solve_dofs,
+                    approx_grads=approx_grads,
+                    n_profile_loops=None,
+                    jac_options=jac_options,
+                    f_ext_dead_full=dv_full.f_ext_dead,
+                    f_ext_follower_full=dv_full.f_ext_follower,
+                )
+                precond_lu = jax.scipy.linalg.lu_factor(p_r_n_p_q_n_dense)
+
+                def apply_precond(c: Array) -> Array:
+                    return jax.scipy.linalg.lu_solve(precond_lu, c, trans=1)
+            else:
+                apply_precond = None
+
             assert adj_t_p_r_np1_p_q_n is not None, (
                 "The adjoint-Jacobian product has not been passed"
             )
@@ -959,6 +993,7 @@ class BeamStructure(BaseBeamStructure):
                     tol=1e-10,
                     atol=1e-10,
                     maxiter=50,
+                    M=apply_precond,
                     solve_method="batched",
                 )
                 return x
@@ -1016,12 +1051,13 @@ class BeamStructure(BaseBeamStructure):
 
             # solve for adjoint at current timestep
             prev_adjoint = adj_[i_ts + 1, ...] if save_adjoint else adj_
-            b: Array = -(p_j_n_p_q_n.reshape(n_j, -1) + prev_adjoint @ p_r_np1_p_q_n).T
+            b: Array = -(p_j_solve + prev_adjoint @ p_r_np1_p_q_n).T
             adj_n = jnp.linalg.solve(p_r_n_p_q_n.T, b).T
 
             # accumulate design derivative
+            n_solve = len(solve_dofs)
             d_j_d_x_ += p_r_v_dot_n_p_dv.premultiply_adj(
-                adj_n[:, solve_idx + 2 * len(solve_dofs)]
+                adj_n[:, 2 * n_solve : 3 * n_solve]
             )
 
             # add on direct contribution from objective
@@ -1159,6 +1195,7 @@ class BeamStructure(BaseBeamStructure):
         approx_grads: bool = True,
         grads_to_compute: StructureGradsToCompute = GRADS_TO_COMPUTE_DEFAULT,
         i_ts_adjoint_range: tuple[int | None, int | None] = (None, None),
+        gmres_precond: bool = True,
     ) -> tuple[StructureDesignVariables, Array | None]:
         r"""
         Dynamic structure grads problem. This computes the gradient of the objective of the dynamic response with
@@ -1184,6 +1221,7 @@ class BeamStructure(BaseBeamStructure):
         :param i_ts_adjoint_range: Optional ``(start, end)`` window of time step indices over which the objective
         contributes to the gradient. Either entry may be ``None`` to leave that side untruncated. Defining a start
         time step that is nonzero will  skip the initial state adjoint contribution.
+        :param gmres_precond: If ``matrix_free``, precondition the GMRES solve.
         :return: Objective gradient :math:`\frac{dJ}{d\mathbf{x}}` and adjoint states
         """
 
@@ -1300,6 +1338,7 @@ class BeamStructure(BaseBeamStructure):
                 n_j=n_j,
                 jac_options=jac_options,
                 i_ts_end=i_ts_end_adj_,
+                gmres_precond=gmres_precond,
             )
 
         # coupling array is either a Jacobian or a VJP depending on if using matrix free or not
@@ -1334,14 +1373,16 @@ class BeamStructure(BaseBeamStructure):
                 dv_full=dv_full,
                 q_n=structure.get_minimal_states(0),
             )
+            p_j0_solve = (
+                p_j0_p_q0.reshape(n_j, 4, -1, 6)
+                .reshape(n_j, 4, -1)[..., jnp.array(solve_dofs)]
+                .reshape(n_j, -1)
+            )
 
             if matrix_free:
-                adj0 = -p_j0_p_q0.reshape(n_j, -1) - coupling0
+                adj0 = -p_j0_solve - coupling0
             else:
-                adj0 = (
-                    -p_j0_p_q0.reshape(n_j, -1)
-                    - (adj[1, ...] if save_adjoint else adj) @ coupling0
-                )
+                adj0 = -p_j0_solve - (adj[1, ...] if save_adjoint else adj) @ coupling0
 
             # add initial direct sensitivity
             d_j_d_x += p_j0_p_x

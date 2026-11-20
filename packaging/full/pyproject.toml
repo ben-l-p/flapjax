@@ -4,7 +4,7 @@ version = "1.4.1"
 description = "FLAPJAX with tests and tutorial notebooks bundled. Install this OR flapjax, not both."
 authors = [{ name = "Ben Preston", email = "b.preston23@imperial.ac.uk" }]
 keywords = ["aeroelasticity", "unsteady vortex lattice method", "nonlinear beam", "adjoint methods"]
-classifiers = [s
+classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
     "Operating System :: OS Independent",

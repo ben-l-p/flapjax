@@ -302,14 +302,16 @@ class AeroelasticDesignVariables(DesignVariables):
         ] = self.get_shapes()
         self.mapping, self.n_x = self.make_index_mapping()
 
-    def to_dict(self) -> dict[str, Array | None]:
+    def to_dict(self) -> dict[str, Array | ArrayList | dict[str, Array] | None]:
         return {
             **(self.structure.to_dict() if self.structure is not None else {}),
             **(self.aero.to_dict() if self.aero is not None else {}),
         }
 
     def split_adjoint(
-        self, d_f_d_x: dict[str, Array | ArrayList | None], f_shape: tuple[int, ...]
+        self,
+        d_f_d_x: dict[str, Array | ArrayList | dict[str, Array] | None],
+        f_shape: tuple[int, ...],
     ) -> AeroelasticDesignVariables:
         struct_dv = StructureDesignVariables(
             **{k: v for k, v in d_f_d_x.items() if k in self.structure.to_dict()},

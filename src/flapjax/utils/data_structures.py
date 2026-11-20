@@ -241,7 +241,7 @@ class DesignVariables:
     def __init__(self):
         # should only be used in child classes
         self.shapes: dict[str, tuple[int, ...] | ArrayListShape | None] = {}
-        self.mapping: dict[str, Array | ArrayList | None] = {}
+        self.mapping: dict[str, Array | ArrayList | OrderedDict[str, Array] | None] = {}
 
     def to_dict(self) -> dict[str, Array | ArrayList | dict[str, Array] | None]:
         # should only be used in child classes

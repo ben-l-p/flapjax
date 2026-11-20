@@ -2189,29 +2189,25 @@ class CoupledAeroelastic(BaseCoupledAeroelastic):
             ad_mode="forward",
         )
 
+        cs_ang_mapping = y_dv.aero.mapping["cs_ang_t"]
+        thrust_mapping = y_dv.structure.mapping["thrust_t"]
         assert (
-            y_dv.aero.mapping["cs_ang_t"] is not None
-            and y_dv.structure.mapping["thrust_t"] is not None
+            cs_ang_mapping is not None
+            and thrust_mapping is not None
             and y_dv.structure.mapping["orientation_euler"] is not None
         )
         y_columns: list[Array] = []
         for group in cs_groups:
             idx = (
                 jnp.concatenate(
-                    [
-                        jnp.ravel(jnp.asarray(y_dv.aero.mapping["cs_ang_t"][k]))
-                        for k in group
-                    ]
+                    [jnp.ravel(jnp.asarray(cs_ang_mapping[k])) for k in group]
                 )
                 + y_dv.structure.n_x
             )
             y_columns.append(jnp.sum(a_y_raw[:, idx], axis=1))
         for group in thrust_groups:
             idx = jnp.concatenate(
-                [
-                    jnp.ravel(jnp.asarray(y_dv.structure.mapping["thrust_t"][k]))
-                    for k in group
-                ]
+                [jnp.ravel(jnp.asarray(thrust_mapping[k])) for k in group]
             )
             y_columns.append(jnp.sum(a_y_raw[:, idx], axis=1))
         for k in trim_orientation_:
